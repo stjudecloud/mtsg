@@ -1,0 +1,7 @@
+[package]
+name = "mutspec"
+version = "0.1.0"
+authors = ["Michael Macias <michael.macias@stjude.org>"]
+
+[dependencies]
+clap = "2.32.0"
