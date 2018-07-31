@@ -1,11 +1,14 @@
 #[macro_use]
 extern crate clap;
+extern crate mutspec;
 
 use std::io;
 use std::path::Path;
 use std::process::Command;
 
-use clap::{App, Arg};
+use clap::{App, Arg, SubCommand};
+
+use mutspec::vcf::split_file;
 
 fn mutational_patterns<P, Q, R, S>(
     vcfs_dir: P,
@@ -41,8 +44,7 @@ where
 }
 
 fn main() {
-    let matches = App::new(crate_name!())
-        .version(crate_version!())
+    let run_cmd = SubCommand::with_name("run")
         .arg(Arg::with_name("cancer-signatures")
             .long("cancer-signatures")
             .value_name("file")
@@ -78,24 +80,49 @@ fn main() {
             .long("sample-sheet")
             .help("Sample sheet of sample names mapped to tissue of origin")
             .required(true)
-            .index(2))
+            .index(2));
+
+    let split_vcf_cmd = SubCommand::with_name("split-vcf")
+        .about("Splits a multi-sample VCF to multiple single-sample VCFs")
+        .arg(Arg::with_name("output-directory")
+            .short("o")
+            .long("output-directory")
+            .value_name("directory")
+            .help("Results directory")
+            .required(true))
+        .arg(Arg::with_name("input")
+            .value_name("file")
+            .help("Input multi-sample VCF")
+            .required(true)
+            .index(1));
+
+    let matches = App::new(crate_name!())
+        .version(crate_version!())
+        .subcommand(run_cmd)
+        .subcommand(split_vcf_cmd)
         .get_matches();
 
-    let vcfs_dir = matches.value_of("vcfs-dir").unwrap();
-    let sample_sheet = matches.value_of("sample-sheet").unwrap();
-    let cancer_signatures = matches.value_of("cancer-signatures").unwrap();
-    let genome_build = matches.value_of("genome-build").unwrap();
-    let min_burden = value_t!(matches, "min-burden", u32).unwrap_or_else(|e| e.exit());
-    let min_contribution = value_t!(matches, "min-contribution", u32).unwrap_or_else(|e| e.exit());
-    let out_dir = matches.value_of("output-directory").unwrap();
+    if let Some(matches) = matches.subcommand_matches("run") {
+        let vcfs_dir = matches.value_of("vcfs-dir").unwrap();
+        let sample_sheet = matches.value_of("sample-sheet").unwrap();
+        let cancer_signatures = matches.value_of("cancer-signatures").unwrap();
+        let genome_build = matches.value_of("genome-build").unwrap();
+        let min_burden = value_t!(matches, "min-burden", u32).unwrap_or_else(|e| e.exit());
+        let min_contribution = value_t!(matches, "min-contribution", u32).unwrap_or_else(|e| e.exit());
+        let out_dir = matches.value_of("output-directory").unwrap();
 
-    mutational_patterns(
-        vcfs_dir,
-        sample_sheet,
-        cancer_signatures,
-        genome_build,
-        min_burden,
-        min_contribution,
-        out_dir,
-    ).unwrap();
+        mutational_patterns(
+            vcfs_dir,
+            sample_sheet,
+            cancer_signatures,
+            genome_build,
+            min_burden,
+            min_contribution,
+            out_dir,
+        ).unwrap();
+    } else if let Some(matches) = matches.subcommand_matches("split-vcf") {
+        let src = matches.value_of("input").unwrap();
+        let dst = matches.value_of("output-directory").unwrap();
+        split_file(src, dst).unwrap();
+    }
 }
