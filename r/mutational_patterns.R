@@ -63,7 +63,12 @@ plot_spectrum(type_occurrences, by = tissues$tissue, CT = FALSE, legend = TRUE)
 invisible(dev.off())
 
 message("Loading COSMIC signature probabilities")
-cancer_signatures <- read.table(signatures_in, sep = "\t", header = TRUE, row.names = 1)
+cancer_signatures <- as.matrix(read.table(
+  signatures_in,
+  sep = "\t",
+  header = TRUE,
+  row.names = 1
+))
 
 message("Plotting trinucleotide profiles")
 pdf(file = file.path(out_dir, "cosmic_signatures.pdf"), width = 7, height = 30)
