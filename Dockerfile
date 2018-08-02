@@ -48,6 +48,6 @@ RUN echo 'source("https://bioconductor.org/biocLite.R"); \
         ))' | R --vanilla
 
 COPY --from=builder /app/target/release/mutspec /app/bin/
-COPY src/ /app/src/
+COPY r/ /app/src/r/
 
 ENTRYPOINT ["/app/bin/mutspec"]
