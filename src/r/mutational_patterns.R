@@ -12,8 +12,6 @@ min_burden <- as.numeric(args[5])
 min_contribution <- as.numeric(args[6])
 out_dir <- args[7]
 
-load(signatures_in)
-
 ref_genome <- if (genome_build == "GRCh37") {
   "BSgenome.Hsapiens.UCSC.hg19"
 } else {
@@ -63,6 +61,9 @@ plot_spectrum(type_occurrences)
 plot_spectrum(type_occurrences, CT = TRUE)
 plot_spectrum(type_occurrences, by = tissues$tissue, CT = FALSE, legend = TRUE)
 invisible(dev.off())
+
+message("Loading COSMIC signature probabilities")
+cancer_signatures <- read.table(signatures_in, sep = "\t", header = TRUE, row.names = 1)
 
 message("Plotting trinucleotide profiles")
 pdf(file = file.path(out_dir, "cosmic_signatures.pdf"), width = 7, height = 30)
