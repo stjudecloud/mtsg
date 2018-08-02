@@ -8,6 +8,7 @@ use std::process::Command;
 
 use clap::{App, Arg, SubCommand};
 
+use mutspec::cosmic::download_signature_probabilities;
 use mutspec::vcf::split_file;
 
 fn mutational_patterns<P, Q, R, S>(
@@ -44,6 +45,15 @@ where
 }
 
 fn main() {
+    let download_signatures_cmd = SubCommand::with_name("download-signatures")
+        .about("Downloads and preprocesses a COSMIC mutational signatures table")
+        .arg(Arg::with_name("output")
+            .short("o")
+            .long("output")
+            .value_name("file")
+            .help("Output pathname")
+            .required(true));
+
     let run_cmd = SubCommand::with_name("run")
         .arg(Arg::with_name("cancer-signatures")
             .long("cancer-signatures")
@@ -98,11 +108,15 @@ fn main() {
 
     let matches = App::new(crate_name!())
         .version(crate_version!())
+        .subcommand(download_signatures_cmd)
         .subcommand(run_cmd)
         .subcommand(split_vcf_cmd)
         .get_matches();
 
-    if let Some(matches) = matches.subcommand_matches("run") {
+    if let Some(matches) = matches.subcommand_matches("download-signatures") {
+        let dst = matches.value_of("output").unwrap();
+        download_signature_probabilities(dst).unwrap();
+    } else if let Some(matches) = matches.subcommand_matches("run") {
         let vcfs_dir = matches.value_of("vcfs-dir").unwrap();
         let sample_sheet = matches.value_of("sample-sheet").unwrap();
         let cancer_signatures = matches.value_of("cancer-signatures").unwrap();

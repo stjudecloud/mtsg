@@ -6,3 +6,5 @@ authors = ["Michael Macias <michael.macias@stjude.org>"]
 [dependencies]
 clap = "2.32.0"
 csv = "1.0.0"
+lazy_static = "1.0.2"
+reqwest = "0.8.6"

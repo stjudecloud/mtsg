@@ -3,7 +3,12 @@
 FROM ubuntu:18.04 as builder
 
 RUN apt-get update \
-    && apt-get -y install build-essential curl \
+    && apt-get -y install \
+        build-essential \
+        curl \
+        # reqwest
+        libssl-dev \
+        pkg-config \
     && rm -r /var/lib/apt/lists/*
 
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --no-modify-path
