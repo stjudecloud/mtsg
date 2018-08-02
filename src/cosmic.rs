@@ -36,8 +36,12 @@ pub fn download_signature_probabilities<P>(dst: P) -> io::Result<()> where P: As
     let mut writer = BufWriter::new(file);
 
     for row in iter::once(&headers).chain(rows.iter()) {
-        for cell in row.iter() {
-            write!(&mut writer, "{}\t", cell)?;
+        for (i, cell) in row.iter().enumerate() {
+            write!(&mut writer, "{}", cell)?;
+
+            if i < row.len() - 1 {
+                write!(&mut writer, "\t")?;
+            }
         }
 
         writeln!(&mut writer)?;
