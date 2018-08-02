@@ -2,6 +2,7 @@
 extern crate clap;
 extern crate mutspec;
 
+use std::env;
 use std::io;
 use std::path::Path;
 use std::process::Command;
@@ -14,7 +15,7 @@ use mutspec::vcf::split_file;
 fn mutational_patterns<P, Q, R, S>(
     vcfs_dir: P,
     sample_sheet: Q,
-    cancer_signatures: R,
+    cancer_signatures: Option<R>,
     reference_genome: &str,
     min_burden: u32,
     min_contribution: u32,
@@ -26,11 +27,20 @@ where
     R: AsRef<Path>,
     S: AsRef<Path>,
 {
+    let cancer_signatures = cancer_signatures
+        .map(|p| p.as_ref().to_path_buf())
+        .unwrap_or_else(|| {
+            let mut dst = env::temp_dir();
+            dst.push("signatures.txt");
+            download_signature_probabilities(&dst).unwrap();
+            dst
+        });
+
     let child = Command::new("Rscript")
         .arg("/app/src/r/mutational_patterns.R")
         .arg(vcfs_dir.as_ref())
         .arg(sample_sheet.as_ref())
-        .arg(cancer_signatures.as_ref())
+        .arg(cancer_signatures)
         .arg(reference_genome)
         .arg(min_burden.to_string())
         .arg(min_contribution.to_string())
@@ -119,7 +129,7 @@ fn main() {
     } else if let Some(matches) = matches.subcommand_matches("run") {
         let vcfs_dir = matches.value_of("vcfs-dir").unwrap();
         let sample_sheet = matches.value_of("sample-sheet").unwrap();
-        let cancer_signatures = matches.value_of("cancer-signatures").unwrap();
+        let cancer_signatures = matches.value_of("cancer-signatures");
         let genome_build = matches.value_of("genome-build").unwrap();
         let min_burden = value_t!(matches, "min-burden", u32).unwrap_or_else(|e| e.exit());
         let min_contribution = value_t!(matches, "min-contribution", u32).unwrap_or_else(|e| e.exit());
