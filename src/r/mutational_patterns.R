@@ -80,5 +80,6 @@ write.table(
   signatures,
   file = file.path(out_dir, "signatures.txt"),
   sep = "\t",
-  quote = FALSE
+  quote = FALSE,
+  col.names = NA
 )
