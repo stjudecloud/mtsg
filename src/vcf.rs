@@ -17,7 +17,8 @@ where
 
     let mut line = String::with_capacity(BUF_SIZE);
     let mut meta = String::with_capacity(BUF_SIZE);
-    let mut samples = Vec::new();
+
+    let samples: Vec<&str>;
 
     loop {
         reader.read_line(&mut line)?;
