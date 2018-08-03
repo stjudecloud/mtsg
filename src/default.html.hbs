@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
+    <script>
+      const state = {
+        name: "Totals by signatures",
+        stacking: "normal",
+        data: {},
+      };
+
+      const addEventListeners = () => {
+        document.getElementById("plot").addEventListener("change", (event) => {
+          state.name = event.target.value;
+          render();
+        });
+
+        document.querySelectorAll("#units input").forEach((input) => {
+          input.addEventListener("change", (event) => {
+            state.stacking = event.target.value;
+            render();
+          });
+        });
+      };
+
+      const loadData = () => {
+        const payload = document.getElementById("payload").innerText;
+        state.data = JSON.parse(payload).data;
+      };
+
+      const render = () => {
+        const { name } = state;
+
+        if (name === "Totals by signatures") {
+          renderTotalsBySignaturesChart(name);
+        } else if (name === "Totals by disease") {
+          renderTotalsByDiseaseChart(name);
+        } else {
+          renderDiseaseChart(name);
+        }
+      };
+
+      const buildTotalsByDisease = (samples) => (
+        samples.reduce((groups, sample) => {
+          if (!groups[sample.disease]) {
+            groups[sample.disease] = sample.contributions;
+          } else {
+            for (let i = 0; i < sample.contributions.length; i++) {
+              groups[sample.disease][i] += sample.contributions[i];
+            }
+          }
+
+          return groups;
+        }, {})
+      );
+
+      const renderTotalsBySignaturesChart = (title) => {
+        const totalsByDisease = buildTotalsByDisease(state.data.samples);
+
+        const categories = state.data.headers;
+        const series = Object.keys(totalsByDisease).map((disease) => ({
+          name: disease,
+          data: totalsByDisease[disease],
+        }));
+
+        renderChart(title, categories, series);
+      };
+
+      const renderTotalsByDiseaseChart = (title) => {
+        const totalsByDisease = buildTotalsByDisease(state.data.samples);
+
+        const totalsBySignature = state.data.headers.reduce((groups, signature, i) => {
+          groups[signature] = [];
+
+          for (const contributions of Object.values(totalsByDisease)) {
+            groups[signature].push(contributions[i]);
+          }
+
+          return groups;
+        }, {});
+
+        const categories = Object.keys(totalsByDisease);
+        const series = Object.keys(totalsBySignature).map((signature) => ({
+          name: signature,
+          data: totalsBySignature[signature],
+        }));
+
+        renderChart(title, categories, series);
+      };
+
+      const renderDiseaseChart = (disease) => {
+        const samples = state.data.samples.filter((s) => s.disease === disease);
+
+        const categories = samples.map((s) => s.id);
+        const series = state.data.headers.map((header, i) => ({
+          name: header,
+          data: samples.map((s) => s.contributions[i]),
+        }));
+
+        renderChart(disease, categories, series);
+      };
+
+      const renderChart = (title, categories, series) => {
+        const { stacking } = state;
+
+        Highcharts.chart("chart", {
+          chart: { type: "bar" },
+          title: { text: title },
+          xAxis: { categories },
+          series,
+          plotOptions: {
+            series: { stacking }
+          }
+        });
+      };
+
+      document.addEventListener("DOMContentLoaded", () => {
+        loadData();
+        addEventListeners();
+        render();
+      });
+    </script>
+    <script id="payload" type="application/json">
+      {{{payload}}}
+    </script>
+    <style>
+      html, body {
+        display: flex;
+        flex: 1;
+        height: 100%;
+      }
+
+      body {
+        flex-direction: column;
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+      }
+
+      #header {
+        background: #efefef;
+        display: flex;
+        flex-shrink: 0;
+        padding: 0.5em 1em;
+        justify-content: space-between;
+      }
+
+      #header h1 {
+        font-size: 22px;
+        font-weight: 300;
+        margin: 0;
+        vertical-align: middle;
+      }
+
+      #controls {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      #type {
+        margin-right: 1em;
+      }
+
+      #chart {
+        display: flex;
+        flex: 1;
+        padding: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header">
+      <h1>Mutational Spectrum</h1>
+
+      <div id="controls">
+        <div class="plots">
+          <strong>Plot</strong>
+          <select id="plot">
+            <option value="Totals by signatures">Totals by signatures</option>
+            <option value="Totals by disease">Totals by disease</option>
+            <option disabled>───</option>
+            {{~#each diseases as |disease|}}
+              <option value="{{disease}}">{{disease}}</option>
+            {{~/each}}
+          </select>
+        </div>
+
+        <div id="units">
+          <strong>Unit</strong>
+          <label for="absolute">Absolute</label>
+          <input type="radio" id="absolute" name="unit" value="normal" checked />
+          <label for="percent">Percent</label>
+          <input type="radio" id="percent" name="unit" value="percent" />
+        </div>
+      </div>
+    </div>
+    <div id="chart"></div>
+  </body>
+</html>

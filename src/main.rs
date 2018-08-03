@@ -11,6 +11,7 @@ use clap::{App, Arg, SubCommand};
 
 use mutspec::cosmic::download_signature_probabilities;
 use mutspec::vcf::split_file;
+use mutspec::visualizations::create_visualization;
 
 fn mutational_patterns<P, Q, R, S>(
     vcfs_dir: P,
@@ -116,11 +117,24 @@ fn main() {
             .required(true)
             .index(1));
 
+    let visualize_cmd = SubCommand::with_name("visualize")
+        .arg(Arg::with_name("output")
+            .short("o")
+            .long("output")
+            .value_name("file")
+            .help("Output pathname")
+            .required(true))
+        .arg(Arg::with_name("input")
+            .help("Fitted mutation matrix to cancer signatures")
+            .required(true)
+            .index(1));
+
     let matches = App::new(crate_name!())
         .version(crate_version!())
         .subcommand(download_signatures_cmd)
         .subcommand(run_cmd)
         .subcommand(split_vcf_cmd)
+        .subcommand(visualize_cmd)
         .get_matches();
 
     if let Some(matches) = matches.subcommand_matches("download-signatures") {
@@ -148,5 +162,9 @@ fn main() {
         let src = matches.value_of("input").unwrap();
         let dst = matches.value_of("output-directory").unwrap();
         split_file(src, dst).unwrap();
+    } else if let Some(matches) = matches.subcommand_matches("visualize") {
+        let src = matches.value_of("input").unwrap();
+        let dst = matches.value_of("output").unwrap();
+        create_visualization(src, dst).unwrap();
     }
 }
