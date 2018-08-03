@@ -39,7 +39,8 @@ write.table(
   mutation_matrix,
   file = file.path(out_dir, "mutation_matrix.txt"),
   sep = "\t",
-  quote = FALSE
+  quote = FALSE,
+  col.names = NA
 )
 
 message("Reading sample sheet")
