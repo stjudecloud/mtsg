@@ -35,6 +35,8 @@ where
         line.clear();
     }
 
+    info!("creating {} vcfs", samples.len());
+
     let mut writers: Vec<BufWriter<File>> = samples.iter()
         .map(|name| {
             let mut dst = dst.as_ref().to_path_buf();

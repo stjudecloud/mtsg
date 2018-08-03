@@ -1,6 +1,9 @@
 #[macro_use]
 extern crate clap;
 extern crate mutspec;
+#[macro_use]
+extern crate log;
+extern crate env_logger;
 
 use std::env;
 use std::io;
@@ -8,6 +11,7 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use clap::{App, Arg, SubCommand};
+use log::LevelFilter;
 
 use mutspec::cosmic::download_signature_probabilities;
 use mutspec::vcf::split_file;
@@ -38,11 +42,18 @@ where
     let cancer_signatures = cancer_signatures
         .map(|p| p.as_ref().to_path_buf())
         .unwrap_or_else(|| {
+            info!("using default COSMIC signature probabilities");
+
             let mut dst = env::temp_dir();
             dst.push("signatures.txt");
             download_signature_probabilities(&dst).unwrap();
             dst
         });
+
+    info!("running MutationalPatterns");
+    info!("  reference-genome = {}", reference_genome);
+    info!("  min-burden = {}", min_burden);
+    info!("  min-contribution= {}", min_contribution);
 
     let child = Command::new("Rscript")
         .arg(script_path)
@@ -138,11 +149,21 @@ fn main() {
 
     let matches = App::new(crate_name!())
         .version(crate_version!())
+        .arg(Arg::with_name("verbose")
+            .short("v")
+            .long("verbose")
+            .help("Use verbose logging"))
         .subcommand(download_signatures_cmd)
         .subcommand(run_cmd)
         .subcommand(split_vcf_cmd)
         .subcommand(visualize_cmd)
         .get_matches();
+
+    if matches.is_present("verbose") {
+        env_logger::Builder::from_default_env()
+            .filter(Some(crate_name!()), LevelFilter::Info)
+            .init()
+    }
 
     if let Some(matches) = matches.subcommand_matches("download-signatures") {
         let dst = matches.value_of("output").unwrap();
