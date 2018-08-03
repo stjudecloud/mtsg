@@ -6,9 +6,9 @@ extern crate log;
 extern crate env_logger;
 
 use std::env;
-use std::io;
+use std::io::{self, Write};
 use std::path::{Path, PathBuf};
-use std::process::Command;
+use std::process::{Command, Stdio};
 
 use clap::{App, Arg, SubCommand};
 use log::LevelFilter;
@@ -16,6 +16,8 @@ use log::LevelFilter;
 use mutspec::cosmic::download_signature_probabilities;
 use mutspec::vcf::split_file;
 use mutspec::visualizations::create_visualization;
+
+static MUTATIONAL_PATTERNS_SRC: &str = include_str!("mutational_patterns.R");
 
 fn mutational_patterns<P, Q, R, S>(
     vcfs_dir: P,
@@ -55,8 +57,10 @@ where
     info!("  min-burden = {}", min_burden);
     info!("  min-contribution= {}", min_contribution);
 
-    let child = Command::new("Rscript")
-        .arg(script_path)
+    let mut child = Command::new("R")
+        .arg("--vanilla")
+        .arg("--slave")
+        .arg("--args")
         .arg(vcfs_dir.as_ref())
         .arg(sample_sheet.as_ref())
         .arg(cancer_signatures)
@@ -64,7 +68,13 @@ where
         .arg(min_burden.to_string())
         .arg(min_contribution.to_string())
         .arg(out_dir.as_ref())
+        .stdin(Stdio::piped())
         .spawn()?;
+
+    {
+        let stdin = child.stdin.as_mut().expect("Failed to open stdin");
+        stdin.write_all(MUTATIONAL_PATTERNS_SRC.as_bytes())?;
+    }
 
     let output = child.wait_with_output()?;
 

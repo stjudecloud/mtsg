@@ -52,8 +52,5 @@ RUN echo 'source("https://bioconductor.org/biocLite.R"); \
         ))' | R --vanilla
 
 COPY --from=builder /app/target/release/mutspec /app/bin/
-COPY r/ /app/r/
-
-ENV MUTSPEC_HOME=/app/r
 
 ENTRYPOINT ["/app/bin/mutspec"]
