@@ -4,7 +4,7 @@ extern crate mutspec;
 
 use std::env;
 use std::io;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use clap::{App, Arg, SubCommand};
@@ -28,6 +28,13 @@ where
     R: AsRef<Path>,
     S: AsRef<Path>,
 {
+    let mut script_path = env::var("MUTSPEC_HOME")
+        .map(|home| PathBuf::from(home))
+        .or_else(|_| env::current_dir())?;
+
+    script_path.push("r");
+    script_path.push("mutational_patterns.R");
+
     let cancer_signatures = cancer_signatures
         .map(|p| p.as_ref().to_path_buf())
         .unwrap_or_else(|| {
@@ -38,7 +45,7 @@ where
         });
 
     let child = Command::new("Rscript")
-        .arg("/app/src/r/mutational_patterns.R")
+        .arg(script_path)
         .arg(vcfs_dir.as_ref())
         .arg(sample_sheet.as_ref())
         .arg(cancer_signatures)
