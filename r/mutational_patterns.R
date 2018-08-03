@@ -1,5 +1,5 @@
-library("MutationalPatterns")
-library("BSgenome")
+suppressMessages(library("MutationalPatterns"))
+suppressMessages(library("BSgenome"))
 library("rtracklayer")
 library("GenomicRanges")
 
