@@ -14,11 +14,15 @@ RUN apt-get update \
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --no-modify-path
 ENV PATH=/root/.cargo/bin:$PATH
 
+# Cache project depedencies.
+RUN USER=root cargo new --vcs none /app
 COPY Cargo.lock /app/Cargo.lock
 COPY Cargo.toml /app/Cargo.toml
+RUN cargo build --release --manifest-path /app/Cargo.toml && rm -r /app/src
+
 COPY src /app/src
 
-RUN cargo build --manifest-path /app/Cargo.toml --release
+RUN cargo build --release --manifest-path /app/Cargo.toml
 
 # stage 2: main
 
