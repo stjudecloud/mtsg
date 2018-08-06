@@ -10,7 +10,7 @@ use std::io::{self, Write};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
-use clap::{App, Arg, SubCommand};
+use clap::{App, AppSettings, Arg, SubCommand};
 use log::LevelFilter;
 
 use mutspec::cosmic::download_signature_probabilities;
@@ -159,6 +159,7 @@ fn main() {
 
     let matches = App::new(crate_name!())
         .version(crate_version!())
+        .setting(AppSettings::SubcommandRequiredElseHelp)
         .arg(Arg::with_name("verbose")
             .short("v")
             .long("verbose")
