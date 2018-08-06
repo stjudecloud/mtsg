@@ -14,6 +14,7 @@ use clap::{App, AppSettings, Arg, SubCommand};
 use log::LevelFilter;
 
 use mutspec::cosmic::download_signature_probabilities;
+use mutspec::sample_sheet;
 use mutspec::vcf::split_file;
 use mutspec::visualizations::create_visualization;
 
@@ -93,6 +94,19 @@ fn main() {
             .help("Output pathname")
             .required(true));
 
+    let generate_sample_sheet_cmd = SubCommand::with_name("generate-sample-sheet")
+        .about("Generates a sample sheet from a directory of VCFs")
+        .arg(Arg::with_name("output")
+            .short("o")
+            .long("output")
+            .value_name("file")
+            .help("Output filename")
+            .required(true))
+        .arg(Arg::with_name("input-directory")
+            .help("Input directory of single-sample VCFs")
+            .required(true)
+            .index(1));
+
     let run_cmd = SubCommand::with_name("run")
         .about("Finds the linear combination of mutation signatures that reconstructs the mutation matrix")
         .arg(Arg::with_name("cancer-signatures")
@@ -167,6 +181,7 @@ fn main() {
             .long("verbose")
             .help("Use verbose logging"))
         .subcommand(download_signatures_cmd)
+        .subcommand(generate_sample_sheet_cmd)
         .subcommand(run_cmd)
         .subcommand(split_vcf_cmd)
         .subcommand(visualize_cmd)
@@ -181,6 +196,10 @@ fn main() {
     if let Some(matches) = matches.subcommand_matches("download-signatures") {
         let dst = matches.value_of("output").unwrap();
         download_signature_probabilities(dst).unwrap();
+    } else if let Some(matches) = matches.subcommand_matches("generate-sample-sheet") {
+        let src = matches.value_of("input-directory").unwrap();
+        let dst = matches.value_of("output").unwrap();
+        sample_sheet::generate(src, dst).unwrap();
     } else if let Some(matches) = matches.subcommand_matches("run") {
         let vcfs_dir = matches.value_of("vcfs-dir").unwrap();
         let sample_sheet = matches.value_of("sample-sheet").unwrap();
