@@ -20,9 +20,10 @@ ref_genome <- if (genome_build == "GRCh37") {
 
 library(ref_genome, character.only = TRUE)
 
-message("Reading input VCFs")
 vcf_pathnames <- list.files(path = vcfs_dir, pattern = ".vcf", full.names = TRUE)
 sample_names <- tools::file_path_sans_ext(basename(vcf_pathnames))
+
+message(sprintf("Reading %d input VCFs", length(vcf_pathnames)))
 vcfs <- read_vcfs_as_granges(vcf_pathnames, sample_names, ref_genome)
 
 message("Filtering VCFs (mitochondrial and allosomal chromosomes)")
@@ -33,7 +34,7 @@ message("Filtering VCFs (mutational burden threshold)")
 mutation_counts <- elementNROWS(filtered_vcfs)
 filtered_vcfs <- filtered_vcfs[mutation_counts > min_burden]
 
-message("Building mutation matrix")
+message(sprintf("Building mutation matrix from %d VCFs", length(filtered_vcfs)))
 mutation_matrix <- mut_matrix(vcf_list = filtered_vcfs, ref_genome = ref_genome)
 write.table(
   mutation_matrix,
