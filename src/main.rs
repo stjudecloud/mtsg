@@ -85,7 +85,7 @@ where
 
 fn main() {
     let download_signatures_cmd = SubCommand::with_name("download-signatures")
-        .about("Downloads and preprocesses a COSMIC mutational signatures table")
+        .about("Downloads and preprocesses known mutational signatures (COSMIC)")
         .arg(Arg::with_name("output")
             .short("o")
             .long("output")
@@ -94,6 +94,7 @@ fn main() {
             .required(true));
 
     let run_cmd = SubCommand::with_name("run")
+        .about("Finds the linear combination of mutation signatures that reconstructs the mutation matrix")
         .arg(Arg::with_name("cancer-signatures")
             .long("cancer-signatures")
             .value_name("file")
@@ -146,6 +147,7 @@ fn main() {
             .index(1));
 
     let visualize_cmd = SubCommand::with_name("visualize")
+        .about("Creates an interactive visualization for the given cancer signatures")
         .arg(Arg::with_name("output")
             .short("o")
             .long("output")
