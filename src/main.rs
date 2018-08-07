@@ -24,7 +24,7 @@ fn mutational_patterns<P, Q, R, S>(
     vcfs_dir: P,
     sample_sheet: Q,
     cancer_signatures: Option<R>,
-    reference_genome: &str,
+    genome_build: &str,
     min_burden: u32,
     min_contribution: u32,
     out_dir: S,
@@ -47,7 +47,7 @@ where
         });
 
     info!("running mutational_patterns.R");
-    info!("  reference-genome = {}", reference_genome);
+    info!("  genome-build = {}", genome_build);
     info!("  min-burden = {}", min_burden);
     info!("  min-contribution = {}", min_contribution);
 
@@ -58,7 +58,7 @@ where
         .arg(vcfs_dir.as_ref())
         .arg(sample_sheet.as_ref())
         .arg(cancer_signatures)
-        .arg(reference_genome)
+        .arg(genome_build)
         .arg(min_burden.to_string())
         .arg(min_contribution.to_string())
         .arg(out_dir.as_ref())
