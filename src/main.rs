@@ -139,12 +139,10 @@ fn main() {
             .help("Results directory")
             .required(true))
         .arg(Arg::with_name("vcfs-dir")
-            .long("vcfs-dir")
             .help("Input directory of single-sample VCFs")
             .required(true)
             .index(1))
         .arg(Arg::with_name("sample-sheet")
-            .long("sample-sheet")
             .help("Sample sheet of sample names mapped to tissue of origin")
             .required(true)
             .index(2));
@@ -158,7 +156,6 @@ fn main() {
             .help("Results directory")
             .required(true))
         .arg(Arg::with_name("input")
-            .value_name("file")
             .help("Input multi-sample VCF. Accepts both uncompressed and gzipped inputs.")
             .required(true)
             .index(1));
