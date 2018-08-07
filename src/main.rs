@@ -6,7 +6,7 @@ extern crate log;
 extern crate env_logger;
 
 use std::env;
-use std::io::{self, Write};
+use std::io::{self, BufRead, BufReader, Write};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
@@ -53,7 +53,7 @@ where
             dst
         });
 
-    info!("running MutationalPatterns");
+    info!("running mutational_patterns.R");
     info!("  reference-genome = {}", reference_genome);
     info!("  min-burden = {}", min_burden);
     info!("  min-contribution= {}", min_contribution);
@@ -70,12 +70,24 @@ where
         .arg(min_contribution.to_string())
         .arg(out_dir.as_ref())
         .stdin(Stdio::piped())
+        .stderr(Stdio::piped())
         .spawn()?;
 
     {
-        let stdin = child.stdin.as_mut().expect("Failed to open stdin");
+        let mut stdin = child.stdin.take().expect("Failed to open stdin");
         stdin.write_all(MUTATIONAL_PATTERNS_SRC.as_bytes())?;
     }
+
+    {
+        let stderr = child.stderr.as_mut().expect("Failed to open stderr");
+        let reader = BufReader::new(stderr);
+
+        for line in reader.lines().filter_map(Result::ok) {
+            info!("R: {}", line);
+        }
+    }
+
+    info!("mutational_patterns.R done");
 
     child.wait()?;
 
