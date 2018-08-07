@@ -4,6 +4,7 @@ extern crate mutspec;
 extern crate log;
 extern crate env_logger;
 
+use std::io;
 use std::process;
 
 use clap::{App, AppSettings, Arg, SubCommand};
@@ -14,6 +15,11 @@ use mutspec::r::mutational_patterns;
 use mutspec::sample_sheet;
 use mutspec::vcf::split_file;
 use mutspec::visualizations::create_visualization;
+
+fn exit_with_io_error(error: io::Error) -> ! {
+    eprintln!("{}", error);
+    process::exit(1);
+}
 
 fn main() {
     let download_signatures_cmd = SubCommand::with_name("download-signatures")
@@ -123,11 +129,11 @@ fn main() {
 
     if let Some(matches) = matches.subcommand_matches("download-signatures") {
         let dst = matches.value_of("output").unwrap();
-        download_signature_probabilities(dst).unwrap();
+        download_signature_probabilities(dst).unwrap_or_else(|e| exit_with_io_error(e));
     } else if let Some(matches) = matches.subcommand_matches("generate-sample-sheet") {
         let src = matches.value_of("input-directory").unwrap();
         let dst = matches.value_of("output").unwrap();
-        sample_sheet::generate(src, dst).unwrap();
+        sample_sheet::generate(src, dst).unwrap_or_else(|e| exit_with_io_error(e));
     } else if let Some(matches) = matches.subcommand_matches("run") {
         let vcfs_dir = matches.value_of("vcfs-dir").unwrap();
         let sample_sheet = matches.value_of("sample-sheet").unwrap();
@@ -154,18 +160,15 @@ fn main() {
                     process::exit(code);
                 }
             },
-            Err(e) => {
-                eprintln!("{}", e);
-                process::exit(1);
-            }
+            Err(e) => exit_with_io_error(e),
         }
     } else if let Some(matches) = matches.subcommand_matches("split-vcf") {
         let src = matches.value_of("input").unwrap();
         let dst = matches.value_of("output-directory").unwrap();
-        split_file(src, dst).unwrap();
+        split_file(src, dst).unwrap_or_else(|e| exit_with_io_error(e));
     } else if let Some(matches) = matches.subcommand_matches("visualize") {
         let src = matches.value_of("input").unwrap();
         let dst = matches.value_of("output").unwrap();
-        create_visualization(src, dst).unwrap();
+        create_visualization(src, dst).unwrap_or_else(|e| exit_with_io_error(e));
     }
 }
