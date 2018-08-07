@@ -1,8 +1,10 @@
+use std::ffi::OsStr;
 use std::fs::File;
 use std::io::{self, BufRead, BufReader, BufWriter, Write};
 use std::path::Path;
 
 use csv;
+use flate2::read::MultiGzDecoder;
 
 const BUF_SIZE: usize = 4096; // bytes
 static EMPTY_CELL: &str = ".:.";
@@ -12,8 +14,7 @@ where
     P: AsRef<Path>,
     Q: AsRef<Path>,
 {
-    let file = File::open(src)?;
-    let mut reader = BufReader::new(file);
+    let mut reader = reader_factory(src)?;
 
     let mut line = String::with_capacity(BUF_SIZE);
     let mut meta = String::with_capacity(BUF_SIZE);
@@ -72,4 +73,20 @@ where
     }
 
     Ok(())
+}
+
+fn reader_factory<P>(src: P) -> io::Result<Box<dyn BufRead>> where P: AsRef<Path> {
+    let path = src.as_ref();
+    let file = File::open(path)?;
+
+    match path.extension().and_then(OsStr::to_str) {
+        Some("gz") => {
+            let decoder = MultiGzDecoder::new(file);
+            let reader = BufReader::new(decoder);
+            Ok(Box::new(reader))
+        },
+        _ => {
+            Ok(Box::new(BufReader::new(file)))
+        }
+    }
 }

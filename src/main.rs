@@ -159,7 +159,7 @@ fn main() {
             .required(true))
         .arg(Arg::with_name("input")
             .value_name("file")
-            .help("Input multi-sample VCF")
+            .help("Input multi-sample VCF. Accepts both uncompressed and gzipped inputs.")
             .required(true)
             .index(1));
 

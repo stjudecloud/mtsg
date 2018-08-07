@@ -1,4 +1,5 @@
 extern crate csv;
+extern crate flate2;
 extern crate glob;
 extern crate handlebars;
 #[macro_use]
