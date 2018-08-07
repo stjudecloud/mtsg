@@ -1,0 +1,73 @@
+{
+  "name": "mutspec",
+  "title": "Mutational Spectrum",
+  "summary": "Find the optimal non-negative linear combination of mutation signatures to reconstruct a mutation matrix",
+  "dxapi": "1.0.0",
+  "version": "0.0.1",
+  "inputSpec": [
+    {
+      "name": "multi_sample_vcf",
+      "label": "Multi-sample VCF",
+      "class": "file"
+    },
+    {
+      "name": "genome_build",
+      "label": "Genome Build",
+      "class": "string",
+      "optional": true,
+      "default": "GRCh38",
+      "choices": ["GRCh37", "GRCh38"]
+    },
+    {
+      "name": "min_burden",
+      "label": "Min burden",
+      "class": "int",
+      "optional": true,
+      "default": 9
+    },
+    {
+      "name": "min_contribution",
+      "label": "Min contribution",
+      "class": "int",
+      "optional": true,
+      "default": 9
+    }
+  ],
+  "outputSpec": [
+    {
+      "name": "signatures_txt",
+      "label": "Raw signatures",
+      "class": "file"
+    },
+    {
+      "name": "signatures_html",
+      "label": "Signatures visualization",
+      "class": "file"
+    }
+  ],
+  "runSpec": {
+    "timeoutPolicy": {
+      "*": {
+        "hours": 48
+      }
+    },
+    "interpreter": "bash",
+    "release": "14.04",
+    "distribution": "Ubuntu",
+    "file": "src/mutspec.sh"
+  },
+  "access": {
+    "network": [
+      "*"
+    ]
+  },
+  "regionalOptions": {
+    "azure:westus": {
+      "systemRequirements": {
+        "*": {
+          "instanceType": "azure:mem1_ssd1_x4"
+        }
+      }
+    }
+  }
+}
