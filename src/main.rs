@@ -49,7 +49,7 @@ where
     info!("running mutational_patterns.R");
     info!("  reference-genome = {}", reference_genome);
     info!("  min-burden = {}", min_burden);
-    info!("  min-contribution= {}", min_contribution);
+    info!("  min-contribution = {}", min_contribution);
 
     let mut child = Command::new("R")
         .arg("--vanilla")
