@@ -106,14 +106,19 @@
       const renderChart = (title, categories, series) => {
         const { stacking } = state;
 
+        const yAxis = {
+          max: stacking === "percent" ? 100 : undefined,
+        };
+
         Highcharts.chart("chart", {
           chart: { type: "bar" },
           title: { text: title },
           xAxis: { categories },
+          yAxis,
           series,
           plotOptions: {
             series: { stacking }
-          }
+          },
         });
       };
 
