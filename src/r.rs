@@ -1,7 +1,7 @@
 use std::env;
 use std::io::{self, BufRead, BufReader, Write};
 use std::path::Path;
-use std::process::{Command, Stdio};
+use std::process::{Command, ExitStatus, Stdio};
 
 use cosmic::download_signature_probabilities;
 
@@ -15,7 +15,7 @@ pub fn mutational_patterns<P, Q, R, S>(
     min_burden: u32,
     min_contribution: u32,
     out_dir: S,
-) -> io::Result<()>
+) -> io::Result<ExitStatus>
 where
     P: AsRef<Path>,
     Q: AsRef<Path>,
@@ -67,9 +67,15 @@ where
         }
     }
 
-    info!("mutational_patterns.R done");
+    let result = child.wait();
 
-    child.wait()?;
+    if let Ok(status) = result {
+        if status.success() {
+            info!("mutational_patterns.R exited (success)");
+        } else {
+            info!("mutational_patterns.R exited (fail)");
+        }
+    }
 
-    Ok(())
+    result
 }

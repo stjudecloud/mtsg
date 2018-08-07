@@ -4,6 +4,8 @@ extern crate mutspec;
 extern crate log;
 extern crate env_logger;
 
+use std::process;
+
 use clap::{App, AppSettings, Arg, SubCommand};
 use log::LevelFilter;
 
@@ -135,7 +137,7 @@ fn main() {
         let min_contribution = value_t!(matches, "min-contribution", u32).unwrap_or_else(|e| e.exit());
         let out_dir = matches.value_of("output-directory").unwrap();
 
-        mutational_patterns(
+        let result = mutational_patterns(
             vcfs_dir,
             sample_sheet,
             cancer_signatures,
@@ -143,7 +145,20 @@ fn main() {
             min_burden,
             min_contribution,
             out_dir,
-        ).unwrap();
+        );
+
+        match result {
+            Ok(status) => {
+                if !status.success() {
+                    let code = status.code().unwrap_or(1);
+                    process::exit(code);
+                }
+            },
+            Err(e) => {
+                eprintln!("{}", e);
+                process::exit(1);
+            }
+        }
     } else if let Some(matches) = matches.subcommand_matches("split-vcf") {
         let src = matches.value_of("input").unwrap();
         let dst = matches.value_of("output-directory").unwrap();
