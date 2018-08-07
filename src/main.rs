@@ -7,7 +7,7 @@ extern crate env_logger;
 
 use std::env;
 use std::io::{self, BufRead, BufReader, Write};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::process::{Command, Stdio};
 
 use clap::{App, AppSettings, Arg, SubCommand};
@@ -35,13 +35,6 @@ where
     R: AsRef<Path>,
     S: AsRef<Path>,
 {
-    let mut script_path = env::var("MUTSPEC_HOME")
-        .map(|home| PathBuf::from(home))
-        .or_else(|_| env::current_dir())?;
-
-    script_path.push("r");
-    script_path.push("mutational_patterns.R");
-
     let cancer_signatures = cancer_signatures
         .map(|p| p.as_ref().to_path_buf())
         .unwrap_or_else(|| {
