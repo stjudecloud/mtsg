@@ -80,6 +80,8 @@ invisible(dev.off())
 message("Fitting mutation matrix to signature matrix")
 fit_result <- fit_to_signatures(mutation_matrix, cancer_signatures)
 contribution <- fit_result$contribution
+
+message("Filtering contributions")
 filtered_contributions <- contribution[rowSums(contribution) > min_contribution,]
 signatures <- as.data.frame(t(filtered_contributions))
 signatures$tissue <- tissues$tissue
