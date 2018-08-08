@@ -108,8 +108,13 @@
       const renderChart = (title, categories, series) => {
         const { stacking } = state;
 
+        const yAxisTitlePrefix = (stacking === "normal") ? "Absolute" : "Percent";
+
         const yAxis = {
           max: stacking === "percent" ? 100 : undefined,
+          title: {
+            text: `${yAxisTitlePrefix} contribution (no. mutations)`,
+          }
         };
 
         Highcharts.chart("chart", {
