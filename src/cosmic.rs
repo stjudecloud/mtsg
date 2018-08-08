@@ -27,7 +27,9 @@ static T_TRIPLETS: &[&str] = &[
 static SP_URL: &str = "https://cancer.sanger.ac.uk/cancergenome/assets/signatures_probabilities.txt";
 
 pub fn download_signature_probabilities<P>(dst: P) -> io::Result<()> where P: AsRef<Path> {
-    let body = download().unwrap();
+    let body = download().map_err(|e| {
+        io::Error::new(io::ErrorKind::Other, format!("{}", e))
+    })?;
 
     let reader = Cursor::new(body);
     let (headers, rows) = process(reader)?;
@@ -90,6 +92,8 @@ where
     Ok((headers, ordered_rows))
 }
 
+/// Builds an iterator that returns mutation types in the same order used by
+/// MutationalPatterns.
 fn somatic_mutation_types() -> impl Iterator<Item = String> {
     C_TRIPLETS.iter()
         .chain(C_TRIPLETS.iter())
