@@ -20,18 +20,20 @@ mutspec supports both hg19 (GRCh37) and hg38 (GRCh38).
   * `multi_sample_vcf`: A multi-sample VCF. This file can be either uncompressed
     or gzipped.
 
-  * `sample-sheet`: A tab-delimited file (no headers) with two columns: the
+  * `sample_sheet`: A tab-delimited file (no headers) with two columns: the
     sample ID and a tag. The tag is any arbitrary identifier, typically a
     disease abbreviation or tissue of origin. If not given, a sample sheet will
-    be generated from sample IDs extracted from the multi-sample VCF.
+    be generated from the sample IDs extracted from the multi-sample VCF.
     [optional]
 
-  * `genome_build`: The genome build used to align the input. This can be
-    either "GRCh37" (hg19) or "GRCh38" (hg38) [default: "GRCh38"].
+  * `genome_build`: The genome build used as reference. This can be
+    either "GRCh37" (hg19) or "GRCh38" (hg38). [default: "GRCh38"]
 
-  * `min_burden`: Threshold to exclude mutations with low burden [default: 9].
+  * `min_burden`: Minimum number of somatic SNVs a sample must have to be
+    considered. [default: 9]
 
-  * `min_contribution`: Threshold to exclude signatures with low contribution [default: 9].
+  * `min_contribution`: Minimum number of mutations attributable to a single
+    signature. [default: 9]
 
 ## Outputs
 

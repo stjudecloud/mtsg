@@ -8,32 +8,37 @@
     {
       "name": "multi_sample_vcf",
       "label": "Multi-sample VCF",
-      "class": "file"
+      "class": "file",
+      "help": "Multi-sample VCF. Can be either uncompressed or gzipped."
     },
     {
       "name": "sample_sheet",
       "label": "Sample sheet",
       "class": "file",
+      "help": "Tab-delimited file containing sample ID and tag pairs",
       "optional": true
     },
     {
       "name": "genome_build",
-      "label": "Genome Build",
+      "label": "Genome build",
       "class": "string",
+      "help": "Genome build the input uses as reference",
       "optional": true,
       "default": "GRCh38",
       "choices": ["GRCh37", "GRCh38"]
     },
     {
       "name": "min_burden",
-      "label": "Min burden",
+      "label": "Minimum mutation burden",
       "class": "int",
+      "help": "Minimum number of somatic SNVs a sample must have to be considered",
       "optional": true,
       "default": 9
     },
     {
       "name": "min_contribution",
-      "label": "Min contribution",
+      "label": "Minimum signature contribution",
+      "help": "Minimum number of mutations attributable to a single signature",
       "class": "int",
       "optional": true,
       "default": 9
@@ -43,12 +48,14 @@
     {
       "name": "signatures_txt",
       "label": "Raw signatures",
-      "class": "file"
+      "class": "file",
+      "help": "Tab-delimited file of the raw results with sample contributions for each signature"
     },
     {
       "name": "signatures_html",
       "label": "Signatures visualization",
-      "class": "file"
+      "class": "file",
+      "help": "HTML file for interactive plotting"
     }
   ],
   "runSpec": {
