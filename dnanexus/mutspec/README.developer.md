@@ -1,12 +1,7 @@
 # St. Jude Mutational Spectrum (dev)
 
-The main script runs a container with a pre-build Mutational Spectrum image.
-The DNAnexus applet executes the following workflow:
-
-  * splits a multi-sample VCF to multiple single-sample VCFs
-  * generates a sample sheet from the directory of single-sample VCFs
-  * runs mutational patterns
-  * creates a visualization file using the fitted signatures
+The main script runs multiple containers with a pre-built Mutational Spectrum
+image. See `README.md` for a description of the process.
 
 ## Build
 
