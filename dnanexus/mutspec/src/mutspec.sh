@@ -20,13 +20,17 @@ main() {
         --output-directory /results/vcfs \
         /data/$VCF_FILENAME
 
-    dx-docker run \
-        --volume $RESULTS_DIR:/results \
-        mutspec \
-        --verbose \
-        generate-sample-sheet \
-        --output /results/sample-sheet.txt \
-        /results/vcfs
+    if [[ -z "$sample_sheet" ]]; then
+        dx-docker run \
+            --volume $RESULTS_DIR:/results \
+            mutspec \
+            --verbose \
+            generate-sample-sheet \
+            --output /results/sample-sheet.txt \
+            /results/vcfs
+    else
+        dx download --output $RESULTS_DIR/sample-sheet.txt "$sample_sheet"
+    fi
 
     dx-docker run \
         --volume $RESULTS_DIR:/results \

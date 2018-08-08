@@ -11,6 +11,12 @@
       "class": "file"
     },
     {
+      "name": "sample_sheet",
+      "label": "Sample sheet",
+      "class": "file",
+      "optional": true
+    },
+    {
       "name": "genome_build",
       "label": "Genome Build",
       "class": "string",
