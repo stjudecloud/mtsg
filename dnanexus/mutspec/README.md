@@ -1,15 +1,13 @@
 <!-- dx-header -->
 # St. Jude Mutational Spectrum
 
-Find the optimal non-negative linear combination of mutation signatures to
-reconstruct a mutation matrix
+Find and quantify COSMIC mutational signatures across samples
 <!-- /dx-header -->
 
-**Mutational Spectrum** (abbreviated syllabically as **mutspec**) finds the
-optimal non-negative linear combination of mutation signatures to reconstruct
-a mutation matrix. It builds the initial mutation matrix from multiple
-single-sample VCFs and, by default, fits it to [mutational signatures from
-COSMIC].
+This is done by finding the optimal non-negative linear combination of
+mutation signatures to reconstruct a mutation matrix. It builds the initial
+mutation matrix from multiple single-sample VCFs and, by default, fits it to
+[mutational signatures from COSMIC].
 
 mutspec supports both hg19 (GRCh37) and hg38 (GRCh38).
 

@@ -1,10 +1,12 @@
 # Mutational Spectrum
 
-**Mutational Spectrum** (abbreviated syllabically as **mutspec**) finds the
-optimal non-negative linear combination of mutation signatures to reconstruct
-a mutation matrix. It builds the initial mutation matrix from multiple
-single-sample VCFs and, by default, fits it to [mutational signatures from
-COSMIC].
+**Mutational Spectrum** (abbreviated syllabically as **mutspec**) finds and
+quantifies COSMIC mutational signatures across samples.
+
+This is done by finding the optimal non-negative linear combination of
+mutation signatures to reconstruct a mutation matrix. It builds the initial
+mutation matrix from multiple single-sample VCFs and, by default, fits it to
+[mutational signatures from COSMIC].
 
 mutspec supports both hg19 (GRCh37) and hg38 (GRCh38).
 
