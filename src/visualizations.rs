@@ -7,6 +7,9 @@ use csv;
 use handlebars::Handlebars;
 use serde_json;
 
+static CRATE_NAME: &str = env!("CARGO_PKG_NAME");
+static CRATE_VERSION: &str = env!("CARGO_PKG_VERSION");
+
 static DEFAULT_TEMPLATE: &str = include_str!("default.html.hbs");
 
 lazy_static! {
@@ -45,6 +48,7 @@ where
 
     let data = json!({
         "diseases": diseases,
+        "generator": format!("{} {}", CRATE_NAME, CRATE_VERSION),
         "payload": serde_json::to_string(&payload).unwrap(),
     });
 
