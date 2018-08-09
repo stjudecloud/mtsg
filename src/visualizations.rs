@@ -80,9 +80,19 @@ where
 
     let samples = reader.records()
         .filter_map(Result::ok)
-        .map(|record| {
+        .enumerate()
+        .map(|(i, record)| {
+            let line_no = i + 1;
+
             let id = record[0].to_string();
-            let disease = record[31].to_string();
+            let disease = record.get(31)
+                .map(|s| s.to_string())
+                .ok_or_else(|| {
+                    io::Error::new(
+                        io::ErrorKind::InvalidInput,
+                        format!("line {}: missing tissue", line_no),
+                    )
+                })?;
 
             let contributions: Vec<f64> = record.iter()
                 .skip(1)
@@ -90,13 +100,46 @@ where
                 .map(|v| v.parse())
                 .collect::<Result<_, _>>()
                 .map_err(|e| {
-                    io::Error::new(io::ErrorKind::InvalidInput, format!("{}", e))
-                })
-                .unwrap();
+                    io::Error::new(
+                        io::ErrorKind::InvalidInput,
+                        format!("line {}: {}", line_no, e),
+                    )
+                })?;
 
-            Sample { id, disease, contributions }
+            Ok(Sample { id, disease, contributions })
         })
-        .collect();
+        .collect::<Result<Vec<Sample>, io::Error>>()?;
 
     Ok((headers, samples))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_read_samples() {
+        let (headers, samples) = read_samples("test/fixtures/signatures.txt").unwrap();
+
+        assert_eq!(headers.len(), 30);
+        assert_eq!(headers[0], "Signature.1");
+
+        assert_eq!(samples.len(), 3);
+        assert_eq!(samples[0].id, "SJACT001_D");
+        assert_eq!(samples[0].disease, "ACT");
+        assert_eq!(samples[0].contributions.len(), 30);
+        assert_eq!(samples[0].contributions[0], 1.71758029457482);
+    }
+
+    #[test]
+    fn test_read_samples_with_bad_contributions() {
+        let result = read_samples("test/fixtures/signatures.bad-contribution.txt");
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_read_samples_with_no_tissue_column() {
+        let result = read_samples("test/fixtures/signatures.no-tissue-column.txt");
+        assert!(result.is_err());
+    }
 }
