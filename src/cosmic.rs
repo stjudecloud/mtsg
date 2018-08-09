@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use std::fs::File;
-use std::io::{self, BufWriter, Cursor, Read, Write};
+use std::io::{self, BufWriter, Read, Write};
 use std::iter;
 use std::path::Path;
 
@@ -31,8 +31,7 @@ pub fn download_signature_probabilities<P>(dst: P) -> io::Result<()> where P: As
         io::Error::new(io::ErrorKind::Other, format!("{}", e))
     })?;
 
-    let reader = Cursor::new(body);
-    let (headers, rows) = process(reader)?;
+    let (headers, rows) = process(body.as_bytes())?;
 
     let file = File::create(dst)?;
     let mut writer = BufWriter::new(file);
