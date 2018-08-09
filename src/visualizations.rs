@@ -10,13 +10,13 @@ use serde_json;
 static CRATE_NAME: &str = env!("CARGO_PKG_NAME");
 static CRATE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
-static DEFAULT_TEMPLATE: &str = include_str!("default.html.hbs");
+static SIGNATURES_TEMPLATE: &str = include_str!("signatures.html.hbs");
 
 lazy_static! {
     static ref HBS: Handlebars = {
         let mut hbs = Handlebars::new();
         hbs.set_strict_mode(true);
-        hbs.register_template_string("default", DEFAULT_TEMPLATE).unwrap();
+        hbs.register_template_string("signatures", SIGNATURES_TEMPLATE).unwrap();
         hbs
     };
 }
@@ -52,7 +52,7 @@ where
         "payload": serde_json::to_string(&payload).unwrap(),
     });
 
-    let result = HBS.render("default", &data).unwrap();
+    let result = HBS.render("signatures", &data).unwrap();
 
     let mut file = File::create(dst)?;
     file.write_all(result.as_bytes())?;
