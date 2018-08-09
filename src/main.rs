@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate clap;
 extern crate mutspec;
+#[macro_use]
 extern crate log;
 extern crate env_logger;
 
@@ -17,7 +18,7 @@ use mutspec::vcf::split_file;
 use mutspec::visualizations::create_visualization;
 
 fn exit_with_io_error(error: io::Error) -> ! {
-    eprintln!("{}", error);
+    error!("{}", error);
     process::exit(1);
 }
 
@@ -124,7 +125,9 @@ fn main() {
     if matches.is_present("verbose") {
         env_logger::Builder::from_default_env()
             .filter(Some(crate_name!()), LevelFilter::Info)
-            .init()
+            .init();
+    } else {
+        env_logger::init();
     }
 
     if let Some(matches) = matches.subcommand_matches("download-signatures") {
