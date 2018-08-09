@@ -1,4 +1,5 @@
 use std::collections::BTreeSet;
+use std::ffi::OsStr;
 use std::fs::File;
 use std::io::{self, Write};
 use std::path::Path;
@@ -64,13 +65,26 @@ pub fn read_samples<P>(src: P) -> io::Result<(Vec<String>, Vec<Sample>)>
 where
     P: AsRef<Path>
 {
+    let filename = match src.as_ref().file_name().and_then(OsStr::to_str) {
+        Some(filename) => filename.to_string(),
+        None => {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                String::from("invalid src"),
+            ))
+        },
+    };
+
     let mut reader = csv::ReaderBuilder::new()
         .delimiter(b'\t')
         .from_path(src)?;
 
     let headers = reader.headers()
         .map_err(|e| {
-            io::Error::new(io::ErrorKind::InvalidInput, format!("{}", e))
+            io::Error::new(
+                io::ErrorKind::InvalidInput,
+                format!("{}:1: {}", filename, e),
+            )
         })?
         .iter()
         .skip(1)
@@ -90,7 +104,7 @@ where
                 .ok_or_else(|| {
                     io::Error::new(
                         io::ErrorKind::InvalidInput,
-                        format!("line {}: missing tissue", line_no),
+                        format!("{}:{}: missing tissue", filename, line_no),
                     )
                 })?;
 
@@ -102,7 +116,7 @@ where
                 .map_err(|e| {
                     io::Error::new(
                         io::ErrorKind::InvalidInput,
-                        format!("line {}: {}", line_no, e),
+                        format!("{}:{}: {}", filename, line_no, e),
                     )
                 })?;
 
@@ -129,6 +143,12 @@ mod tests {
         assert_eq!(samples[0].disease, "ACT");
         assert_eq!(samples[0].contributions.len(), 30);
         assert_eq!(samples[0].contributions[0], 1.71758029457482);
+    }
+
+    #[test]
+    fn test_read_samples_with_invalid_src() {
+        let result = read_samples("/");
+        assert!(result.is_err());
     }
 
     #[test]
