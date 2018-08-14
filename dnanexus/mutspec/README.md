@@ -33,6 +33,9 @@ mutspec supports both hg19 (GRCh37) and hg38 (GRCh38).
   * `min_contribution`: Minimum number of mutations attributable to a single
     signature. [default: 9]
 
+  * `prefix`: Prefix to prepend to the output filenames. If blank, the basename
+    of `multi_sample_vcf` is used. [optional]
+
 ## Outputs
 
   * `signatures_txt`: A tab-delimited file of the raw results with sample

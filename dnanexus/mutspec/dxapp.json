@@ -42,6 +42,13 @@
       "class": "int",
       "optional": true,
       "default": 9
+    },
+    {
+      "name": "prefix",
+      "label": "Output prefix",
+      "help": "Prefix to prepend to output filenames",
+      "class": "string",
+      "optional": true
     }
   ],
   "outputSpec": [
