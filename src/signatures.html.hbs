@@ -126,6 +126,7 @@
           plotOptions: {
             series: { stacking }
           },
+          credits: false,
         });
       };
 
@@ -193,7 +194,41 @@
         display: flex;
         flex: 1;
         overflow: hidden;
-        padding: 1em;
+        padding: 1em 1em 0;
+      }
+
+      #footer {
+        display: flex;
+        flex-shrink: 0;
+        font-size: 0.75em;
+        justify-content: center;
+      }
+
+      #footer ul {
+        padding: 0;
+      }
+
+      #footer li {
+        display: inline-block;
+      }
+
+      #footer li:before {
+        color: #999;
+        content: "\2022";
+        margin: 0 0.5em 0 0.25em;
+      }
+
+      #footer li:first-child:before {
+        content: "";
+      }
+
+      #footer li a {
+        color: #999;
+        text-decoration: none;
+      }
+
+      #footer li a:hover {
+        text-decoration: underline;
       }
     </style>
   </head>
@@ -224,5 +259,11 @@
       </div>
     </div>
     <div id="chart"></div>
+    <div id="footer">
+      <ul>
+        <li><a href="https://www.stjude.org/">St. Jude Children's Research Hospital</a></li>
+        <li><a href="https://cancer.sanger.ac.uk/cosmic/signatures">Wellcome Sanger Institute COSMIC Signatures</a></li>
+      </ul>
+    </div>
   </body>
 </html>
