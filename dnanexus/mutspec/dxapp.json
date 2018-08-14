@@ -56,6 +56,12 @@
       "label": "Signatures visualization",
       "class": "file",
       "help": "HTML file for interactive plotting"
+    },
+    {
+      "name": "sample_sheet_out",
+      "label": "Sample sheet",
+      "class": "file",
+      "help": "Tab-delimited file containing sample ID and tag pairs"
     }
   ],
   "runSpec": {

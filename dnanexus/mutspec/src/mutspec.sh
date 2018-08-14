@@ -54,7 +54,9 @@ main() {
 
     signatures_txt=$(dx upload --brief $RESULTS_DIR/signatures.txt)
     signatures_html=$(dx upload --brief $RESULTS_DIR/signatures.html)
+    sample_sheet_out=$(dx upload --brief $RESULTS_DIR/sample-sheet.txt)
 
     dx-jobutil-add-output --class file signatures_txt "$signatures_txt"
     dx-jobutil-add-output --class file signatures_html "$signatures_html"
+    dx-jobutil-add-output --class file sample_sheet_out "$sample_sheet_out"
 }

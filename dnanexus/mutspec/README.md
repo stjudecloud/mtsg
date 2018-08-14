@@ -41,6 +41,13 @@ mutspec supports both hg19 (GRCh37) and hg38 (GRCh38).
   * `signatures_html`: An HTML file that imports `signatures_txt` for
     interactive plotting.
 
+  * `sample_sheet_out`: A tab-delimited file (no headers) with two columns: the
+    sample ID and a tag. The tag is any arbitrary identifier, typically a
+    disease abbreviation or tissue of origin. If a sample sheet was not
+    originally given as an input, this file is the one that was automatically
+    generated. It can be reused in subsequent runs. If a sample was given, this
+    is a copy of the input.
+
 ## Process
 
 Mutational Spectrum runs four steps using subcommands of `mutspec`.
