@@ -48,7 +48,7 @@
       const buildTotalsByDisease = (samples) => (
         samples.reduce((groups, sample) => {
           if (!groups[sample.disease]) {
-            groups[sample.disease] = sample.contributions;
+            groups[sample.disease] = [...sample.contributions];
           } else {
             for (let i = 0; i < sample.contributions.length; i++) {
               groups[sample.disease][i] += sample.contributions[i];
