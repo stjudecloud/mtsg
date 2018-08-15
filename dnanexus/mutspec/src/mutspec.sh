@@ -18,7 +18,7 @@ main() {
 
     SAMPLE_SHEET=$PREFIX.sample.sheet.txt
     SIGNATURES_HTML=$PREFIX.signatures.html
-    SIGNATURES_TXT=signatures.txt
+    SIGNATURES_TXT=$PREFIX.signatures.txt
 
     dx download --output $DATA_DIR/$VCF "$multi_sample_vcf"
 
@@ -49,6 +49,7 @@ main() {
         --verbose \
         run \
         --output-directory /results \
+        --prefix $PREFIX \
         --genome-build $genome_build \
         --min-burden $min_burden \
         --min-contribution $min_contribution \

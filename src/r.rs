@@ -15,6 +15,7 @@ pub fn mutational_patterns<P, Q, R, S>(
     min_burden: u32,
     min_contribution: u32,
     out_dir: S,
+    prefix: Option<&str>,
 ) -> io::Result<ExitStatus>
 where
     P: AsRef<Path>,
@@ -33,6 +34,13 @@ where
             dst
         });
 
+    let prefix = prefix
+        .map(|p| p.to_string())
+        .unwrap_or_else(|| {
+            info!("using default prefix");
+            String::from("mutspec")
+        });
+
     info!("running mutational_patterns.R");
     info!("  genome-build = {}", genome_build);
     info!("  min-burden = {}", min_burden);
@@ -49,6 +57,7 @@ where
         .arg(min_burden.to_string())
         .arg(min_contribution.to_string())
         .arg(out_dir.as_ref())
+        .arg(prefix)
         .stdin(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()?;

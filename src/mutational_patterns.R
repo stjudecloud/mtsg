@@ -11,6 +11,7 @@ genome_build <- args[4]
 min_burden <- as.numeric(args[5])
 min_contribution <- as.numeric(args[6])
 out_dir <- args[7]
+prefix <- args[8]
 
 ref_genome <- if (genome_build == "GRCh37") {
   "BSgenome.Hsapiens.UCSC.hg19"
@@ -36,9 +37,10 @@ filtered_vcfs <- filtered_vcfs[mutation_counts > min_burden]
 
 message(sprintf("Building mutation matrix from %d VCFs", length(filtered_vcfs)))
 mutation_matrix <- mut_matrix(vcf_list = filtered_vcfs, ref_genome = ref_genome)
+filename <- paste(prefix, "mutation_matrix.txt", sep = ".")
 write.table(
   mutation_matrix,
-  file = file.path(out_dir, "mutation_matrix.txt"),
+  file = file.path(out_dir, filename),
   sep = "\t",
   quote = FALSE,
   col.names = NA
@@ -58,7 +60,8 @@ type_context <- type_context(vcfs[[1]], ref_genome)
 type_occurrences <- mut_type_occurrences(filtered_vcfs, ref_genome)
 
 message("Plotting mutation spectrum")
-pdf(file = file.path(out_dir, "summary.pdf"), width = 10)
+filename <- paste(prefix, "summary.pdf", sep = ".")
+pdf(file = file.path(out_dir, filename), width = 10)
 plot_spectrum(type_occurrences)
 plot_spectrum(type_occurrences, CT = TRUE)
 plot_spectrum(type_occurrences, by = tissues$tissue, CT = FALSE, legend = TRUE)
@@ -73,7 +76,7 @@ cancer_signatures <- as.matrix(read.table(
 ))
 
 message("Plotting trinucleotide profiles")
-pdf(file = file.path(out_dir, "cosmic_signatures.pdf"), width = 7, height = 30)
+pdf(file = file.path(out_dir, "cosmic-signatures.pdf"), width = 7, height = 30)
 plot_96_profile(cancer_signatures[,1:30])
 invisible(dev.off())
 
@@ -85,9 +88,10 @@ message("Filtering contributions")
 filtered_contributions <- contribution[rowSums(contribution) > min_contribution,]
 signatures <- as.data.frame(t(filtered_contributions))
 signatures$tissue <- tissues$tissue
+filename <- paste(prefix, "signatures.txt", sep = ".")
 write.table(
   signatures,
-  file = file.path(out_dir, "signatures.txt"),
+  file = file.path(out_dir, filename),
   sep = "\t",
   quote = FALSE,
   col.names = NA
