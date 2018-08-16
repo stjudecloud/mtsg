@@ -15,8 +15,8 @@ mutspec supports both hg19 (GRCh37) and hg38 (GRCh38).
 
 ## Inputs
 
-  * `multi_sample_vcf`: A multi-sample VCF. This file can be either uncompressed
-    or gzipped.
+  * `vcfs`: List of VCF inputs. This can be any list of single or multi-sample
+    VCFs. The files can be either uncompressed or gzipped.
 
   * `sample_sheet`: A tab-delimited file (no headers) with two columns: the
     sample ID and a tag. The tag is any arbitrary identifier, typically a

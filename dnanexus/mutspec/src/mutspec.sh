@@ -3,15 +3,23 @@
 main() {
     set -ex
 
+    DEFAULT_PREFIX=mutspec
+
     DATA_DIR=$HOME/data
     RESULTS_DIR=$HOME/results
 
     mkdir -p $DATA_DIR $RESULTS_DIR/vcfs
 
-    VCF=$(dx describe --name "$multi_sample_vcf")
+    dx-download-all-inputs --parallel --except sample_sheet
+    mv $HOME/in/vcfs/**/* $DATA_DIR
 
-    if [[ -z "$prefix" ]]; then
-        PREFIX=$(basename $(basename $VCF .vcf) .vcf.gz)
+    if [[ -z "$prefix"  ]]; then
+        if [[ ${#vcfs[@]} -eq 1 ]]; then
+            VCF=$(dx describe --name "${vcfs[0]}")
+            PREFIX=$(basename $(basename $VCF .vcf) .vcf.gz)
+        else
+            PREFIX=$DEFAULT_PREFIX
+        fi
     else
         PREFIX=$prefix
     fi
@@ -20,8 +28,6 @@ main() {
     SIGNATURES_HTML=$PREFIX.signatures.html
     SIGNATURES_TXT=$PREFIX.signatures.txt
 
-    dx download --output $DATA_DIR/$VCF "$multi_sample_vcf"
-
     dx-docker run \
         --volume $DATA_DIR:/data \
         --volume $RESULTS_DIR:/results \
@@ -29,7 +35,7 @@ main() {
         --verbose \
         split-vcf \
         --output-directory /results/vcfs \
-        /data/$VCF
+        /data/*.vcf*
 
     if [[ -z "$sample_sheet" ]]; then
         dx-docker run \

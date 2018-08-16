@@ -6,10 +6,10 @@
   "version": "0.0.1",
   "inputSpec": [
     {
-      "name": "multi_sample_vcf",
-      "label": "Multi-sample VCF",
-      "class": "file",
-      "help": "Multi-sample VCF. Can be either uncompressed or gzipped."
+      "name": "vcfs",
+      "label": "VCF(s)",
+      "class": "array:file",
+      "help": "Input VCFs. Can be single-sample or multi-sample and uncompressed or gzipped."
     },
     {
       "name": "sample_sheet",
