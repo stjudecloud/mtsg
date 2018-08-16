@@ -97,6 +97,7 @@ fn main() {
         .arg(Arg::with_name("input")
             .help("Input multi-sample VCF. Accepts both uncompressed and gzipped inputs.")
             .required(true)
+            .multiple(true)
             .index(1));
 
     let visualize_cmd = SubCommand::with_name("visualize")
@@ -172,9 +173,12 @@ fn main() {
             Err(e) => exit_with_io_error(e),
         }
     } else if let Some(matches) = matches.subcommand_matches("split-vcf") {
-        let src = matches.value_of("input").unwrap();
+        let srcs: Vec<&str> = matches.values_of("input").unwrap().collect();
         let dst = matches.value_of("output-directory").unwrap();
-        split_file(src, dst).unwrap_or_else(|e| exit_with_io_error(e));
+
+        for src in srcs {
+            split_file(src, dst).unwrap_or_else(|e| exit_with_io_error(e));
+        }
     } else if let Some(matches) = matches.subcommand_matches("visualize") {
         let src = matches.value_of("input").unwrap();
         let dst = matches.value_of("output").unwrap();
