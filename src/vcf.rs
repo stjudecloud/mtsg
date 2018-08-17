@@ -14,7 +14,7 @@ where
     P: AsRef<Path>,
     Q: AsRef<Path>,
 {
-    let mut reader = reader_factory(src)?;
+    let mut reader = reader_factory(&src)?;
 
     let mut line = String::with_capacity(BUF_SIZE);
     let mut meta = String::with_capacity(BUF_SIZE);
@@ -36,7 +36,7 @@ where
         line.clear();
     }
 
-    info!("creating {} vcfs", samples.len());
+    info!("{}: creating {} vcf(s)", src.as_ref().display(), samples.len());
 
     let mut writers: Vec<BufWriter<File>> = samples.iter()
         .map(|name| {
