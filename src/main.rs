@@ -177,7 +177,14 @@ fn main() {
         let dst = matches.value_of("output-directory").unwrap();
 
         for src in srcs {
-            split_file(src, dst).unwrap_or_else(|e| exit_with_io_error(e));
+            split_file(src, dst).unwrap_or_else(|e| {
+                match e.kind() {
+                    io::ErrorKind::UnexpectedEof => {
+                        warn!("{}: invalid VCF (unexpected EOF), skipping", src);
+                    },
+                    _ => exit_with_io_error(e),
+                }
+            });
         }
     } else if let Some(matches) = matches.subcommand_matches("visualize") {
         let src = matches.value_of("input").unwrap();

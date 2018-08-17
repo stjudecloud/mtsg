@@ -24,6 +24,13 @@ where
     loop {
         reader.read_line(&mut line)?;
 
+        if line.is_empty() {
+            return Err(io::Error::new(
+                io::ErrorKind::UnexpectedEof,
+                String::from("could not find VCF header"),
+            ))
+        }
+
         if line.starts_with("##") {
             meta.push_str(&line);
         } else if line.starts_with("#CHROM") {
@@ -88,5 +95,37 @@ fn reader_factory<P>(src: P) -> io::Result<Box<dyn BufRead>> where P: AsRef<Path
         _ => {
             Ok(Box::new(BufReader::new(file)))
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::env;
+
+    use super::*;
+
+    #[test]
+    fn test_split_file() {
+        let dst = env::temp_dir();
+
+        let result = split_file("test/fixtures/sample.single.vcf", &dst);
+        assert!(result.is_ok());
+
+        let result = split_file("test/fixtures/sample.multi.vcf", &dst);
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_split_file_with_an_empty_input() {
+        let dst = env::temp_dir();
+        let result = split_file("test/fixtures/sample.empty.vcf", dst);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_split_file_with_an_invalid_input() {
+        let dst = env::temp_dir();
+        let result = split_file("test/fixtures/sample.invalid.vcf", dst);
+        assert!(result.is_err());
     }
 }
