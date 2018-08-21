@@ -96,7 +96,7 @@ where
         .filter_map(Result::ok)
         .enumerate()
         .map(|(i, record)| {
-            let line_no = i + 1;
+            let line_no = i + 2;
 
             let id = record[0].to_string();
             let disease = record.get(31)
