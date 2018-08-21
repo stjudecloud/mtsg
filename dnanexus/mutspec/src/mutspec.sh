@@ -49,6 +49,8 @@ main() {
         dx download --output $RESULTS_DIR/$SAMPLE_SHEET "$sample_sheet"
     fi
 
+    sample_sheet_out=$(dx upload --brief $RESULTS_DIR/$SAMPLE_SHEET)
+
     dx-docker run \
         --volume $RESULTS_DIR:/results \
         mutspec \
@@ -72,7 +74,6 @@ main() {
 
     signatures_txt=$(dx upload --brief $RESULTS_DIR/$SIGNATURES_TXT)
     signatures_html=$(dx upload --brief $RESULTS_DIR/$SIGNATURES_HTML)
-    sample_sheet_out=$(dx upload --brief $RESULTS_DIR/$SAMPLE_SHEET)
 
     dx-jobutil-add-output --class file signatures_txt "$signatures_txt"
     dx-jobutil-add-output --class file signatures_html "$signatures_html"
