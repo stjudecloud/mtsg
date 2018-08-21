@@ -79,7 +79,7 @@ where
         .delimiter(b'\t')
         .from_path(src)?;
 
-    let headers = reader.headers()
+    let headers: Vec<String> = reader.headers()
         .map_err(|e| {
             io::Error::new(
                 io::ErrorKind::InvalidInput,
@@ -87,9 +87,14 @@ where
             )
         })?
         .iter()
-        .skip(1)
-        .take(30)
         .map(String::from)
+        .collect();
+
+    let n_headers = headers.len();
+
+    let headers: Vec<String> = headers.into_iter()
+        .skip(1)
+        .take(n_headers)
         .collect();
 
     let samples = reader.records()
@@ -99,7 +104,7 @@ where
             let line_no = i + 2;
 
             let id = record[0].to_string();
-            let disease = record.get(31)
+            let disease = record.get(n_headers - 1)
                 .map(|s| s.to_string())
                 .ok_or_else(|| {
                     io::Error::new(
@@ -110,7 +115,7 @@ where
 
             let contributions: Vec<f64> = record.iter()
                 .skip(1)
-                .take(30)
+                .take(n_headers - 2)
                 .map(|v| v.parse())
                 .collect::<Result<_, _>>()
                 .map_err(|e| {
