@@ -49,6 +49,13 @@
       "help": "Prefix to prepend to output filenames",
       "class": "string",
       "optional": true
+    },
+    {
+      "name": "disabled_column",
+      "label": "Disabled VCF column",
+      "help": "VCF column index to ignore (starting from sample names, zero-based)",
+      "class": "int",
+      "optional": true
     }
   ],
   "outputSpec": [

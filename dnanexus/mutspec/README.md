@@ -36,6 +36,9 @@ mutspec supports both hg19 (GRCh37) and hg38 (GRCh38).
   * `prefix`: Prefix to prepend to the output filenames. If blank, the basename
     of `multi_sample_vcf` is used. [optional]
 
+  * `disabled_column`: VCF column index (starting from samples, zero-based) to
+    ignore when reading VCFs. Applies to all input VCFs. [optional]
+
 ## Outputs
 
   * `signatures_txt`: A tab-delimited file of the raw results with sample

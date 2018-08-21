@@ -4,6 +4,7 @@ main() {
     set -ex
 
     DEFAULT_PREFIX=mutspec
+    MUTSPEC_RUN_EXTRA_ARGS=""
 
     DATA_DIR=$HOME/data
     RESULTS_DIR=$HOME/results
@@ -51,6 +52,10 @@ main() {
 
     sample_sheet_out=$(dx upload --brief $RESULTS_DIR/$SAMPLE_SHEET)
 
+    if [[ ! -z "$disabled_column" ]]; then
+        MUTSPEC_RUN_EXTRA_ARGS="--disable-column $disable_column"
+    fi
+
     dx-docker run \
         --volume $RESULTS_DIR:/results \
         mutspec \
@@ -61,6 +66,7 @@ main() {
         --genome-build $genome_build \
         --min-burden $min_burden \
         --min-contribution $min_contribution \
+        $MUTSPEC_RUN_EXTRA_ARGS \
         /results/vcfs \
         /results/$SAMPLE_SHEET
 
