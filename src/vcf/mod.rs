@@ -23,6 +23,7 @@ where
 
     let mut writers = {
         let meta = reader.meta().unwrap();
+        let headers = reader.mandatory_headers().unwrap();
         let samples = reader.samples().unwrap();
 
         info!("{}: creating {} vcf(s)", src.as_ref().display(), samples.len());
@@ -37,7 +38,13 @@ where
             .collect();
 
         for (writer, sample) in writers.iter_mut().zip(samples.iter()) {
-            writeln!(writer, "{}\t{}", meta, sample)?;
+            write!(writer, "{}", meta)?;
+
+            for header in &headers {
+                write!(writer, "{}\t", header)?;
+            }
+
+            writeln!(writer, "{}", sample)?;
         }
 
         writers
