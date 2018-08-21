@@ -5,6 +5,8 @@ use std::path::Path;
 use glob::glob;
 use regex::Regex;
 
+static DEFAULT_TAG: &str = "unknown";
+
 pub fn generate<P, Q>(src: P, dst: Q) -> io::Result<()>
 where
     P: AsRef<Path>,
@@ -39,7 +41,7 @@ where
                 )
             })?;
 
-        let disease = parse_disease(sample_id).unwrap();
+        let disease = parse_disease(sample_id).unwrap_or(DEFAULT_TAG);
 
         writeln!(&mut writer, "{}\t{}", sample_id, disease)?;
     }
@@ -52,13 +54,13 @@ where
 /// The regex pattern used is crude. It incorrectly captures single letter
 /// symbols with the case number (e.g., SJE2001_D => E2) and misses symbols with
 /// trailing numbers (e.g., SJAMLM7005_D (AMLM7)).
-fn parse_disease(name: &str) -> Option<String> {
+fn parse_disease(name: &str) -> Option<&str> {
     lazy_static! {
         static ref PATTERN: Regex = Regex::new(r"SJ(\w\d*?\w+?)\d+").unwrap();
     }
 
     PATTERN.captures(name).and_then(|matches| {
-        matches.get(1).map(|m| m.as_str().to_string())
+        matches.get(1).map(|m| m.as_str())
     })
 }
 
@@ -68,10 +70,11 @@ mod tests {
 
     #[test]
     fn test_parse_disease() {
-        assert_eq!(parse_disease("SJACT001_D"), Some(String::from("ACT")));
-        assert_eq!(parse_disease("SJAMLM7005_D"), Some(String::from("AMLM")));
-        assert_eq!(parse_disease("SJBALL020013_D1"), Some(String::from("BALL")));
-        assert_eq!(parse_disease("SJE2A001_D"), Some(String::from("E2A")));
-        assert_eq!(parse_disease("SJRB001130_M1"), Some(String::from("RB")));
+        assert_eq!(parse_disease("SJACT001_D"), Some("ACT"));
+        assert_eq!(parse_disease("SJAMLM7005_D"), Some("AMLM"));
+        assert_eq!(parse_disease("SJBALL020013_D1"), Some("BALL"));
+        assert_eq!(parse_disease("SJE2A001_D"), Some("E2A"));
+        assert_eq!(parse_disease("SJRB001130_M1"), Some("RB"));
+        assert_eq!(parse_disease("XXABC001_D"), None);
     }
 }
