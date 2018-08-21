@@ -59,6 +59,8 @@ where
         writers
     };
 
+    let n_headers = reader.n_headers();
+
     let mut csv = csv::ReaderBuilder::new()
         .delimiter(b'\t')
         .has_headers(false)
@@ -66,7 +68,7 @@ where
 
     for record in csv.records().filter_map(Result::ok) {
         let iter = record.iter()
-            .skip(9)
+            .skip(n_headers)
             .enumerate()
             .filter(|(i, _)| disable_column.map(|j| *i != j).unwrap_or(true))
             .map(|(_, value)| value)
@@ -77,7 +79,10 @@ where
                 continue;
             }
 
-            let line = record.iter().take(9).collect::<Vec<&str>>().join("\t");
+            let line = record.iter()
+                .take(n_headers)
+                .collect::<Vec<&str>>()
+                .join("\t");
 
             writeln!(&mut writers[i], "{}\t{}", line, value)?;
         }

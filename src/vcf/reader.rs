@@ -127,7 +127,7 @@ impl<R: BufRead> VcfReader<R> {
         self.inner
     }
 
-    fn n_headers(&self) -> usize {
+    pub fn n_headers(&self) -> usize {
         let len = MANDATORY_HEADERS.len();
 
         if self.has_format {
