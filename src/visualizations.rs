@@ -94,7 +94,7 @@ where
 
     let headers: Vec<String> = headers.into_iter()
         .skip(1)
-        .take(n_headers)
+        .take(n_headers - 2)
         .collect();
 
     let samples = reader.records()
