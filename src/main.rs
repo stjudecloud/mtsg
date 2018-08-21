@@ -88,6 +88,10 @@ fn main() {
 
     let split_vcf_cmd = SubCommand::with_name("split-vcf")
         .about("Splits a multi-sample VCF to multiple single-sample VCFs")
+        .arg(Arg::with_name("disable-column")
+            .long("disable-column")
+            .value_name("integer")
+            .help("Column index to skip (zero-based)"))
         .arg(Arg::with_name("output-directory")
             .short("o")
             .long("output-directory")
@@ -175,9 +179,10 @@ fn main() {
     } else if let Some(matches) = matches.subcommand_matches("split-vcf") {
         let srcs: Vec<&str> = matches.values_of("input").unwrap().collect();
         let dst = matches.value_of("output-directory").unwrap();
+        let disable_column = value_t!(matches, "disable-column", usize).ok();
 
         for src in srcs {
-            split_file(src, dst).unwrap_or_else(|e| {
+            split_file(src, dst, disable_column).unwrap_or_else(|e| {
                 match e.kind() {
                     io::ErrorKind::UnexpectedEof => {
                         warn!("{}: invalid VCF (unexpected EOF), skipping", src);

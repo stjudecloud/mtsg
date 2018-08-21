@@ -12,19 +12,28 @@ pub mod reader;
 
 static EMPTY_CELL: &str = ".:.";
 
-pub fn split_file<P, Q>(src: P, dst: Q) -> io::Result<()>
+pub fn split_file<P, Q>(
+    src: P,
+    dst: Q,
+    disable_column: Option<usize>,
+) -> io::Result<()>
 where
     P: AsRef<Path>,
     Q: AsRef<Path>,
 {
     let file_reader = reader_factory(&src)?;
+
     let mut reader = VcfReader::new(file_reader);
     reader.read_meta()?;
 
     let mut writers = {
         let meta = reader.meta().unwrap();
         let headers = reader.mandatory_headers().unwrap();
-        let samples = reader.samples().unwrap();
+        let samples: Vec<&str> = reader.samples().unwrap().iter()
+            .enumerate()
+            .filter(|(i, _)| disable_column.map(|j| *i != j).unwrap_or(true))
+            .map(|(_, &id)| id)
+            .collect();
 
         info!("{}: creating {} vcf(s)", src.as_ref().display(), samples.len());
 
@@ -56,16 +65,19 @@ where
         .from_reader(reader.into_inner());
 
     for record in csv.records().filter_map(Result::ok) {
-        for (i, value) in record.iter().skip(9).enumerate() {
+        let iter = record.iter()
+            .skip(9)
+            .enumerate()
+            .filter(|(i, _)| disable_column.map(|j| *i != j).unwrap_or(true))
+            .map(|(_, value)| value)
+            .enumerate();
+
+        for (i, value) in iter {
             if value == EMPTY_CELL {
                 continue;
             }
 
-            let line = record.iter()
-                .take(9)
-                .map(String::from)
-                .collect::<Vec<String>>()
-                .join("\t");
+            let line = record.iter().take(9).collect::<Vec<&str>>().join("\t");
 
             writeln!(&mut writers[i], "{}\t{}", line, value)?;
         }
