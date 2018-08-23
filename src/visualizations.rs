@@ -11,6 +11,8 @@ use serde_json;
 static CRATE_NAME: &str = env!("CARGO_PKG_NAME");
 static CRATE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
+static TAG_COLUMN_NAME: &str = "tissue";
+
 static SIGNATURES_TEMPLATE: &str = include_str!("signatures.html.hbs");
 
 lazy_static! {
@@ -89,6 +91,15 @@ where
         .iter()
         .map(String::from)
         .collect();
+
+    if let Some(name) = headers.last() {
+        if name != TAG_COLUMN_NAME {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                format!("{}:1: missing tissue column", filename),
+            ))
+        }
+    }
 
     let n_headers = headers.len();
 
