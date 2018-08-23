@@ -96,7 +96,7 @@ fn main() {
         .arg(Arg::with_name("disable-column")
             .long("disable-column")
             .value_name("integer")
-            .help("Column index to skip (zero-based)"))
+            .help("Column index to skip (starting from samples, zero-based)"))
         .arg(Arg::with_name("output-directory")
             .short("o")
             .long("output-directory")
