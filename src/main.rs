@@ -81,7 +81,8 @@ fn main() {
         .arg(Arg::with_name("prefix")
             .long("prefix")
             .value_name("string")
-            .help("Prefix to prepend to output filenames"))
+            .help("Prefix to prepend to output filenames")
+            .default_value(crate_name!()))
         .arg(Arg::with_name("vcfs-dir")
             .help("Input directory of single-sample VCFs")
             .required(true)
@@ -159,7 +160,7 @@ fn main() {
         let min_burden = value_t!(matches, "min-burden", u32).unwrap_or_else(|e| e.exit());
         let min_contribution = value_t!(matches, "min-contribution", u32).unwrap_or_else(|e| e.exit());
         let out_dir = matches.value_of("output-directory").unwrap();
-        let prefix = matches.value_of("prefix");
+        let prefix = matches.value_of("prefix").unwrap();
 
         let result = mutational_patterns(
             vcfs_dir,

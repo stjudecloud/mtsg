@@ -5,7 +5,6 @@ use std::process::{Command, ExitStatus, Stdio};
 
 use cosmic::download_signature_probabilities;
 
-static DEFAULT_PREFIX: &str = env!("CARGO_PKG_NAME");
 static MUTATIONAL_PATTERNS_SRC: &str = include_str!("mutational_patterns.R");
 
 pub fn mutational_patterns<P, Q, R, S>(
@@ -16,7 +15,7 @@ pub fn mutational_patterns<P, Q, R, S>(
     min_burden: u32,
     min_contribution: u32,
     out_dir: S,
-    prefix: Option<&str>,
+    prefix: &str,
 ) -> io::Result<ExitStatus>
 where
     P: AsRef<Path>,
@@ -34,11 +33,6 @@ where
             download_signature_probabilities(&dst).unwrap();
             dst
         });
-
-    let prefix = prefix.unwrap_or_else(|| {
-        info!("using default prefix '{}'", DEFAULT_PREFIX);
-        DEFAULT_PREFIX
-    });
 
     info!("running mutational_patterns.R");
     info!("  genome-build = {}", genome_build);
