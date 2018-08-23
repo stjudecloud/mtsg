@@ -17,6 +17,11 @@ use mutspec::sample_sheet;
 use mutspec::vcf::split_file;
 use mutspec::visualizations::create_visualization;
 
+fn exit_with_clap_error(error: clap::Error) -> ! {
+    error!("{}", error);
+    process::exit(1);
+}
+
 fn exit_with_io_error(error: io::Error) -> ! {
     error!("{}", error);
     process::exit(1);
@@ -179,7 +184,13 @@ fn main() {
     } else if let Some(matches) = matches.subcommand_matches("split-vcf") {
         let srcs: Vec<&str> = matches.values_of("input").unwrap().collect();
         let dst = matches.value_of("output-directory").unwrap();
-        let disable_column = value_t!(matches, "disable-column", usize).ok();
+        let disable_column = match value_t!(matches, "disable-column", usize) {
+            Ok(i) => Some(i),
+            Err(e) => match e.kind {
+                clap::ErrorKind::ValueValidation => exit_with_clap_error(e),
+                _ => None,
+            },
+        };
 
         for src in srcs {
             split_file(src, dst, disable_column).unwrap_or_else(|e| {
