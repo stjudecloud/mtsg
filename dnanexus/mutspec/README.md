@@ -37,7 +37,12 @@ mutspec supports both hg19 (GRCh37) and hg38 (GRCh38).
     of `multi_sample_vcf` is used. [optional]
 
   * `disabled_column`: VCF column index (starting from samples, zero-based) to
-    ignore when reading VCFs. Applies to all input VCFs. [optional]
+    ignore when reading VCFs. In not set, all samples are considered. Applies
+    to all input VCFs.
+
+    For example, in a VCF with samples `SJEPD003_D` and `SJEPD003_G`, the
+    germline sample (`SJEPD003_G`) can be discarded by setting
+    `disabled_column` to `1`. [optional]
 
 ## Outputs
 
