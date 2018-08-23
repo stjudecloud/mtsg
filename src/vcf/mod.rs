@@ -41,10 +41,10 @@ where
             .map(|name| {
                 let mut dst = dst.as_ref().to_path_buf();
                 dst.push(format!("{}.vcf", name));
-                let file = File::create(dst).unwrap();
-                BufWriter::new(file)
+                let file = File::create(dst)?;
+                Ok(BufWriter::new(file))
             })
-            .collect();
+            .collect::<io::Result<_>>()?;
 
         for (writer, sample) in writers.iter_mut().zip(samples.iter()) {
             write!(writer, "{}", meta)?;
