@@ -63,7 +63,7 @@ mutspec supports both hg19 (GRCh37) and hg38 (GRCh38).
 
 Mutational Spectrum runs four steps using subcommands of `mutspec`.
 
-  1. split a multi-sample VCF to multiple single-sample VCFs
+  1. split VCFs (single or multi-sample) to multiple single-sample VCFs
   2. generate a sample sheet from the directory of single-sample VCFs
   3. run mutational patterns
   4. create a visualization file using the fitted signatures
