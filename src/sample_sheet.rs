@@ -41,7 +41,10 @@ where
                 )
             })?;
 
-        let disease = parse_disease(sample_id).unwrap_or(DEFAULT_TAG);
+        let disease = parse_disease(sample_id).unwrap_or_else(|| {
+            warn!("could not extract disease from sample name '{}'", sample_id);
+            DEFAULT_TAG
+        });
 
         writeln!(&mut writer, "{}\t{}", sample_id, disease)?;
     }
