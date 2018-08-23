@@ -117,10 +117,10 @@ mod tests {
     fn test_split_file() {
         let dst = env::temp_dir();
 
-        let result = split_file("test/fixtures/sample.single.vcf", &dst);
+        let result = split_file("test/fixtures/sample.single.vcf", &dst, None);
         assert!(result.is_ok());
 
-        let result = split_file("test/fixtures/sample.multi.vcf", &dst);
+        let result = split_file("test/fixtures/sample.multi.vcf", &dst, None);
         assert!(result.is_ok());
     }
 }
