@@ -179,13 +179,42 @@ mod tests {
     }
 
     #[test]
+    #[should_panic(expected = "invalid VCF file format")]
     fn test_read_meta_with_no_file_format() {
-        assert!(read_vcf("test/fixtures/sample.empty.vcf").is_err());
+        let mut reader = VcfReader::new("".as_bytes());
+        reader.read_meta().unwrap()
     }
 
     #[test]
+    #[should_panic(expected = "unexpected non-header line")]
     fn test_read_meta_with_no_headers() {
-        assert!(read_vcf("test/fixtures/sample.invalid.vcf").is_err());
+        let data = "\
+##fileformat=VCFv4.1
+chr10\t287638\t.\tG\tC\t.\t.\tSampleCounts=1\tAD:DP\t20,7:27
+";
+
+        let mut reader = VcfReader::new(data.as_bytes());
+        reader.read_meta().unwrap()
+    }
+
+    #[test]
+    fn test_meta() {
+        let reader = read_vcf("test/fixtures/sample.single.vcf").unwrap();
+        let meta = reader.meta().unwrap();
+
+        let expected = r#"##fileformat=VCFv4.1
+##FILTER=<ID=PASS,Description="All filters passed">
+"#;
+
+        assert_eq!(meta, expected);
+    }
+
+    #[test]
+    fn test_headers() {
+        let reader = read_vcf("test/fixtures/sample.single.vcf").unwrap();
+        let headers = reader.headers().unwrap();
+        let expected = "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tSJACT001_D\n";
+        assert_eq!(headers, expected);
     }
 
     #[test]
@@ -205,5 +234,31 @@ mod tests {
         let reader = read_vcf("test/fixtures/sample.multi.vcf").unwrap();
         let samples = reader.samples().unwrap();
         assert_eq!(samples, vec!["SJACT001_D", "SJACT002_D", "SJACT003_D"]);
+    }
+
+    #[test]
+    fn test_n_headers_when_vcf_has_no_format() {
+        let data = "\
+##fileformat=VCFv4.1
+#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tSJACT001_D
+chr10\t287638\t.\tG\tC\t.\t.\tSampleCounts=1\t20
+";
+
+        let mut reader = VcfReader::new(data.as_bytes());
+        reader.read_meta().unwrap();
+        assert_eq!(reader.n_headers(), 8);
+    }
+
+    #[test]
+    fn test_n_headers_when_vcf_has_format() {
+        let data = "\
+##fileformat=VCFv4.1
+#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tSJACT001_D
+chr10\t287638\t.\tG\tC\t.\t.\tSampleCounts=1\tAD:DP\t20,7:27
+";
+
+        let mut reader = VcfReader::new(data.as_bytes());
+        reader.read_meta().unwrap();
+        assert_eq!(reader.n_headers(), 9);
     }
 }
