@@ -55,7 +55,7 @@ filtered_sample_names <- data.frame(names(filtered_vcfs))
 colnames(filtered_sample_names) <- "ID"
 tissues <- merge(filtered_sample_names, sample_sheet)
 
-message("Counting occurences of base substitution types")
+message("Counting occurrences of base substitution types")
 type_context <- type_context(vcfs[[1]], ref_genome)
 type_occurrences <- mut_type_occurrences(filtered_vcfs, ref_genome)
 
