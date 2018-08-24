@@ -166,23 +166,23 @@ mod tests {
     }
 
     #[test]
+    #[should_panic(expected = "expected 96 triplets, got 0")]
     fn test_extract_table_with_an_empty_reader() {
-        let result = extract_table("".as_bytes());
-        assert!(result.is_err());
+        extract_table("".as_bytes()).unwrap();
     }
 
     #[test]
+    #[should_panic(expected = "expected 96 triplets, got 2")]
     fn test_extract_table_with_fewer_signature_columns() {
         let data = fs::read_to_string("test/fixtures/probabilities.missing-signatures.txt").unwrap();
-        let result = extract_table(data.as_bytes());
-        assert!(result.is_err());
+        extract_table(data.as_bytes()).unwrap();
     }
 
     #[test]
+    #[should_panic(expected = "expected 96 triplets, got 2")]
     fn test_extract_table_with_missing_mutation_types() {
         let data = fs::read_to_string("test/fixtures/probabilities.missing-mutation-types.txt").unwrap();
-        let result = extract_table(data.as_bytes());
-        assert!(result.is_err());
+        extract_table(data.as_bytes()).unwrap();
     }
 
     #[test]
@@ -228,4 +228,3 @@ Signature 1\tSignature 2
         assert_eq!(&types[95], "T[T>G]T");
     }
 }
-
