@@ -78,6 +78,13 @@ where
         .map(String::from)
         .collect();
 
+    if headers.len() < N_SIGNATURES + 1 {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            format!("expected {} columns, got {}", N_SIGNATURES + 1, headers.len()),
+        ));
+    }
+
     let mut mapped_rows = HashMap::new();
 
     for record in csv.records().filter_map(Result::ok) {
@@ -166,13 +173,13 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "expected 96 triplets, got 0")]
+    #[should_panic(expected = "expected 31 columns, got 0")]
     fn test_extract_table_with_an_empty_reader() {
         extract_table("".as_bytes()).unwrap();
     }
 
     #[test]
-    #[should_panic(expected = "expected 96 triplets, got 2")]
+    #[should_panic(expected = "expected 31 columns, got 3")]
     fn test_extract_table_with_fewer_signature_columns() {
         let data = fs::read_to_string("test/fixtures/probabilities.missing-signatures.txt").unwrap();
         extract_table(data.as_bytes()).unwrap();
