@@ -202,12 +202,16 @@ SJAMLM7005_D\tNA\tAMLM7
 
     #[test]
     fn test_write_html() {
-        let headers = vec![String::from("Signature.1")];
+        let headers = vec![
+            String::from("Signature.1"),
+            String::from("Signature.2"),
+            String::from("Signature.3"),
+        ];
 
         let samples = vec![Sample {
             id: String::from("SJACT001_D"),
             disease: String::from("ACT"),
-            contributions: vec![1.7157, 131.0337, 295.0582],
+            contributions: vec![11.7157, 131.0337, 295.0582],
         }];
 
         let mut buf = Vec::new();
