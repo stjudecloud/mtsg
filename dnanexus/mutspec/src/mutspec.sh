@@ -17,7 +17,7 @@ main() {
     if [[ -z "$prefix"  ]]; then
         if [[ ${#vcfs[@]} -eq 1 ]]; then
             VCF=$(dx describe --name "${vcfs[0]}")
-            PREFIX=$(basename $(basename $VCF .vcf) .vcf.gz)
+            PREFIX=$(basename "$(basename "$VCF" .vcf)" .vcf.gz)
         else
             PREFIX=$DEFAULT_PREFIX
         fi
@@ -29,9 +29,9 @@ main() {
         MUTSPEC_SPLIT_VCF_EXTRA_ARGS="--disable-column $disabled_column"
     fi
 
-    SAMPLE_SHEET=$PREFIX.sample.sheet.txt
-    SIGNATURES_HTML=$PREFIX.signatures.html
-    SIGNATURES_TXT=$PREFIX.signatures.txt
+    SAMPLE_SHEET="$PREFIX.sample.sheet.txt"
+    SIGNATURES_HTML="$PREFIX.signatures.html"
+    SIGNATURES_TXT="$PREFIX.signatures.txt"
 
     dx-docker run \
         --volume $DATA_DIR:/data \
@@ -52,13 +52,13 @@ main() {
             mutspec \
             --verbose \
             generate-sample-sheet \
-            --output /results/$SAMPLE_SHEET \
+            --output "/results/$SAMPLE_SHEET" \
             /results/vcfs
     else
-        dx download --output $RESULTS_DIR/$SAMPLE_SHEET "$sample_sheet"
+        dx download --output "$RESULTS_DIR/$SAMPLE_SHEET" "$sample_sheet"
     fi
 
-    sample_sheet_out=$(dx upload --brief $RESULTS_DIR/$SAMPLE_SHEET)
+    sample_sheet_out=$(dx upload --brief "$RESULTS_DIR/$SAMPLE_SHEET")
 
     dx-docker run \
         --volume $RESULTS_DIR:/results \
@@ -66,23 +66,23 @@ main() {
         --verbose \
         run \
         --output-directory /results \
-        --prefix $PREFIX \
+        --prefix "$PREFIX" \
         --genome-build $genome_build \
         --min-burden $min_burden \
         --min-contribution $min_contribution \
         /results/vcfs \
-        /results/$SAMPLE_SHEET
+        "/results/$SAMPLE_SHEET"
 
     dx-docker run \
         --volume $RESULTS_DIR:/results \
         mutspec \
         --verbose \
         visualize \
-        --output /results/$SIGNATURES_HTML \
-        /results/$SIGNATURES_TXT
+        --output "/results/$SIGNATURES_HTML" \
+        "results/$SIGNATURES_TXT"
 
-    signatures_txt=$(dx upload --brief $RESULTS_DIR/$SIGNATURES_TXT)
-    signatures_html=$(dx upload --brief $RESULTS_DIR/$SIGNATURES_HTML)
+    signatures_txt=$(dx upload --brief "$RESULTS_DIR/$SIGNATURES_TXT")
+    signatures_html=$(dx upload --brief "$RESULTS_DIR/$SIGNATURES_HTML")
 
     dx-jobutil-add-output --class file signatures_txt "$signatures_txt"
     dx-jobutil-add-output --class file signatures_html "$signatures_html"
