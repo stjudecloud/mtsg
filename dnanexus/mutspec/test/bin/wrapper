@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+MUTSPEC_HOME=$(realpath $(dirname $0)/../..)
+
+HOME=$MUTSPEC_HOME/tmp/test
+PATH=$MUTSPEC_HOME/test/bin:$PATH
+
+# inputs
+DEFAULT_VCFS=($TEST_HOME/in/vcfs/0/*)
+vcfs=(${1:-${DEFAULT_VCFS[@]}})
+sample_sheet=$2
+genome_build=${3:-GRCh38}
+min_burden=${4:-9}
+min_contribution=${5:-9}
+prefix=$6
+disabled_column=$7
+
+# outputs
+signatures_txt=""
+signatures_html=""
+sample_sheet_out=""
+
+source $MUTSPEC_HOME/src/mutspec.sh
+main
+
+exit $?

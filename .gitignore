@@ -1,4 +1,5 @@
 **/*.rs.bk
 dnanexus/mutspec/resources/tmp
+dnanexus/mutspec/tmp
 target
 tmp

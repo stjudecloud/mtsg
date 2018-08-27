@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+MUTSPEC_HOME=$(realpath $(dirname $0)/..)
+TEST_HOME=$MUTSPEC_HOME/tmp/test
+
+WRAPPER=$MUTSPEC_HOME/test/bin/wrapper
+
+oneTimeSetUp() {
+    docker build --tag mutspec $MUTSPEC_HOME/../..
+}
+
+setUp() {
+    mkdir -p $TEST_HOME/in/vcfs/0
+    cp $MUTSPEC_HOME/test/fixtures/vcfs/* $TEST_HOME/in/vcfs/0
+}
+
+tearDown() {
+    rm -r $TEST_HOME
+}
+
+test_wrapper() {
+    $WRAPPER > /dev/null 2>&1
+    assertEquals "wrapper failed" $? 0
+}
+
+test_wrapper_with_sample_sheet() {
+    SAMPLE_SHEET=$MUTSPEC_HOME/test/fixtures/sample-sheet.txt
+    mkdir -p $TEST_HOME/results
+    cp $SAMPLE_SHEET $TEST_HOME/results/mutspec.sample.sheet.txt
+
+    $WRAPPER "" $SAMPLE_SHEET > /dev/null 2>&1
+
+    diff $SAMPLE_SHEET $TEST_HOME/results/mutspec.sample.sheet.txt
+    assertEquals "sample sheet did not match input" $? 0
+}
+
+test_wrapper_with_invalid_min_burden() {
+    $WRAPPER "" "" "" -1 > /dev/null 2>&1
+    assertEquals "invalid min burden did not fail" $? 1
+}
+
+test_wrapper_with_invalid_min_contribution() {
+    $WRAPPER "" "" "" "" -1 > /dev/null 2>&1
+    assertEquals "invalid min contribution did not fail" $? 1
+}
+
+test_wrapper_with_no_prefix_and_one_file() {
+    $WRAPPER $TEST_HOME/in/vcfs/0/sample.single.vcf > /dev/null 2>&1
+    N_FILES=$(ls $TEST_HOME/results/sample.single* | wc -l)
+    assertEquals "input basename not prepended to result filenames" $N_FILES 5
+}
+
+test_wrapper_with_prefix() {
+    $WRAPPER "" "" "" "" "" ms > /dev/null 2>&1
+    N_FILES=$(ls $TEST_HOME/results/ms* | wc -l)
+    assertEquals "prefix override not prepended to result filenames" $N_FILES 5
+}
+
+test_wrapper_with_space_in_prefix() {
+    $WRAPPER "" "" "" "" "" "mut spec" > /dev/null 2>&1
+    assertEquals "prefixes with spaces failed" $? 0
+}
+
+source shunit2

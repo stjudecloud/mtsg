@@ -15,3 +15,13 @@ Note dx-docker exports the image in the ACI format, which requires
 [docker2aci] to be installed.
 
 [docker2aci]: https://github.com/appc/docker2aci
+
+## Tests
+
+Tests can be run using [shunit2].
+
+```
+$ test/run
+```
+
+[shunit2]: https://github.com/kward/shunit2

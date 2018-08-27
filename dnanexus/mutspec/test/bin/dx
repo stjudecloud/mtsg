@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+case $1 in
+describe)
+  # dx describe --name <src>
+  basename "$3"
+  ;;
+download)
+  # dx download --output <dst> <src>
+  ;;
+upload)
+  # dx upload --brief <src>
+  ;;
+*)
+  echo "unsupported dx command $1" >&2
+  exit 1
+esac
