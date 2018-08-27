@@ -36,12 +36,15 @@ main() {
     dx-docker run \
         --volume $DATA_DIR:/data \
         --volume $RESULTS_DIR:/results \
+        --entrypoint /bin/bash \
         mutspec \
+        -c \
+        "/app/bin/mutspec \
         --verbose \
         split-vcf \
         --output-directory /results/vcfs \
         $MUTSPEC_SPLIT_VCF_EXTRA_ARGS \
-        /data/*.vcf*
+        /data/*.vcf*"
 
     if [[ -z "$sample_sheet" ]]; then
         dx-docker run \
