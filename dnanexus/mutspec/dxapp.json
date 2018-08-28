@@ -51,7 +51,7 @@
       "optional": true
     },
     {
-      "name": "disabled_column",
+      "name": "disable_column",
       "label": "Disabled VCF column",
       "help": "VCF column index to ignore (starting from sample names, zero-based)",
       "class": "int",

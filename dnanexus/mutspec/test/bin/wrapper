@@ -13,7 +13,7 @@ genome_build=${3:-GRCh38}
 min_burden=${4:-9}
 min_contribution=${5:-9}
 prefix=$6
-disabled_column=$7
+disable_column=$7
 
 # outputs
 signatures_txt=""

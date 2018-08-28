@@ -25,8 +25,8 @@ main() {
         PREFIX=$prefix
     fi
 
-    if [[ ! -z "$disabled_column" ]]; then
-        MUTSPEC_SPLIT_VCF_EXTRA_ARGS="--disable-column $disabled_column"
+    if [[ ! -z "$disable_column" ]]; then
+        MUTSPEC_SPLIT_VCF_EXTRA_ARGS="--disable-column $disable_column"
     fi
 
     SAMPLE_SHEET="$PREFIX.sample.sheet.txt"
