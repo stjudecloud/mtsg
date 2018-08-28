@@ -5,8 +5,9 @@ MUTSPEC_HOME=$(realpath $(dirname $0)/../..)
 HOME=$MUTSPEC_HOME/tmp/test
 PATH=$MUTSPEC_HOME/test/bin:$PATH
 
+DEFAULT_VCFS=($HOME/in/vcfs/0/*)
+
 # inputs
-DEFAULT_VCFS=($TEST_HOME/in/vcfs/0/*)
 vcfs=(${1:-${DEFAULT_VCFS[@]}})
 sample_sheet=$2
 genome_build=${3:-GRCh38}
