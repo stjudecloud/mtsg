@@ -79,6 +79,7 @@ where
     let headers: Vec<String> = headers.into_iter()
         .skip(1)
         .take(n_headers - 2)
+        .map(|h| h.replace(".", " "))
         .collect();
 
     let samples = reader.records()
@@ -159,8 +160,8 @@ mod tests {
         let (headers, samples) = read_table(data.as_bytes(), "<test>").unwrap();
 
         assert_eq!(headers.len(), 30);
-        assert_eq!(headers[0], "Signature.1");
-        assert_eq!(headers[29], "Signature.30");
+        assert_eq!(headers[0], "Signature 1");
+        assert_eq!(headers[29], "Signature 30");
 
         assert_eq!(samples.len(), 3);
         assert_eq!(samples[0].id, "SJACT001_D");
@@ -203,9 +204,9 @@ SJAMLM7005_D\tNA\tAMLM7
     #[test]
     fn test_write_html() {
         let headers = vec![
-            String::from("Signature.1"),
-            String::from("Signature.2"),
-            String::from("Signature.3"),
+            String::from("Signature 1"),
+            String::from("Signature 2"),
+            String::from("Signature 3"),
         ];
 
         let samples = vec![Sample {
