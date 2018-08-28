@@ -16,7 +16,11 @@ Note dx-docker exports the image in the ACI format, which requires
 
 [docker2aci]: https://github.com/appc/docker2aci
 
-## Tests
+## Test
+
+The included tests are a suite of system tests that run the main entry point
+with various input arguments. The suite is run locally, preparing input data
+manually and shimming dxpy commands.
 
 Tests can be run using [shunit2].
 
