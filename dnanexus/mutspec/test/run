@@ -61,4 +61,9 @@ test_wrapper_with_space_in_prefix() {
     assertEquals "prefixes with spaces failed" $? 0
 }
 
+test_wrapper_with_disabled_column() {
+    $WRAPPER "" "" "" "" "" "" 1 > /dev/null 2>&1
+    assertFalse "sample unexpectedly exists" "[ -e $TEST_HOME/results/vcfs/SJACT002_D.vcf ]"
+}
+
 source shunit2
