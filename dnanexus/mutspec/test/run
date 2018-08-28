@@ -21,6 +21,14 @@ tearDown() {
 test_wrapper() {
     $WRAPPER > /dev/null 2>&1
     assertEquals "wrapper failed" $? 0
+
+    assertTrue "SJACT001_D.vcf does not exist" "[ -e $TEST_HOME/results/vcfs/SJACT001_D.vcf ]"
+    assertTrue "SJACT002_D.vcf does not exist" "[ -e $TEST_HOME/results/vcfs/SJACT002_D.vcf ]"
+    assertTrue "SJACT003_D.vcf does not exist" "[ -e $TEST_HOME/results/vcfs/SJACT003_D.vcf ]"
+
+    assertTrue "mutspec.sample.sheet.txt does not exist" "[ -e $TEST_HOME/results/mutspec.sample.sheet.txt ]"
+    assertTrue "mutspec.signatures.html does not exist" "[ -e $TEST_HOME/results/mutspec.signatures.html ]"
+    assertTrue "mutspec.signatures.txt does not exist" "[ -e $TEST_HOME/results/mutspec.signatures.txt ]"
 }
 
 test_wrapper_with_sample_sheet() {
