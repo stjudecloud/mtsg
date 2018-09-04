@@ -41,7 +41,7 @@ $ cargo install --git https://github.com/stjude/mutspec.git
 ## Usage
 
 ```
-mutspec 0.1.0
+mutspec 1.0.0
 
 USAGE:
     mutspec [FLAGS] <SUBCOMMAND>
