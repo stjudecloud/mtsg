@@ -3,7 +3,7 @@
   "title": "Mutational Spectrum",
   "summary": "Find and quantify COSMIC mutational signatures across samples",
   "dxapi": "1.0.0",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "inputSpec": [
     {
       "name": "vcfs",
