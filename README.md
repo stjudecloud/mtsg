@@ -1,5 +1,7 @@
 # Mutational Spectrum
 
+[![Build Status](https://travis-ci.org/stjude/mutspec.svg?branch=master)](https://travis-ci.org/stjude/mutspec)
+
 **Mutational Spectrum** (abbreviated syllabically as **mutspec**) finds and
 quantifies COSMIC mutational signatures across samples.
 
