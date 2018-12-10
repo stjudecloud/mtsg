@@ -3,7 +3,7 @@ use std::io::{self, BufRead, BufReader, Write};
 use std::path::Path;
 use std::process::{Command, ExitStatus, Stdio};
 
-use cosmic::download_signature_probabilities;
+use crate::cosmic::download_signature_probabilities;
 
 static MUTATIONAL_PATTERNS_SRC: &str = include_str!("mutational_patterns.R");
 
