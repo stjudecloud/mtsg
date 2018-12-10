@@ -5,6 +5,7 @@ use std::iter;
 use std::path::Path;
 
 use csv;
+use log::warn;
 use reqwest;
 
 static SUBSTITUTIONS: &[&str] = &["C>A", "C>G", "C>T", "T>A", "T>C", "T>G"];

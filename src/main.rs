@@ -1,15 +1,9 @@
-#[macro_use]
-extern crate clap;
-extern crate mutspec;
-#[macro_use]
-extern crate log;
-extern crate env_logger;
-
 use std::io;
 use std::process;
 
-use clap::{App, AppSettings, Arg, SubCommand};
-use log::LevelFilter;
+use clap::{App, AppSettings, Arg, crate_name, crate_version, SubCommand, value_t};
+use env_logger;
+use log::{error, LevelFilter, warn};
 
 use mutspec::cosmic::download_signature_probabilities;
 use mutspec::r::mutational_patterns;

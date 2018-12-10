@@ -3,6 +3,8 @@ use std::io::{self, BufWriter, Write};
 use std::path::Path;
 
 use glob::glob;
+use lazy_static::lazy_static;
+use log::warn;
 use regex::Regex;
 
 static DEFAULT_TAG: &str = "unknown";

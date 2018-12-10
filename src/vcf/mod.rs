@@ -5,6 +5,7 @@ use std::path::Path;
 
 use csv;
 use flate2::read::MultiGzDecoder;
+use log::info;
 
 use self::reader::VcfReader;
 

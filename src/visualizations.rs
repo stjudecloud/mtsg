@@ -5,7 +5,9 @@ use std::path::Path;
 
 use csv;
 use handlebars::Handlebars;
-use serde_json;
+use lazy_static::lazy_static;
+use serde_derive::Serialize;
+use serde_json::{self, json};
 
 static CRATE_NAME: &str = env!("CARGO_PKG_NAME");
 static CRATE_VERSION: &str = env!("CARGO_PKG_VERSION");
