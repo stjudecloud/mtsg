@@ -3,6 +3,7 @@ name = "mutspec"
 version = "1.0.0"
 authors = ["Michael Macias <michael.macias@stjude.org>"]
 edition = "2018"
+license = "Apache-2.0"
 
 [dependencies]
 clap = "2.32.0"
