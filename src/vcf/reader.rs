@@ -186,6 +186,14 @@ mod tests {
     }
 
     #[test]
+    #[should_panic(expected = "unexpected EOF")]
+    fn test_read_meta_with_unexpected_eof() {
+        let data = "##fileformat=VCFv4.1";
+        let mut reader = VcfReader::new(data.as_bytes());
+        reader.read_meta().unwrap();
+    }
+
+    #[test]
     #[should_panic(expected = "unexpected non-header line")]
     fn test_read_meta_with_no_headers() {
         let data = "\
