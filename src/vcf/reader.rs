@@ -84,17 +84,11 @@ impl<R: BufRead> VcfReader<R> {
     }
 
     pub fn meta(&self) -> Option<&str> {
-        match self.meta {
-            Some(ref m) => Some(m),
-            None => None,
-        }
+        self.meta.as_ref().map(|s| s.as_str())
     }
 
     pub fn headers(&self) -> Option<&str> {
-        match self.headers {
-            Some(ref h) => Some(h),
-            None => None,
-        }
+        self.headers.as_ref().map(|s| s.as_str())
     }
 
     pub fn mandatory_headers(&self) -> Option<Vec<&str>> {
@@ -146,8 +140,7 @@ impl<R: BufRead> VcfReader<R> {
 
 fn has_format(headers: &str) -> bool {
     headers.split('\t')
-        .skip(MANDATORY_HEADERS.len())
-        .next()
+        .nth(MANDATORY_HEADERS.len())
         .map(|header| header == OPTIONAL_HEADER)
         .unwrap_or(false)
 }

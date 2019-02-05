@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{self, BufWriter, Read, Write};
-use std::iter;
 use std::path::Path;
 
 use csv;
@@ -122,8 +121,8 @@ where
 
 fn write_table<W>(
     writer: &mut W,
-    headers: &Vec<String>,
-    rows: &Vec<Vec<String>>,
+    headers: &[String],
+    rows: &[Vec<String>],
 ) -> csv::Result<()>
 where
     W: Write,
@@ -132,12 +131,10 @@ where
         .delimiter(b'\t')
         .from_writer(writer);
 
-    for row in iter::once(headers).chain(rows.iter()) {
-        for cell in row {
-            csv.write_field(cell)?;
-        }
+    csv.write_record(headers)?;
 
-        csv.write_record(None::<&[u8]>)?;
+    for row in rows {
+        csv.write_record(row)?;
     }
 
     Ok(())

@@ -67,13 +67,13 @@ where
         .map(String::from)
         .collect();
 
-    if let Some(name) = headers.last().or(Some(&String::from(""))) {
-        if name != TAG_COLUMN_NAME {
-            return Err(io::Error::new(
-                io::ErrorKind::InvalidData,
-                format!("{}:1: expected last column to be '{}', got '{}'", pathname, TAG_COLUMN_NAME, name),
-            ));
-        }
+    let name = headers.last().map(|n| n.as_str()).unwrap_or("");
+
+    if name != TAG_COLUMN_NAME {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            format!("{}:1: expected last column to be '{}', got '{}'", pathname, TAG_COLUMN_NAME, name),
+        ));
     }
 
     let n_headers = headers.len();
