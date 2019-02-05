@@ -46,7 +46,7 @@ impl<R: BufRead> VcfReader<R> {
 
         if !line.starts_with(FILE_FORMAT) {
             return Err(io::Error::new(
-                io::ErrorKind::InvalidInput,
+                io::ErrorKind::InvalidData,
                 "invalid VCF file format",
             ));
         }
@@ -71,7 +71,7 @@ impl<R: BufRead> VcfReader<R> {
                 break;
             } else {
                 return Err(io::Error::new(
-                    io::ErrorKind::InvalidInput,
+                    io::ErrorKind::InvalidData,
                     String::from("unexpected non-header line"),
                 ));
             }

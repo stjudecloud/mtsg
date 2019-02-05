@@ -59,7 +59,7 @@ where
     let headers: Vec<String> = reader.headers()
         .map_err(|e| {
             io::Error::new(
-                io::ErrorKind::InvalidInput,
+                io::ErrorKind::InvalidData,
                 format!("{}:1: {}", pathname, e),
             )
         })?
@@ -70,7 +70,7 @@ where
     if let Some(name) = headers.last().or(Some(&String::from(""))) {
         if name != TAG_COLUMN_NAME {
             return Err(io::Error::new(
-                io::ErrorKind::InvalidInput,
+                io::ErrorKind::InvalidData,
                 format!("{}:1: expected last column to be '{}', got '{}'", pathname, TAG_COLUMN_NAME, name),
             ));
         }
@@ -96,7 +96,7 @@ where
                 .map(|s| s.to_string())
                 .ok_or_else(|| {
                     io::Error::new(
-                        io::ErrorKind::InvalidInput,
+                        io::ErrorKind::InvalidData,
                         format!("{}:{}: missing {}", pathname, line_no, TAG_COLUMN_NAME),
                     )
                 })?;
@@ -108,7 +108,7 @@ where
                 .collect::<Result<_, _>>()
                 .map_err(|e| {
                     io::Error::new(
-                        io::ErrorKind::InvalidInput,
+                        io::ErrorKind::InvalidData,
                         format!("{}:{}: {}", pathname, line_no, e),
                     )
                 })?;

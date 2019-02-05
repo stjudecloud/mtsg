@@ -34,7 +34,7 @@ static SP_URL: &str = "https://cancer.sanger.ac.uk/cancergenome/assets/signature
 
 pub fn download_signature_probabilities<P>(dst: P) -> io::Result<()> where P: AsRef<Path> {
     let body = download().map_err(|e| {
-        io::Error::new(io::ErrorKind::Other, format!("{}", e))
+        io::Error::new(io::ErrorKind::Other, e)
     })?;
 
     let (headers, rows) = extract_table(body.as_bytes())?;
@@ -43,7 +43,7 @@ pub fn download_signature_probabilities<P>(dst: P) -> io::Result<()> where P: As
     let mut writer = BufWriter::new(file);
 
     write_table(&mut writer, &headers, &rows).map_err(|e| {
-        io::Error::new(io::ErrorKind::Other, format!("{}", e))
+        io::Error::new(io::ErrorKind::Other, e)
     })
 }
 
@@ -72,7 +72,7 @@ where
     // The `take` adapter is used instead of reading to the end of line because
     // there's empty column data trailing each row.
     let headers: Vec<String> = csv.headers()
-        .map_err(|e| io::Error::new(io::ErrorKind::InvalidInput, format!("{}", e)))?
+        .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?
         .iter()
         .skip(N_SKIPPABLE_HEADERS)
         .take(N_SIGNATURES + 1)
@@ -81,7 +81,7 @@ where
 
     if headers.len() < N_SIGNATURES + 1 {
         return Err(io::Error::new(
-            io::ErrorKind::InvalidInput,
+            io::ErrorKind::InvalidData,
             format!("expected {} columns, got {}", N_SIGNATURES + 1, headers.len()),
         ));
     }
@@ -112,7 +112,7 @@ where
 
     if ordered_rows.len() < TOTAL_TRIPLETS {
         Err(io::Error::new(
-            io::ErrorKind::InvalidInput,
+            io::ErrorKind::InvalidData,
             format!("expected {} triplets, got {}", TOTAL_TRIPLETS, ordered_rows.len()),
         ))
     } else {
