@@ -36,9 +36,13 @@ mutspec supports both hg19 (GRCh37) and hg38 (GRCh38).
 
 ## Installation
 
+Install [Rust] and use `cargo` to install `mutspec`.
+
 ```
 $ cargo install --git https://github.com/stjude/mutspec.git
 ```
+
+[Rust]: https://www.rust-lang.org/tools/install
 
 ## Usage
 
