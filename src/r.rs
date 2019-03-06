@@ -27,16 +27,18 @@ where
     R: AsRef<Path>,
     S: AsRef<Path>,
 {
-    let cancer_signatures = cancer_signatures
-        .map(|p| p.as_ref().to_path_buf())
-        .unwrap_or_else(|| {
-            info!("using default COSMIC signature probabilities");
+    let cancer_signatures = if let Some(path) = cancer_signatures {
+        path.as_ref().to_path_buf()
+    } else {
+        info!("using default COSMIC signature probabilities");
 
-            let mut dst = env::temp_dir();
-            dst.push("signatures.txt");
-            download_signature_probabilities(&dst).unwrap();
-            dst
-        });
+        let mut dst = env::temp_dir();
+        dst.push("signatures.txt");
+
+        download_signature_probabilities(&dst)?;
+
+        dst
+    };
 
     info!("running mutational_patterns.R");
     info!("  genome-build = {}", genome_build);
