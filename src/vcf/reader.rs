@@ -44,6 +44,8 @@ impl<R: BufRead> VcfReader<R> {
 
         self.read_line(&mut line)?;
 
+        // The first line must describe the file format. See 1.2.2 in
+        // <https://samtools.github.io/hts-specs/VCFv4.2.pdf>.
         if !line.starts_with(FILE_FORMAT) {
             return Err(io::Error::new(
                 io::ErrorKind::InvalidData,
