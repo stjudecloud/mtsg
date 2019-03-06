@@ -22,7 +22,10 @@ pub struct VcfReader<R: BufRead> {
 }
 
 impl<R: BufRead> VcfReader<R> {
-    pub fn open<P>(src: P) -> io::Result<VcfReader<BufReader<File>>> where P: AsRef<Path> {
+    pub fn open<P>(src: P) -> io::Result<VcfReader<BufReader<File>>>
+    where
+        P: AsRef<Path>,
+    {
         let file = File::open(src)?;
         let reader = BufReader::new(file);
         Ok(VcfReader::new(reader))
@@ -152,7 +155,8 @@ impl<R: BufRead> VcfReader<R> {
 }
 
 fn has_format(headers: &str) -> bool {
-    headers.split('\t')
+    headers
+        .split('\t')
         .nth(MANDATORY_HEADERS.len())
         .map(|header| header == OPTIONAL_HEADER)
         .unwrap_or(false)
@@ -178,7 +182,10 @@ mod tests {
 
     use super::VcfReader;
 
-    fn read_vcf<P>(path: P) -> io::Result<VcfReader<BufReader<File>>> where P: AsRef<Path> {
+    fn read_vcf<P>(path: P) -> io::Result<VcfReader<BufReader<File>>>
+    where
+        P: AsRef<Path>,
+    {
         let mut reader = VcfReader::<BufReader<File>>::open(path).unwrap();
         reader.read_meta()?;
         Ok(reader)

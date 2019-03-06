@@ -20,7 +20,8 @@ lazy_static! {
     static ref HBS: Handlebars = {
         let mut hbs = Handlebars::new();
         hbs.set_strict_mode(true);
-        hbs.register_template_string("signatures", SIGNATURES_TEMPLATE).unwrap();
+        hbs.register_template_string("signatures", SIGNATURES_TEMPLATE)
+            .unwrap();
         hbs
     };
 }
@@ -45,10 +46,7 @@ where
     write_html(&mut file, &headers, &samples)
 }
 
-pub fn read_table<R>(
-    reader: R,
-    pathname: &str,
-) -> io::Result<(Vec<String>, Vec<Sample>)>
+pub fn read_table<R>(reader: R, pathname: &str) -> io::Result<(Vec<String>, Vec<Sample>)>
 where
     R: Read,
 {
@@ -56,13 +54,9 @@ where
         .delimiter(b'\t')
         .from_reader(reader);
 
-    let headers: Vec<String> = reader.headers()
-        .map_err(|e| {
-            io::Error::new(
-                io::ErrorKind::InvalidData,
-                format!("{}:1: {}", pathname, e),
-            )
-        })?
+    let headers: Vec<String> = reader
+        .headers()
+        .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, format!("{}:1: {}", pathname, e)))?
         .iter()
         .map(String::from)
         .collect();
@@ -72,19 +66,24 @@ where
     if name != TAG_COLUMN_NAME {
         return Err(io::Error::new(
             io::ErrorKind::InvalidData,
-            format!("{}:1: expected last column to be '{}', got '{}'", pathname, TAG_COLUMN_NAME, name),
+            format!(
+                "{}:1: expected last column to be '{}', got '{}'",
+                pathname, TAG_COLUMN_NAME, name
+            ),
         ));
     }
 
     let n_headers = headers.len();
 
-    let headers: Vec<String> = headers.into_iter()
+    let headers: Vec<String> = headers
+        .into_iter()
         .skip(1)
         .take(n_headers - 2)
         .map(|h| h.replace(".", " "))
         .collect();
 
-    let samples = reader.records()
+    let samples = reader
+        .records()
         .filter_map(Result::ok)
         .enumerate()
         .map(|(i, record)| {
@@ -92,7 +91,8 @@ where
 
             let id = record[0].to_string();
 
-            let disease = record.get(n_headers - 1)
+            let disease = record
+                .get(n_headers - 1)
                 .map(|s| s.to_string())
                 .ok_or_else(|| {
                     io::Error::new(
@@ -101,7 +101,8 @@ where
                     )
                 })?;
 
-            let contributions: Vec<f64> = record.iter()
+            let contributions: Vec<f64> = record
+                .iter()
                 .skip(1)
                 .take(n_headers - 2)
                 .map(|v| v.parse())
@@ -113,24 +114,22 @@ where
                     )
                 })?;
 
-            Ok(Sample { id, disease, contributions })
+            Ok(Sample {
+                id,
+                disease,
+                contributions,
+            })
         })
         .collect::<Result<Vec<Sample>, io::Error>>()?;
 
     Ok((headers, samples))
 }
 
-fn write_html<W>(
-    writer: &mut W,
-    headers: &[String],
-    samples: &[Sample],
-) -> io::Result<()>
+fn write_html<W>(writer: &mut W, headers: &[String], samples: &[Sample]) -> io::Result<()>
 where
     W: Write,
 {
-    let diseases: BTreeSet<String> = samples.iter()
-        .map(|s| s.disease.clone())
-        .collect();
+    let diseases: BTreeSet<String> = samples.iter().map(|s| s.disease.clone()).collect();
 
     let payload = json!({
         "data": {

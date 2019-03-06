@@ -9,6 +9,7 @@ use reqwest;
 
 static SUBSTITUTIONS: &[&str] = &["C>A", "C>G", "C>T", "T>A", "T>C", "T>G"];
 
+#[rustfmt::skip]
 static C_TRIPLETS: &[&str] = &[
     "ACA", "ACC", "ACG", "ACT",
     "CCA", "CCC", "CCG", "CCT",
@@ -16,6 +17,7 @@ static C_TRIPLETS: &[&str] = &[
     "TCA", "TCC", "TCG", "TCT",
 ];
 
+#[rustfmt::skip]
 static T_TRIPLETS: &[&str] = &[
     "ATA", "ATC", "ATG", "ATT",
     "CTA", "CTC", "CTG", "CTT",
@@ -29,21 +31,21 @@ const N_SKIPPABLE_HEADERS: usize = 2;
 const N_SIGNATURES: usize = 30;
 
 // COSMIC mutational signature probabilities
-static SP_URL: &str = "https://cancer.sanger.ac.uk/cancergenome/assets/signatures_probabilities.txt";
+static SP_URL: &str =
+    "https://cancer.sanger.ac.uk/cancergenome/assets/signatures_probabilities.txt";
 
-pub fn download_signature_probabilities<P>(dst: P) -> io::Result<()> where P: AsRef<Path> {
-    let body = download().map_err(|e| {
-        io::Error::new(io::ErrorKind::Other, e)
-    })?;
+pub fn download_signature_probabilities<P>(dst: P) -> io::Result<()>
+where
+    P: AsRef<Path>,
+{
+    let body = download().map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
 
     let (headers, rows) = extract_table(body.as_bytes())?;
 
     let file = File::create(dst)?;
     let mut writer = BufWriter::new(file);
 
-    write_table(&mut writer, &headers, &rows).map_err(|e| {
-        io::Error::new(io::ErrorKind::Other, e)
-    })
+    write_table(&mut writer, &headers, &rows).map_err(|e| io::Error::new(io::ErrorKind::Other, e))
 }
 
 fn download() -> reqwest::Result<String> {
@@ -70,7 +72,8 @@ where
 
     // The `take` adapter is used instead of reading to the end of line because
     // there's empty column data trailing each row.
-    let headers: Vec<String> = csv.headers()
+    let headers: Vec<String> = csv
+        .headers()
         .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?
         .iter()
         .skip(N_SKIPPABLE_HEADERS)
@@ -81,14 +84,19 @@ where
     if headers.len() < N_SIGNATURES + 1 {
         return Err(io::Error::new(
             io::ErrorKind::InvalidData,
-            format!("expected {} columns, got {}", N_SIGNATURES + 1, headers.len()),
+            format!(
+                "expected {} columns, got {}",
+                N_SIGNATURES + 1,
+                headers.len()
+            ),
         ));
     }
 
     let mut mapped_rows = HashMap::new();
 
     for record in csv.records().filter_map(Result::ok) {
-        let row: Vec<String> = record.iter()
+        let row: Vec<String> = record
+            .iter()
             .skip(N_SKIPPABLE_HEADERS)
             .take(N_SIGNATURES + 1)
             .map(String::from)
@@ -112,18 +120,18 @@ where
     if ordered_rows.len() < TOTAL_TRIPLETS {
         Err(io::Error::new(
             io::ErrorKind::InvalidData,
-            format!("expected {} triplets, got {}", TOTAL_TRIPLETS, ordered_rows.len()),
+            format!(
+                "expected {} triplets, got {}",
+                TOTAL_TRIPLETS,
+                ordered_rows.len()
+            ),
         ))
     } else {
         Ok((headers, ordered_rows))
     }
 }
 
-fn write_table<W>(
-    writer: &mut W,
-    headers: &[String],
-    rows: &[Vec<String>],
-) -> csv::Result<()>
+fn write_table<W>(writer: &mut W, headers: &[String], rows: &[Vec<String>]) -> csv::Result<()>
 where
     W: Write,
 {
@@ -143,7 +151,8 @@ where
 /// Builds an iterator that returns mutation types in the same order used by
 /// MutationalPatterns.
 fn somatic_mutation_types() -> impl Iterator<Item = String> {
-    C_TRIPLETS.iter()
+    C_TRIPLETS
+        .iter()
         .chain(C_TRIPLETS.iter())
         .chain(C_TRIPLETS.iter())
         .chain(T_TRIPLETS.iter())
@@ -179,23 +188,22 @@ mod tests {
     #[test]
     #[should_panic(expected = "expected 31 columns, got 3")]
     fn test_extract_table_with_fewer_signature_columns() {
-        let data = fs::read_to_string("test/fixtures/probabilities.missing-signatures.txt").unwrap();
+        let data =
+            fs::read_to_string("test/fixtures/probabilities.missing-signatures.txt").unwrap();
         extract_table(data.as_bytes()).unwrap();
     }
 
     #[test]
     #[should_panic(expected = "expected 96 triplets, got 2")]
     fn test_extract_table_with_missing_mutation_types() {
-        let data = fs::read_to_string("test/fixtures/probabilities.missing-mutation-types.txt").unwrap();
+        let data =
+            fs::read_to_string("test/fixtures/probabilities.missing-mutation-types.txt").unwrap();
         extract_table(data.as_bytes()).unwrap();
     }
 
     #[test]
     fn test_write_table() {
-        let headers: Vec<String> = vec![
-            String::from("Signature 1"),
-            String::from("Signature 2"),
-        ];
+        let headers: Vec<String> = vec![String::from("Signature 1"), String::from("Signature 2")];
 
         let rows: Vec<Vec<String>> = vec![
             vec![String::from("0.95"), String::from("0.05")],

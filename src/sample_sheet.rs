@@ -24,9 +24,8 @@ where
 
     let pattern = format!("{}", pattern.display());
 
-    let pathnames = list_directory(&pattern).map_err(|e| {
-        io::Error::new(io::ErrorKind::Other, e)
-    })?;
+    let pathnames =
+        list_directory(&pattern).map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
 
     let pairs = build_pairs(&pathnames);
 
@@ -36,7 +35,10 @@ where
     write_table(&mut writer, &pairs)
 }
 
-fn write_table<W>(writer: &mut W, pairs: &[NameTagPair]) -> io::Result<()> where W: Write {
+fn write_table<W>(writer: &mut W, pairs: &[NameTagPair]) -> io::Result<()>
+where
+    W: Write,
+{
     for pair in pairs {
         writeln!(writer, "{}\t{}", pair.name, pair.tag)?;
     }
@@ -57,19 +59,29 @@ fn list_directory(pattern: &str) -> Result<Vec<String>, String> {
     Ok(basenames)
 }
 
-fn basename<P>(path: P) -> Option<String> where P: AsRef<Path> {
-    path.as_ref().file_stem().and_then(|n| n.to_str()).map(String::from)
+fn basename<P>(path: P) -> Option<String>
+where
+    P: AsRef<Path>,
+{
+    path.as_ref()
+        .file_stem()
+        .and_then(|n| n.to_str())
+        .map(String::from)
 }
 
 fn build_pairs(names: &[String]) -> Vec<NameTagPair> {
-    names.iter()
+    names
+        .iter()
         .map(|name| {
             let tag = parse_disease(name).unwrap_or_else(|| {
                 warn!("could not extract disease from sample name '{}'", name);
                 DEFAULT_TAG
             });
 
-            NameTagPair { name: name.clone(), tag: tag.to_string() }
+            NameTagPair {
+                name: name.clone(),
+                tag: tag.to_string(),
+            }
         })
         .collect()
 }
@@ -84,9 +96,9 @@ fn parse_disease(name: &str) -> Option<&str> {
         static ref PATTERN: Regex = Regex::new(r"SJ(\w\d*?\w+?)\d+").unwrap();
     }
 
-    PATTERN.captures(name).and_then(|matches| {
-        matches.get(1).map(|m| m.as_str())
-    })
+    PATTERN
+        .captures(name)
+        .and_then(|matches| matches.get(1).map(|m| m.as_str()))
 }
 
 #[cfg(test)]
@@ -96,8 +108,14 @@ mod tests {
     #[test]
     fn test_write_table() {
         let pairs = vec![
-            NameTagPair { name: String::from("SJACT001_D"), tag: String::from("ACT") },
-            NameTagPair { name: String::from("SJBALL020013_D1"), tag: String::from("BALL") },
+            NameTagPair {
+                name: String::from("SJACT001_D"),
+                tag: String::from("ACT"),
+            },
+            NameTagPair {
+                name: String::from("SJBALL020013_D1"),
+                tag: String::from("BALL"),
+            },
         ];
 
         let mut data = Vec::new();

@@ -13,11 +13,7 @@ pub mod reader;
 
 static EMPTY_CELL: &str = ".:.";
 
-pub fn split_file<P, Q>(
-    src: P,
-    dst: Q,
-    disable_column: Option<usize>,
-) -> io::Result<()>
+pub fn split_file<P, Q>(src: P, dst: Q, disable_column: Option<usize>) -> io::Result<()>
 where
     P: AsRef<Path>,
     Q: AsRef<Path>,
@@ -30,15 +26,23 @@ where
     let mut writers = {
         let meta = reader.meta().unwrap();
         let headers = reader.mandatory_headers().unwrap();
-        let samples: Vec<&str> = reader.samples().unwrap().iter()
+        let samples: Vec<&str> = reader
+            .samples()
+            .unwrap()
+            .iter()
             .enumerate()
             .filter(|(i, _)| disable_column.map(|j| *i != j).unwrap_or(true))
             .map(|(_, &id)| id)
             .collect();
 
-        info!("{}: creating {} vcf(s)", src.as_ref().display(), samples.len());
+        info!(
+            "{}: creating {} vcf(s)",
+            src.as_ref().display(),
+            samples.len()
+        );
 
-        let mut writers: Vec<BufWriter<File>> = samples.iter()
+        let mut writers: Vec<BufWriter<File>> = samples
+            .iter()
             .map(|name| {
                 let mut dst = dst.as_ref().to_path_buf();
                 dst.push(format!("{}.vcf", name));
@@ -68,7 +72,8 @@ where
         .from_reader(reader.into_inner());
 
     for record in csv.records().filter_map(Result::ok) {
-        let iter = record.iter()
+        let iter = record
+            .iter()
             .skip(n_headers)
             .enumerate()
             .filter(|(i, _)| disable_column.map(|j| *i != j).unwrap_or(true))
@@ -80,7 +85,8 @@ where
                 continue;
             }
 
-            let line = record.iter()
+            let line = record
+                .iter()
                 .take(n_headers)
                 .collect::<Vec<&str>>()
                 .join("\t");
@@ -92,7 +98,10 @@ where
     Ok(())
 }
 
-fn reader_factory<P>(src: P) -> io::Result<Box<dyn BufRead>> where P: AsRef<Path> {
+fn reader_factory<P>(src: P) -> io::Result<Box<dyn BufRead>>
+where
+    P: AsRef<Path>,
+{
     let path = src.as_ref();
     let file = File::open(path)?;
 
@@ -101,10 +110,8 @@ fn reader_factory<P>(src: P) -> io::Result<Box<dyn BufRead>> where P: AsRef<Path
             let decoder = MultiGzDecoder::new(file);
             let reader = BufReader::new(decoder);
             Ok(Box::new(reader))
-        },
-        _ => {
-            Ok(Box::new(BufReader::new(file)))
         }
+        _ => Ok(Box::new(BufReader::new(file))),
     }
 }
 
