@@ -39,7 +39,7 @@ main() {
         --entrypoint /bin/bash \
         mutspec \
         -c \
-        "/app/bin/mutspec \
+        "/opt/mutspec/bin/mutspec \
         --verbose \
         split-vcf \
         --output-directory /results/vcfs \
