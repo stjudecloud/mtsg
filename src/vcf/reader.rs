@@ -14,7 +14,7 @@ static MANDATORY_HEADERS: &[&str] = &[
 ];
 static OPTIONAL_HEADER: &str = "FORMAT";
 
-pub struct VcfReader<R: BufRead> {
+pub struct Reader<R: BufRead> {
     inner: R,
     line_no: usize,
     meta: Option<String>,
@@ -23,18 +23,18 @@ pub struct VcfReader<R: BufRead> {
     is_gvcf: bool,
 }
 
-impl<R: BufRead> VcfReader<R> {
-    pub fn open<P>(src: P) -> io::Result<VcfReader<BufReader<File>>>
+impl<R: BufRead> Reader<R> {
+    pub fn open<P>(src: P) -> io::Result<Reader<BufReader<File>>>
     where
         P: AsRef<Path>,
     {
         let file = File::open(src)?;
         let reader = BufReader::new(file);
-        Ok(VcfReader::new(reader))
+        Ok(Reader::new(reader))
     }
 
-    pub fn new(inner: R) -> VcfReader<R> {
-        VcfReader {
+    pub fn new(inner: R) -> Reader<R> {
+        Reader {
             inner,
             line_no: 0,
             meta: None,
@@ -184,13 +184,13 @@ mod tests {
         path::Path,
     };
 
-    use super::VcfReader;
+    use super::Reader;
 
-    fn read_vcf<P>(path: P) -> io::Result<VcfReader<BufReader<File>>>
+    fn read_vcf<P>(path: P) -> io::Result<Reader<BufReader<File>>>
     where
         P: AsRef<Path>,
     {
-        let mut reader = VcfReader::<BufReader<File>>::open(path).unwrap();
+        let mut reader = Reader::<BufReader<File>>::open(path).unwrap();
         reader.read_meta()?;
         Ok(reader)
     }
@@ -210,7 +210,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "invalid VCF file format")]
     fn test_read_meta_with_no_file_format() {
-        let mut reader = VcfReader::new("".as_bytes());
+        let mut reader = Reader::new("".as_bytes());
         reader.read_meta().unwrap()
     }
 
@@ -218,7 +218,7 @@ mod tests {
     #[should_panic(expected = "unexpected EOF")]
     fn test_read_meta_with_unexpected_eof() {
         let data = "##fileformat=VCFv4.1";
-        let mut reader = VcfReader::new(data.as_bytes());
+        let mut reader = Reader::new(data.as_bytes());
         reader.read_meta().unwrap();
     }
 
@@ -230,7 +230,7 @@ mod tests {
 chr10\t287638\t.\tG\tC\t.\t.\tSampleCounts=1\tAD:DP\t20,7:27
 ";
 
-        let mut reader = VcfReader::new(data.as_bytes());
+        let mut reader = Reader::new(data.as_bytes());
         reader.read_meta().unwrap()
     }
 
@@ -281,7 +281,7 @@ chr10\t287638\t.\tG\tC\t.\t.\tSampleCounts=1\tAD:DP\t20,7:27
 chr10\t287638\t.\tG\tC\t.\t.\tSampleCounts=1\t20
 ";
 
-        let mut reader = VcfReader::new(data.as_bytes());
+        let mut reader = Reader::new(data.as_bytes());
         reader.read_meta().unwrap();
         assert_eq!(reader.n_headers(), 8);
     }
@@ -294,7 +294,7 @@ chr10\t287638\t.\tG\tC\t.\t.\tSampleCounts=1\t20
 chr10\t287638\t.\tG\tC\t.\t.\tSampleCounts=1\tAD:DP\t20,7:27
 ";
 
-        let mut reader = VcfReader::new(data.as_bytes());
+        let mut reader = Reader::new(data.as_bytes());
         reader.read_meta().unwrap();
         assert_eq!(reader.n_headers(), 9);
     }

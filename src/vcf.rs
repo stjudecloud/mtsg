@@ -8,7 +8,7 @@ use std::{
 use flate2::read::MultiGzDecoder;
 use log::info;
 
-use self::reader::VcfReader;
+use self::reader::Reader;
 
 pub mod reader;
 
@@ -21,7 +21,7 @@ where
 {
     let file_reader = reader_factory(&src)?;
 
-    let mut reader = VcfReader::new(file_reader);
+    let mut reader = Reader::new(file_reader);
     reader.read_meta()?;
 
     let mut writers = {
