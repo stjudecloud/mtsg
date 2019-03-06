@@ -1,9 +1,10 @@
-use std::collections::BTreeSet;
-use std::fs::File;
-use std::io::{self, Read, Write};
-use std::path::Path;
+use std::{
+    collections::BTreeSet,
+    fs::File,
+    io::{self, Read, Write},
+    path::Path,
+};
 
-use csv;
 use handlebars::Handlebars;
 use lazy_static::lazy_static;
 use serde_derive::Serialize;

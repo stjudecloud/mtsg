@@ -1,6 +1,8 @@
-use std::fs::File;
-use std::io::{self, BufRead, BufReader};
-use std::path::Path;
+use std::{
+    fs::File,
+    io::{self, BufRead, BufReader},
+    path::Path,
+};
 
 const DEFAULT_BUF_SIZE: usize = 8 * 1024; // bytes
 
@@ -176,9 +178,11 @@ fn test_has_format() {
 
 #[cfg(test)]
 mod tests {
-    use std::fs::File;
-    use std::io::{self, BufReader};
-    use std::path::Path;
+    use std::{
+        fs::File,
+        io::{self, BufReader},
+        path::Path,
+    };
 
     use super::VcfReader;
 

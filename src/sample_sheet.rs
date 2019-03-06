@@ -1,6 +1,8 @@
-use std::fs::File;
-use std::io::{self, BufWriter, Write};
-use std::path::Path;
+use std::{
+    fs::File,
+    io::{self, BufWriter, Write},
+    path::Path,
+};
 
 use glob::glob;
 use lazy_static::lazy_static;

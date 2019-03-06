@@ -1,11 +1,11 @@
-use std::collections::HashMap;
-use std::fs::File;
-use std::io::{self, BufWriter, Read, Write};
-use std::path::Path;
+use std::{
+    collections::HashMap,
+    fs::File,
+    io::{self, BufWriter, Read, Write},
+    path::Path,
+};
 
-use csv;
 use log::warn;
-use reqwest;
 
 static SUBSTITUTIONS: &[&str] = &["C>A", "C>G", "C>T", "T>A", "T>C", "T>G"];
 

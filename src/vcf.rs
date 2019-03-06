@@ -1,9 +1,10 @@
-use std::ffi::OsStr;
-use std::fs::File;
-use std::io::{self, BufRead, BufReader, BufWriter, Write};
-use std::path::Path;
+use std::{
+    ffi::OsStr,
+    fs::File,
+    io::{self, BufRead, BufReader, BufWriter, Write},
+    path::Path,
+};
 
-use csv;
 use flate2::read::MultiGzDecoder;
 use log::info;
 

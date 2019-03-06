@@ -1,7 +1,9 @@
-use std::env;
-use std::io::{self, BufRead, BufReader, Write};
-use std::path::Path;
-use std::process::{Command, ExitStatus, Stdio};
+use std::{
+    env,
+    io::{self, BufRead, BufReader, Write},
+    path::Path,
+    process::{Command, ExitStatus, Stdio},
+};
 
 use log::info;
 

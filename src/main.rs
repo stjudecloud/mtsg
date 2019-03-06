@@ -1,15 +1,12 @@
-use std::io;
-use std::process;
+use std::{io, process};
 
 use clap::{crate_name, crate_version, value_t, App, AppSettings, Arg, SubCommand};
-use env_logger;
 use log::{error, warn, LevelFilter};
 
-use mutspec::cosmic::download_signature_probabilities;
-use mutspec::r::mutational_patterns;
-use mutspec::sample_sheet;
-use mutspec::vcf::split_file;
-use mutspec::visualizations::create_visualization;
+use mutspec::{
+    cosmic::download_signature_probabilities, r::mutational_patterns, sample_sheet,
+    vcf::split_file, visualizations::create_visualization,
+};
 
 fn exit_with_clap_error(error: clap::Error) -> ! {
     error!("{}", error);
