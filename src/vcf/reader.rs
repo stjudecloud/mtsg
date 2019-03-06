@@ -6,6 +6,7 @@ const DEFAULT_BUF_SIZE: usize = 8 * 1024; // bytes
 
 static META_COMMENT: &str = "##";
 static FILE_FORMAT: &str = "##fileformat=VCF";
+static GVCF_BLOCK_FIELD_NAME: &str = "##GVCFBlock";
 static MANDATORY_HEADERS: &[&str] = &[
     "#CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO",
 ];
@@ -17,6 +18,7 @@ pub struct VcfReader<R: BufRead> {
     meta: Option<String>,
     headers: Option<String>,
     has_format: bool,
+    is_gvcf: bool,
 }
 
 impl<R: BufRead> VcfReader<R> {
@@ -33,7 +35,12 @@ impl<R: BufRead> VcfReader<R> {
             meta: None,
             headers: None,
             has_format: false,
+            is_gvcf: false,
         }
+    }
+
+    pub fn is_gvcf(&self) -> bool {
+        self.is_gvcf
     }
 
     pub fn read_meta(&mut self) -> io::Result<()> {
@@ -63,6 +70,10 @@ impl<R: BufRead> VcfReader<R> {
                     io::ErrorKind::UnexpectedEof,
                     String::from("unexpected EOF"),
                 ));
+            }
+
+            if line.starts_with(GVCF_BLOCK_FIELD_NAME) {
+                self.is_gvcf = true;
             }
 
             if line.starts_with(META_COMMENT) {
@@ -171,6 +182,18 @@ mod tests {
         let mut reader = VcfReader::<BufReader<File>>::open(path).unwrap();
         reader.read_meta()?;
         Ok(reader)
+    }
+
+    #[test]
+    fn test_read_meta() {
+        let reader = read_vcf("test/fixtures/sample.single.vcf").unwrap();
+        assert!(!reader.is_gvcf)
+    }
+
+    #[test]
+    fn test_read_meta_with_gvcf() {
+        let reader = read_vcf("test/fixtures/sample.single.g.vcf").unwrap();
+        assert!(reader.is_gvcf)
     }
 
     #[test]
