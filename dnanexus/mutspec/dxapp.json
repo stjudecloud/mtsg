@@ -9,6 +9,7 @@
       "name": "vcfs",
       "label": "VCF(s)",
       "class": "array:file",
+      "patterns": ["*.vcf", "*.vcf.gz"],
       "help": "Input VCFs. Can be single-sample or multi-sample and uncompressed or gzipped."
     },
     {
