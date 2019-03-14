@@ -5,9 +5,9 @@ use std::{
 };
 
 use glob::glob;
-use lazy_static::lazy_static;
 use log::warn;
-use regex::Regex;
+
+use crate::sjid;
 
 static DEFAULT_TAG: &str = "unknown";
 
@@ -75,32 +75,19 @@ fn build_pairs(names: &[String]) -> Vec<NameTagPair> {
     names
         .iter()
         .map(|name| {
-            let tag = parse_disease(name).unwrap_or_else(|| {
-                warn!("could not extract disease from sample name '{}'", name);
-                DEFAULT_TAG
-            });
+            let tag = sjid::parse(name)
+                .map(|id| id.disease().to_string())
+                .unwrap_or_else(|_| {
+                    warn!("could not parse '{}' as SJID", name);
+                    DEFAULT_TAG.to_string()
+                });
 
             NameTagPair {
                 name: name.clone(),
-                tag: tag.to_string(),
+                tag,
             }
         })
         .collect()
-}
-
-/// Extracts the disease name from a sample ID.
-///
-/// The regex pattern used is crude. It incorrectly captures single letter
-/// symbols with the case number (e.g., SJE2001_D => E2) and misses symbols with
-/// trailing numbers (e.g., SJAMLM7005_D (AMLM7)).
-fn parse_disease(name: &str) -> Option<&str> {
-    lazy_static! {
-        static ref PATTERN: Regex = Regex::new(r"SJ(\w\d*?\w+?)\d+").unwrap();
-    }
-
-    PATTERN
-        .captures(name)
-        .and_then(|matches| matches.get(1).map(|m| m.as_str()))
 }
 
 #[cfg(test)]
@@ -155,15 +142,5 @@ SJBALL020013_D1\tBALL
 
         assert_eq!(pairs[1].name, "SJBALL020013_D1");
         assert_eq!(pairs[1].tag, "BALL");
-    }
-
-    #[test]
-    fn test_parse_disease() {
-        assert_eq!(parse_disease("SJACT001_D"), Some("ACT"));
-        assert_eq!(parse_disease("SJAMLM7005_D"), Some("AMLM"));
-        assert_eq!(parse_disease("SJBALL020013_D1"), Some("BALL"));
-        assert_eq!(parse_disease("SJE2A001_D"), Some("E2A"));
-        assert_eq!(parse_disease("SJRB001130_M1"), Some("RB"));
-        assert_eq!(parse_disease("XXABC001_D"), None);
     }
 }
