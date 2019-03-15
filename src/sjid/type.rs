@@ -13,6 +13,22 @@ pub enum Type {
 }
 
 impl Type {
+    /// Returns the sample type code as a single character.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use mutspec::sjid::r#type::Type;
+    ///
+    /// assert_eq!(Type::Autopsy.code(), "A");
+    /// assert_eq!(Type::CellLine.code(), "C");
+    /// assert_eq!(Type::Diagnosis.code(), "D");
+    /// assert_eq!(Type::Germline.code(), "G");
+    /// assert_eq!(Type::Metastatic.code(), "M");
+    /// assert_eq!(Type::OtherTumor.code(), "O");
+    /// assert_eq!(Type::Relapse.code(), "R");
+    /// assert_eq!(Type::Xenograft.code(), "X");
+    /// ```
     pub fn code(&self) -> &'static str {
         match self {
             Type::Autopsy => "A",
