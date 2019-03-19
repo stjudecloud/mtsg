@@ -1,16 +1,16 @@
-# Mutational Spectrum
+# Mutational Signatures
 
-[![Build Status](https://travis-ci.org/stjude/mutspec.svg?branch=master)](https://travis-ci.org/stjude/mutspec)
+[![Build Status](https://travis-ci.org/stjude/mtsg.svg?branch=master)](https://travis-ci.org/stjude/mtsg)
 
-**Mutational Spectrum** (abbreviated syllabically as **mutspec**) finds and
-quantifies COSMIC mutational signatures across samples.
+**Mutational Signatures** (abbreviated as **mtsg**) finds and quantifies COSMIC
+mutational signatures across samples.
 
 This is done by finding the optimal non-negative linear combination of
 mutation signatures to reconstruct a mutation matrix. It builds the initial
 mutation matrix from multiple single-sample VCFs and, by default, fits it to
 [mutational signatures from COSMIC].
 
-mutspec supports both hg19 (GRCh37) and hg38 (GRCh38).
+mtsg supports both hg19 (GRCh37) and hg38 (GRCh38).
 
 [mutational signatures from COSMIC]: https://cancer.sanger.ac.uk/cosmic/signatures
 
@@ -36,10 +36,10 @@ mutspec supports both hg19 (GRCh37) and hg38 (GRCh38).
 
 ## Installation
 
-Install [Rust] and use `cargo` to install `mutspec`.
+Install [Rust] and use `cargo` to install `mtsg`.
 
 ```
-$ cargo install --git https://github.com/stjude/mutspec.git
+$ cargo install --git https://github.com/stjude/mtsg.git
 ```
 
 [Rust]: https://www.rust-lang.org/tools/install
@@ -47,10 +47,10 @@ $ cargo install --git https://github.com/stjude/mutspec.git
 ## Usage
 
 ```
-mutspec 1.0.0
+mtsg 1.0.0
 
 USAGE:
-    mutspec [FLAGS] <SUBCOMMAND>
+    mtsg [FLAGS] <SUBCOMMAND>
 
 FLAGS:
     -h, --help       Prints help information
@@ -67,39 +67,39 @@ SUBCOMMANDS:
     visualize                Creates an interactive visualization for the given cancer signatures
 ```
 
-Run `mutspec <subcommand> --help` for more information about each subcommand.
+Run `mtsg <subcommand> --help` for more information about each subcommand.
 
 A common workflow would be to 1) split a multi-sample VCF into single-sample
 VCFs, 2) create a sample sheet mapping sample IDs to diseases, 3) run
 mutational patterns, and 4) visualize the results.
 
 ```
-$ mutspec split-vcf --output-directory vcfs in.vcf
-$ mutspec generate-sample-sheet --output sample-sheet.txt vcfs
-$ mutspec run --output-directory results vcfs sample-sheet.txt
-$ mutspec visualize --output results/signatures.html results/signatures.txt
+$ mtsg split-vcf --output-directory vcfs in.vcf
+$ mtsg generate-sample-sheet --output sample-sheet.txt vcfs
+$ mtsg run --output-directory results vcfs sample-sheet.txt
+$ mtsg visualize --output results/signatures.html results/signatures.txt
 ```
 
 ## Docker
 
-Mutational Spectrum has a `Dockerfile` to create a Docker image, which sets
+Mutational Signatures has a `Dockerfile` to create a Docker image, which sets
 up and installs all the required dependencies. To build and use this image,
 [install Docker](https://docs.docker.com/install) for your platform.
 
 ### Build
 
-In the Mutational Spectrum project directory, build the Docker image.
+In the Mutational Signatures project directory, build the Docker image.
 
 ```
-$ docker build --tag mutspec .
+$ docker build --tag mtsg .
 ```
 
 ### Run
 
-The image uses `mutspec` as its entrypoint, giving access to all commands.
+The image uses `mtsg` as its entrypoint, giving access to all commands.
 
 ```
-$ docker run mutspec <args...>
+$ docker run mtsg <args...>
 ```
 
 The following example mounts the necessary files/directories and runs the
@@ -109,7 +109,7 @@ The following example mounts the necessary files/directories and runs the
 $ docker run \
     --mount type=bind,source=$DATA_DIR,target=/data,readonly \
     --mount type=bind,source=$RESULTS_DIR,target=/results \
-    mutspec \
+    mtsg \
     --verbose \
     run \
     --output-directory /results \

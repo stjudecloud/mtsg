@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
-MUTSPEC_HOME=$(realpath $(dirname $0)/..)
-TEST_HOME=$MUTSPEC_HOME/tmp/test
+MTSG_HOME=$(realpath $(dirname $0)/..)
+TEST_HOME=$MTSG_HOME/tmp/test
 
-WRAPPER=$MUTSPEC_HOME/test/bin/wrapper
+WRAPPER=$MTSG_HOME/test/bin/wrapper
 
 oneTimeSetUp() {
-    docker build --tag mutspec $MUTSPEC_HOME/../..
+    docker build --tag mtsg $MTSG_HOME/../..
 }
 
 setUp() {
     mkdir -p $TEST_HOME/in/vcfs/0
-    cp $MUTSPEC_HOME/test/fixtures/vcfs/* $TEST_HOME/in/vcfs/0
+    cp $MTSG_HOME/test/fixtures/vcfs/* $TEST_HOME/in/vcfs/0
 }
 
 tearDown() {
@@ -26,19 +26,19 @@ test_wrapper() {
     assertTrue "SJACT002_D.vcf does not exist" "[ -e $TEST_HOME/results/vcfs/SJACT002_D.vcf ]"
     assertTrue "SJACT003_D.vcf does not exist" "[ -e $TEST_HOME/results/vcfs/SJACT003_D.vcf ]"
 
-    assertTrue "mutspec.sample.sheet.txt does not exist" "[ -e $TEST_HOME/results/mutspec.sample.sheet.txt ]"
-    assertTrue "mutspec.signatures.html does not exist" "[ -e $TEST_HOME/results/mutspec.signatures.html ]"
-    assertTrue "mutspec.signatures.txt does not exist" "[ -e $TEST_HOME/results/mutspec.signatures.txt ]"
+    assertTrue "mtsg.sample.sheet.txt does not exist" "[ -e $TEST_HOME/results/mtsg.sample.sheet.txt ]"
+    assertTrue "mtsg.signatures.html does not exist" "[ -e $TEST_HOME/results/mtsg.signatures.html ]"
+    assertTrue "mtsg.signatures.txt does not exist" "[ -e $TEST_HOME/results/mtsg.signatures.txt ]"
 }
 
 test_wrapper_with_sample_sheet() {
-    SAMPLE_SHEET=$MUTSPEC_HOME/test/fixtures/sample-sheet.txt
+    SAMPLE_SHEET=$MTSG_HOME/test/fixtures/sample-sheet.txt
     mkdir -p $TEST_HOME/results
-    cp $SAMPLE_SHEET $TEST_HOME/results/mutspec.sample.sheet.txt
+    cp $SAMPLE_SHEET $TEST_HOME/results/mtsg.sample-sheet.txt
 
     $WRAPPER "" $SAMPLE_SHEET > /dev/null 2>&1
 
-    diff $SAMPLE_SHEET $TEST_HOME/results/mutspec.sample.sheet.txt
+    diff $SAMPLE_SHEET $TEST_HOME/results/mtsg.sample-sheet.txt
     assertEquals "sample sheet did not match input" $? 0
 }
 

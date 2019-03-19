@@ -56,6 +56,6 @@ RUN cargo build --release --manifest-path /app/Cargo.toml
 
 FROM env
 
-COPY --from=app /app/target/release/mutspec /opt/mutspec/bin/
+COPY --from=app /app/target/release/mtsg /opt/mtsg/bin/
 
-ENTRYPOINT ["/opt/mutspec/bin/mutspec"]
+ENTRYPOINT ["/opt/mtsg/bin/mtsg"]

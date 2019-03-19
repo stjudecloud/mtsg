@@ -3,8 +3,8 @@
 main() {
     set -ex
 
-    DEFAULT_PREFIX=mutspec
-    MUTSPEC_SPLIT_VCF_EXTRA_ARGS=""
+    DEFAULT_PREFIX=mtsg
+    MTSG_SPLIT_VCF_EXTRA_ARGS=""
 
     DATA_DIR=$HOME/data
     RESULTS_DIR=$HOME/results
@@ -26,7 +26,7 @@ main() {
     fi
 
     if [[ ! -z "$disable_column" ]]; then
-        MUTSPEC_SPLIT_VCF_EXTRA_ARGS="--disable-column $disable_column"
+        MTSG_SPLIT_VCF_EXTRA_ARGS="--disable-column $disable_column"
     fi
 
     SAMPLE_SHEET="$PREFIX.sample.sheet.txt"
@@ -37,19 +37,19 @@ main() {
         --volume $DATA_DIR:/data \
         --volume $RESULTS_DIR:/results \
         --entrypoint /bin/bash \
-        mutspec \
+        mtsg \
         -c \
-        "/opt/mutspec/bin/mutspec \
+        "/opt/mtsg/bin/mtsg \
         --verbose \
         split-vcf \
         --output-directory /results/vcfs \
-        $MUTSPEC_SPLIT_VCF_EXTRA_ARGS \
+        $MTSG_SPLIT_VCF_EXTRA_ARGS \
         /data/*.vcf*"
 
     if [[ -z "$sample_sheet" ]]; then
         dx-docker run \
             --volume $RESULTS_DIR:/results \
-            mutspec \
+            mtsg \
             --verbose \
             generate-sample-sheet \
             --output "/results/$SAMPLE_SHEET" \
@@ -62,7 +62,7 @@ main() {
 
     dx-docker run \
         --volume $RESULTS_DIR:/results \
-        mutspec \
+        mtsg \
         --verbose \
         run \
         --output-directory /results \
@@ -75,7 +75,7 @@ main() {
 
     dx-docker run \
         --volume $RESULTS_DIR:/results \
-        mutspec \
+        mtsg \
         --verbose \
         visualize \
         --output "/results/$SIGNATURES_HTML" \

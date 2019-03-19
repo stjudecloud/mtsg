@@ -1,6 +1,6 @@
 {
-  "name": "mutspec",
-  "title": "St. Jude Mutational Spectrum",
+  "name": "mtsg",
+  "title": "St. Jude Mutational Signatures",
   "summary": "Find and quantify COSMIC mutational signatures across samples",
   "dxapi": "1.0.0",
   "version": "1.0.0",
@@ -88,7 +88,7 @@
     "interpreter": "bash",
     "release": "16.04",
     "distribution": "Ubuntu",
-    "file": "src/mutspec.sh"
+    "file": "src/mtsg.sh"
   },
   "access": {
     "network": [

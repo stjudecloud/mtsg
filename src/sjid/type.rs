@@ -18,7 +18,7 @@ impl Type {
     /// # Examples
     ///
     /// ```
-    /// use mutspec::sjid::r#type::Type;
+    /// use mtsg::sjid::r#type::Type;
     ///
     /// assert_eq!(Type::Autopsy.code(), "A");
     /// assert_eq!(Type::CellLine.code(), "C");

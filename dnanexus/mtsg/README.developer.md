@@ -1,13 +1,13 @@
-# St. Jude Mutational Spectrum (dev)
+# St. Jude Mutational Signatures (dev)
 
-The main script runs multiple containers with a pre-built Mutational Spectrum
+The main script runs multiple containers with a pre-built Mutational Signatures
 image. See `README.md` for a description of the process.
 
 ## Build
 
 ```
-$ docker build --tag mutspec ../..
-$ dx-docker add-to-applet mutspec .
+$ docker build --tag mtsg ../..
+$ dx-docker add-to-applet mtsg .
 $ dx-build
 ```
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-MUTSPEC_HOME=$(realpath $(dirname $0)/../..)
+MTSG_HOME=$(realpath $(dirname $0)/../..)
 
-HOME=$MUTSPEC_HOME/tmp/test
-PATH=$MUTSPEC_HOME/test/bin:$PATH
+HOME=$MTSG_HOME/tmp/test
+PATH=$MTSG_HOME/test/bin:$PATH
 
 DEFAULT_VCFS=($HOME/in/vcfs/0/*)
 
@@ -21,7 +21,7 @@ signatures_txt=""
 signatures_html=""
 sample_sheet_out=""
 
-source $MUTSPEC_HOME/src/mutspec.sh
+source $MTSG_HOME/src/mtsg.sh
 main
 
 exit $?

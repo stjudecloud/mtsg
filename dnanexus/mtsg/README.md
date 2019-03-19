@@ -1,5 +1,5 @@
 <!-- dx-header -->
-# St. Jude Mutational Spectrum
+# St. Jude Mutational Signatures
 
 Find and quantify COSMIC mutational signatures across samples
 <!-- /dx-header -->
@@ -9,7 +9,7 @@ mutation signatures to reconstruct a mutation matrix. It builds the initial
 mutation matrix from multiple single-sample VCFs and, by default, fits it to
 [mutational signatures from COSMIC].
 
-mutspec supports both hg19 (GRCh37) and hg38 (GRCh38).
+mtsg supports both hg19 (GRCh37) and hg38 (GRCh38).
 
 [mutational signatures from COSMIC]: https://cancer.sanger.ac.uk/cosmic/signatures
 
@@ -61,7 +61,7 @@ mutspec supports both hg19 (GRCh37) and hg38 (GRCh38).
 
 ## Process
 
-Mutational Spectrum runs four steps using subcommands of `mutspec`.
+Mutational Signatures runs four steps using subcommands of `mtsg`.
 
   1. split VCFs (single or multi-sample) to multiple single-sample VCFs
   2. generate a sample sheet from the directory of single-sample VCFs
@@ -70,7 +70,7 @@ Mutational Spectrum runs four steps using subcommands of `mutspec`.
 
 ## Instance Types
 
-Mutational Spectrum is a CPU-bound workflow, spending a majority of its time
+Mutational Signatures is a CPU-bound workflow, spending a majority of its time
 reading VCFs and creating the initial mutation matrix. Both of these
 operations are multithreaded, meaning that adding more CPUs can improve
 performance.

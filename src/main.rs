@@ -3,7 +3,7 @@ use std::{io, process};
 use clap::{crate_name, crate_version, value_t, App, AppSettings, Arg, SubCommand};
 use log::{error, warn, LevelFilter};
 
-use mutspec::{
+use mtsg::{
     cosmic::download_signature_probabilities, r::mutational_patterns, sample_sheet,
     vcf::split_file, visualizations::create_visualization,
 };

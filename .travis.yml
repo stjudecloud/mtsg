@@ -4,7 +4,7 @@ services:
   - docker
 
 before_install:
-  - docker build --target app --tag mutspec-app .
+  - docker build --target app --tag mtsg-app .
 
 script:
-  - docker run mutspec-app cargo test --manifest-path /app/Cargo.toml
+  - docker run mtsg-app cargo test --manifest-path /app/Cargo.toml

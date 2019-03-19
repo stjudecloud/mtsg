@@ -1,5 +1,5 @@
 [package]
-name = "mutspec"
+name = "mtsg"
 version = "1.0.0"
 authors = ["Michael Macias <michael.macias@stjude.org>"]
 edition = "2018"
