@@ -116,3 +116,11 @@ $ docker run \
     /data/vcfs \
     /data/sample-sheet.txt
 ```
+
+## References
+
+  * Blokzijl F, Janssen R, van Boxtel R, Cuppen E (2018). "MutationalPatterns:
+    comprehensive genome-wide analysis of mutational processes." Genome
+    Medicine. doi: [10.1186/s13073-018-0539-0].
+
+[10.1186/s13073-018-0539-0]: https://doi.org/10.1186/s13073-018-0539-0
