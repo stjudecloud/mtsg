@@ -132,15 +132,23 @@ SJBALL020013_D1\tBALL
 
     #[test]
     fn test_build_pairs() {
-        let names = vec![String::from("SJACT001_D"), String::from("SJBALL020013_D1")];
+        let names = vec![
+            String::from("SJACT001_D"),
+            String::from("SJBALL020013_D1"),
+            String::from("HAP1_POLM_21-4"),
+        ];
+
         let pairs = build_pairs(&names);
 
-        assert_eq!(pairs.len(), 2);
+        assert_eq!(pairs.len(), 3);
 
         assert_eq!(pairs[0].name, "SJACT001_D");
         assert_eq!(pairs[0].tag, "ACT");
 
         assert_eq!(pairs[1].name, "SJBALL020013_D1");
         assert_eq!(pairs[1].tag, "BALL");
+
+        assert_eq!(pairs[2].name, "HAP1_POLM_21-4");
+        assert_eq!(pairs[2].tag, "unknown")
     }
 }
