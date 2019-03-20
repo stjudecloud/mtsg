@@ -29,3 +29,12 @@ $ test/run
 ```
 
 [shunit2]: https://github.com/kward/shunit2
+
+## Publish
+
+Create and publish an app to make it available in the global namespace to
+authorized users.
+
+```
+dx build --app --publish
+```
