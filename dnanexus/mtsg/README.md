@@ -84,3 +84,11 @@ filtered samples with `mem1_ssd1_x{2,4,8,16}` instances (as of 2018-08-08).
 |    4 |  7:17 |   1:42 | 20:52 | $0.0959 |
 |    8 |  4:05 |   0:55 | 14:36 | $0.1342 |
 |   16 |  2:29 |   0:30 | 11:10 | $0.2052 |
+
+## References
+
+  * Blokzijl F, Janssen R, van Boxtel R, Cuppen E (2018). "MutationalPatterns:
+    comprehensive genome-wide analysis of mutational processes." _Genome
+    Medicine_. doi: [10.1186/s13073-018-0539-0].
+
+[10.1186/s13073-018-0539-0]: https://doi.org/10.1186/s13073-018-0539-0
