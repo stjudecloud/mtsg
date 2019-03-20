@@ -47,7 +47,7 @@ $ cargo install --git https://github.com/stjude/mtsg.git
 ## Usage
 
 ```
-mtsg 1.0.0
+mtsg 2.0.0
 
 USAGE:
     mtsg [FLAGS] <SUBCOMMAND>

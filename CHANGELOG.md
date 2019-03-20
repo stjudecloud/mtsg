@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [2.0.0] - 2019-03-20
 
 ### Changed
 
@@ -19,3 +19,5 @@
 ## 1.0.0 - 2018-09-04
 
   * Initial release
+
+[2.0.0]: https://github.com/stjude/mtsg/compare/v1.0.0...v2.0.0
