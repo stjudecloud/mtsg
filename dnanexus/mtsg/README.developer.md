@@ -8,7 +8,7 @@ image. See `README.md` for a description of the process.
 ```
 $ docker build --tag mtsg ../..
 $ dx-docker add-to-applet mtsg .
-$ dx-build
+$ dx build
 ```
 
 Note dx-docker exports the image in the ACI format, which requires
