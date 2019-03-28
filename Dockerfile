@@ -21,15 +21,15 @@ RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
         libmariadb-client-lgpl-dev \
     && rm -r /var/lib/apt/lists/*
 
-RUN echo 'source("https://bioconductor.org/biocLite.R"); \
-        biocLite(c( \
+RUN echo 'install.packages("BiocManager", repos = "https://cloud.r-project.org/"); \
+        BiocManager::install(c( \
             "MutationalPatterns", \
             "BSgenome", \
             "BSgenome.Hsapiens.UCSC.hg19", \
             "BSgenome.Hsapiens.UCSC.hg38", \
             "rtracklayer", \
             "GenomicRanges" \
-        ))' | R --vanilla
+        ), version = "3.8")' | R --vanilla
 
 # stage 2
 
