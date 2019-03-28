@@ -2,6 +2,12 @@
 
 FROM ubuntu:18.04 AS env
 
+# Add repository for R 3.5.
+RUN apt-get update \
+    && apt-get -y install ca-certificates gnupg \
+    && echo "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" > /etc/apt/sources.list.d/r.list \
+    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+
 # Set the timezone before installing r-base to avoid having to interact with tzdata.
 RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
     && apt-get update \
