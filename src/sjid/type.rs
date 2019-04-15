@@ -29,7 +29,7 @@ impl Type {
     /// assert_eq!(Type::Relapse.code(), "R");
     /// assert_eq!(Type::Xenograft.code(), "X");
     /// ```
-    pub fn code(&self) -> &'static str {
+    pub fn code(self) -> &'static str {
         match self {
             Type::Autopsy => "A",
             Type::CellLine => "C",

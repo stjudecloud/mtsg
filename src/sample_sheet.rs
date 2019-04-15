@@ -1,4 +1,5 @@
 use std::{
+    ffi::OsStr,
     fs::File,
     io::{self, BufWriter, Write},
     path::Path,
@@ -67,7 +68,7 @@ where
 {
     path.as_ref()
         .file_stem()
-        .and_then(|n| n.to_str())
+        .and_then(OsStr::to_str)
         .map(String::from)
 }
 

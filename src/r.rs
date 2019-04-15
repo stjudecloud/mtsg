@@ -11,6 +11,7 @@ use crate::cosmic::download_signature_probabilities;
 
 static MUTATIONAL_PATTERNS_SRC: &str = include_str!("mutational_patterns.R");
 
+#[allow(clippy::too_many_arguments)]
 pub fn mutational_patterns<P, Q, R, S>(
     vcfs_dir: P,
     sample_sheet: Q,

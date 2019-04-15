@@ -45,7 +45,7 @@ impl Sjid for SampleName {
     }
 
     fn secondary_id(&self) -> Option<&str> {
-        self.secondary_id.as_ref().map(|s| s.as_str())
+        self.secondary_id.as_ref().map(String::as_str)
     }
 
     fn subject(&self) -> String {

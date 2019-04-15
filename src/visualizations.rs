@@ -62,7 +62,7 @@ where
         .map(String::from)
         .collect();
 
-    let name = headers.last().map(|n| n.as_str()).unwrap_or("");
+    let name = headers.last().map(String::as_str).unwrap_or("");
 
     if name != TAG_COLUMN_NAME {
         return Err(io::Error::new(
@@ -92,21 +92,18 @@ where
 
             let id = record[0].to_string();
 
-            let disease = record
-                .get(n_headers - 1)
-                .map(|s| s.to_string())
-                .ok_or_else(|| {
-                    io::Error::new(
-                        io::ErrorKind::InvalidData,
-                        format!("{}:{}: missing {}", pathname, line_no, TAG_COLUMN_NAME),
-                    )
-                })?;
+            let disease = record.get(n_headers - 1).map(String::from).ok_or_else(|| {
+                io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    format!("{}:{}: missing {}", pathname, line_no, TAG_COLUMN_NAME),
+                )
+            })?;
 
             let contributions: Vec<f64> = record
                 .iter()
                 .skip(1)
                 .take(n_headers - 2)
-                .map(|v| v.parse())
+                .map(str::parse)
                 .collect::<Result<_, _>>()
                 .map_err(|e| {
                     io::Error::new(

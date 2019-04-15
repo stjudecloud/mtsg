@@ -102,25 +102,23 @@ impl<R: BufRead> Reader<R> {
     }
 
     pub fn meta(&self) -> Option<&str> {
-        self.meta.as_ref().map(|s| s.as_str())
+        self.meta.as_ref().map(String::as_str)
     }
 
     pub fn headers(&self) -> Option<&str> {
-        self.headers.as_ref().map(|s| s.as_str())
+        self.headers.as_ref().map(String::as_str)
     }
 
     pub fn mandatory_headers(&self) -> Option<Vec<&str>> {
-        if self.headers.is_none() {
-            return None;
-        }
+        self.headers().map(|_| {
+            let mut headers = MANDATORY_HEADERS.to_vec();
 
-        let mut headers = MANDATORY_HEADERS.to_vec();
+            if self.has_format {
+                headers.push(OPTIONAL_HEADER);
+            }
 
-        if self.has_format {
-            headers.push(OPTIONAL_HEADER);
-        }
-
-        Some(headers)
+            headers
+        })
     }
 
     pub fn samples(&self) -> Option<Vec<&str>> {
