@@ -2,7 +2,7 @@
 
 FROM ubuntu:18.04 AS env
 
-# Add repository for R 3.5.
+# Add repository for R 3.6.
 RUN apt-get update \
     && apt-get -y install ca-certificates gnupg \
     && echo "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" > /etc/apt/sources.list.d/r.list \
@@ -29,7 +29,7 @@ RUN echo 'install.packages("BiocManager", repos = "https://cloud.r-project.org/"
             "BSgenome.Hsapiens.UCSC.hg38", \
             "rtracklayer", \
             "GenomicRanges" \
-        ), version = "3.8")' | R --vanilla
+        ), version = "3.9")' | R --vanilla
 
 # stage 2
 
