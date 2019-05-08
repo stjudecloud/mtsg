@@ -1,12 +1,15 @@
 use std::{io, process};
 
-use clap::{crate_name, crate_version, value_t, App, AppSettings, Arg, SubCommand};
+use clap::{crate_name, value_t, App, AppSettings, Arg, SubCommand};
+use git_testament::{git_testament, render_testament};
 use log::{error, warn, LevelFilter};
 
 use mtsg::{
     cosmic::download_signature_probabilities, r::mutational_patterns, sample_sheet,
     vcf::split_file, visualizations::create_visualization,
 };
+
+git_testament!(TESTAMENT);
 
 fn exit_with_clap_error(error: clap::Error) -> ! {
     error!("{}", error);
@@ -131,7 +134,7 @@ fn main() {
         );
 
     let matches = App::new(crate_name!())
-        .version(crate_version!())
+        .version(render_testament!(TESTAMENT).as_str())
         .setting(AppSettings::SubcommandRequiredElseHelp)
         .arg(
             Arg::with_name("verbose")
