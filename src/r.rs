@@ -32,12 +32,8 @@ where
         path.as_ref().to_path_buf()
     } else {
         info!("using default COSMIC signature probabilities");
-
-        let mut dst = env::temp_dir();
-        dst.push("signatures.txt");
-
+        let dst = env::temp_dir().join("signatures.txt");
         download_signature_probabilities(&dst)?;
-
         dst
     };
 

@@ -14,7 +14,7 @@ pub mod reader;
 
 static EMPTY_CELL: &str = ".:.";
 
-pub fn split_file<P, Q>(src: P, dst: Q, disable_column: Option<usize>) -> io::Result<()>
+pub fn split_file<P, Q>(src: P, dst_prefix: Q, disable_column: Option<usize>) -> io::Result<()>
 where
     P: AsRef<Path>,
     Q: AsRef<Path>,
@@ -45,8 +45,8 @@ where
         let mut writers: Vec<BufWriter<File>> = samples
             .iter()
             .map(|name| {
-                let mut dst = dst.as_ref().to_path_buf();
-                dst.push(format!("{}.vcf", name));
+                let filename = format!("{}.vcf", name);
+                let dst = dst_prefix.as_ref().join(filename);
                 let file = File::create(dst)?;
                 Ok(BufWriter::new(file))
             })
