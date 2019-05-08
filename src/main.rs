@@ -1,4 +1,4 @@
-use std::{io, process};
+use std::{error::Error, io, process};
 
 use clap::{crate_name, value_t, App, AppSettings, Arg, SubCommand};
 use git_testament::{git_testament, render_testament};
@@ -11,12 +11,10 @@ use mtsg::{
 
 git_testament!(TESTAMENT);
 
-fn exit_with_clap_error(error: clap::Error) -> ! {
-    error!("{}", error);
-    process::exit(1);
-}
-
-fn exit_with_io_error(error: io::Error) -> ! {
+fn exit_with_error<E>(error: E) -> !
+where
+    E: Error,
+{
     error!("{}", error);
     process::exit(1);
 }
@@ -159,11 +157,11 @@ fn main() {
 
     if let Some(matches) = matches.subcommand_matches("download-signatures") {
         let dst = matches.value_of("output").unwrap();
-        download_signature_probabilities(dst).unwrap_or_else(|e| exit_with_io_error(e));
+        download_signature_probabilities(dst).unwrap_or_else(|e| exit_with_error(e));
     } else if let Some(matches) = matches.subcommand_matches("generate-sample-sheet") {
         let src = matches.value_of("input-directory").unwrap();
         let dst = matches.value_of("output").unwrap();
-        sample_sheet::generate(src, dst).unwrap_or_else(|e| exit_with_io_error(e));
+        sample_sheet::generate(src, dst).unwrap_or_else(|e| exit_with_error(e));
     } else if let Some(matches) = matches.subcommand_matches("run") {
         let vcfs_dir = matches.value_of("vcfs-dir").unwrap();
         let sample_sheet = matches.value_of("sample-sheet").unwrap();
@@ -193,7 +191,7 @@ fn main() {
                     process::exit(code);
                 }
             }
-            Err(e) => exit_with_io_error(e),
+            Err(e) => exit_with_error(e),
         }
     } else if let Some(matches) = matches.subcommand_matches("split-vcf") {
         let srcs: Vec<&str> = matches.values_of("input").unwrap().collect();
@@ -201,7 +199,7 @@ fn main() {
         let disable_column = match value_t!(matches, "disable-column", usize) {
             Ok(i) => Some(i),
             Err(e) => match e.kind {
-                clap::ErrorKind::ValueValidation => exit_with_clap_error(e),
+                clap::ErrorKind::ValueValidation => exit_with_error(e),
                 _ => None,
             },
         };
@@ -211,12 +209,12 @@ fn main() {
                 io::ErrorKind::UnexpectedEof => {
                     warn!("{}: invalid VCF (unexpected EOF), skipping", src);
                 }
-                _ => exit_with_io_error(e),
+                _ => exit_with_error(e),
             });
         }
     } else if let Some(matches) = matches.subcommand_matches("visualize") {
         let src = matches.value_of("input").unwrap();
         let dst = matches.value_of("output").unwrap();
-        create_visualization(src, dst).unwrap_or_else(|e| exit_with_io_error(e));
+        create_visualization(src, dst).unwrap_or_else(|e| exit_with_error(e));
     }
 }
