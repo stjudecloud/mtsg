@@ -1,6 +1,6 @@
 [package]
 name = "mtsg"
-version = "2.0.0"
+version = "2.1.0"
 authors = ["Michael Macias <michael.macias@stjude.org>"]
 edition = "2018"
 license = "Apache-2.0"
