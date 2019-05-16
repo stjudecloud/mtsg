@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+  * Rather than the default set of ten repeated colors, the colors used in the
+    signature contributions stacked bar chart are distinct.
+
 ## [2.0.0] - 2019-03-20
 
 ### Changed

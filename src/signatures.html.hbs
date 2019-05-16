@@ -8,6 +8,14 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
     <script>
+      const COLORS = [
+        "#f44336", "#00bcd4", "#9c27b0", "#8bc34a", "#3f51b5", "#ffeb3b",
+        "#ffc107", "#03a9f4", "#e91e63", "#009688", "#4caf50", "#673ab7",
+        "#cddc39", "#ff9800", "#ff5722", "#795548", "#2196f3", "#9e9e9e",
+        "#607d8b", "#ef9a9a", "#90caf9", "#a5d6a7", "#c62828", "#1565c0",
+        "#2e7d32", "#ef6c00", "#b0bec5", "#37474f", "#ffcc80", "#4e342e",
+      ];
+
       const state = {
         name: "Totals by signatures",
         stacking: "normal",
@@ -123,6 +131,7 @@
           xAxis: { categories },
           yAxis,
           series,
+          colors: COLORS,
           plotOptions: {
             series: { stacking }
           },
