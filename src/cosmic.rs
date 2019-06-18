@@ -150,6 +150,12 @@ where
 
 /// Builds an iterator that returns mutation types in the same order used by
 /// MutationalPatterns.
+///
+/// This order can be seen in both [`signatures_probabilities.txt`] (column "Somatic Mutation
+/// Type") and [`MutationalPatterns.R`] (`TRIPLETS_96`).
+///
+/// [`signatures_probabilities.txt`]: https://cancer.sanger.ac.uk/cancergenome/assets/signatures_probabilities.txt
+/// [`MutationalPatterns.R`]: https://github.com/UMCUGenetics/MutationalPatterns/blob/283570e84132416764ebbc739bf44f6edc982791/R/MutationalPatterns.R
 fn somatic_mutation_types() -> impl Iterator<Item = String> {
     C_TRIPLETS
         .iter()
