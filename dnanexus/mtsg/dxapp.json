@@ -96,7 +96,7 @@
   },
   "access": {
     "network": [
-      "*"
+      "cancer.sanger.ac.uk"
     ]
   },
   "regionalOptions": {
