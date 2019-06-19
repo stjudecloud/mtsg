@@ -5,6 +5,9 @@
   "dxapi": "1.0.0",
   "version": "2.1.0",
   "openSource": true,
+  "details": {
+    "upstreamUrl": "https://github.com/stjude/mtsg"
+  },
   "inputSpec": [
     {
       "name": "vcfs",
