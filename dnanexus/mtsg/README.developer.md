@@ -30,6 +30,13 @@ $ test/run
 
 [shunit2]: https://github.com/kward/shunit2
 
+## Versioning
+
+The version set in `dxapp.json` is defined as "{upstream version}-{release
+count}". The upstream version is the same as the application being wrapped and
+must not include hyphens. The release count starts at 1 and indicates changes
+to the DNAnexus app build.
+
 ## Publish
 
 Create and publish an app to make it available in the global namespace to
