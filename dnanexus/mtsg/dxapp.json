@@ -8,7 +8,7 @@
   "details": {
     "upstreamUrl": "https://github.com/stjude/mtsg",
     "upstreamVersion": "2.1.0",
-    "upstreamLicenses": "Apache-2.0"
+    "upstreamLicenses": ["Apache-2.0"]
   },
   "inputSpec": [
     {
