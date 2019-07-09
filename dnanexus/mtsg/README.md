@@ -85,14 +85,6 @@ filtered samples with `mem1_ssd1_x{2,4,8,16}` instances (as of 2018-08-08).
 |    8 |  4:05 |   0:55 | 14:36 | $0.1342 |
 |   16 |  2:29 |   0:30 | 11:10 | $0.2052 |
 
-## Network Access
-
-COSMIC mutational signature probabilities are downloaded from the [Wellcome
-Sanger Institute]. Network access is restricted to the COSMIC subdomain
-`cancer.sanger.ac.uk`.
-
-[Wellcome Sanger Institute]: https://www.sanger.ac.uk/
-
 ## References
 
   * Blokzijl F, Janssen R, van Boxtel R, Cuppen E (2018). "MutationalPatterns:
