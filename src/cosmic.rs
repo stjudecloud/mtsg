@@ -27,6 +27,7 @@ static T_TRIPLETS: &[&str] = &[
 
 const TOTAL_TRIPLETS: usize = 96;
 
+// The first two columns "Substitution Type" and "Trinucleotide" are not used.
 const N_SKIPPABLE_HEADERS: usize = 2;
 const N_SIGNATURES: usize = 30;
 
