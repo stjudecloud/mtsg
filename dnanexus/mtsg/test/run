@@ -7,6 +7,8 @@ WRAPPER=$MTSG_HOME/test/bin/wrapper
 
 oneTimeSetUp() {
     docker build --tag mtsg $MTSG_HOME/../..
+    mkdir -p $MTSG_HOME/resources/tmp
+    docker save mtsg | gzip -1 > $MTSG_HOME/resources/tmp/mtsg-latest.tar.gz
 }
 
 setUp() {

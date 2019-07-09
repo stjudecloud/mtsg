@@ -9,6 +9,8 @@ main() {
     DATA_DIR=$HOME/data
     RESULTS_DIR=$HOME/results
 
+    gzip --decompress --stdout $RESOURCES/tmp/mtsg-latest.tar.gz | docker load
+
     mkdir -p $DATA_DIR $RESULTS_DIR/vcfs
 
     dx-download-all-inputs --parallel --except sample_sheet
@@ -33,9 +35,9 @@ main() {
     SIGNATURES_HTML="$PREFIX.signatures.html"
     SIGNATURES_TXT="$PREFIX.signatures.txt"
 
-    dx-docker run \
-        --volume $DATA_DIR:/data \
-        --volume $RESULTS_DIR:/results \
+    docker run \
+        --mount type=bind,source=$DATA_DIR,target=/data,readonly \
+        --mount type=bind,source=$RESULTS_DIR,target=/results \
         --entrypoint /bin/bash \
         mtsg \
         -c \
@@ -47,8 +49,8 @@ main() {
         /data/*.vcf*"
 
     if [[ -z "$sample_sheet" ]]; then
-        dx-docker run \
-            --volume $RESULTS_DIR:/results \
+        docker run \
+            --mount type=bind,source=$RESULTS_DIR,target=/results \
             mtsg \
             --verbose \
             generate-sample-sheet \
@@ -60,8 +62,8 @@ main() {
 
     sample_sheet_out=$(dx upload --brief "$RESULTS_DIR/$SAMPLE_SHEET")
 
-    dx-docker run \
-        --volume $RESULTS_DIR:/results \
+    docker run \
+        --mount type=bind,source=$RESULTS_DIR,target=/results \
         mtsg \
         --verbose \
         run \
@@ -73,8 +75,8 @@ main() {
         /results/vcfs \
         "/results/$SAMPLE_SHEET"
 
-    dx-docker run \
-        --volume $RESULTS_DIR:/results \
+    docker run \
+        --mount type=bind,source=$RESULTS_DIR,target=/results \
         mtsg \
         --verbose \
         visualize \

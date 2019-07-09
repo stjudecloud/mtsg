@@ -5,6 +5,8 @@ MTSG_HOME=$(realpath $(dirname $0)/../..)
 HOME=$MTSG_HOME/tmp/test
 PATH=$MTSG_HOME/test/bin:$PATH
 
+RESOURCES=$MTSG_HOME/resources
+
 DEFAULT_VCFS=($HOME/in/vcfs/0/*)
 
 # inputs

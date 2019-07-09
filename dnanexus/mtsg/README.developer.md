@@ -7,14 +7,10 @@ image. See `README.md` for a description of the process.
 
 ```
 $ docker build --tag mtsg ../..
-$ dx-docker add-to-applet mtsg .
+$ mkdir resources/tmp
+$ docker save mtsg | gzip > resources/tmp/mtsg-latest.tar.gz
 $ dx build
 ```
-
-Note dx-docker exports the image in the ACI format, which requires
-[docker2aci] to be installed.
-
-[docker2aci]: https://github.com/appc/docker2aci
 
 ## Test
 
