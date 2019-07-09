@@ -18,6 +18,9 @@ RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
         # curl (R lib)
         libcurl4-openssl-dev \
         libssl-dev \
+        # htslib
+        libbz2-dev \
+        liblzma-dev \
         # RMySQL
         libmariadb-client-lgpl-dev \
     && rm -r /var/lib/apt/lists/*
