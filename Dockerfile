@@ -53,8 +53,7 @@ ENV PATH=/root/.cargo/bin:$PATH
 
 # Cache project dependencies.
 RUN USER=root cargo new --vcs none /app
-COPY Cargo.lock /app/Cargo.lock
-COPY Cargo.toml /app/Cargo.toml
+COPY Cargo.lock Cargo.toml /app/
 RUN cargo build --release --manifest-path /app/Cargo.toml && rm -r /app/src
 
 COPY src /app/src
