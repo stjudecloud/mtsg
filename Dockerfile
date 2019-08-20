@@ -37,27 +37,11 @@ RUN echo 'install.packages("BiocManager", repos = "https://cloud.r-project.org/"
 
 # stage 2
 
-FROM env AS app
+FROM rust:1.37.0 AS app
 
-RUN apt-get update \
-    && apt-get -y --no-install-recommends install \
-        build-essential \
-        curl \
-        # reqwest
-        libssl-dev \
-        pkg-config \
-    && rm -r /var/lib/apt/lists/*
-
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --no-modify-path
-ENV PATH=/root/.cargo/bin:$PATH
-
-# Cache project dependencies.
-RUN USER=root cargo new --vcs none /app
 COPY Cargo.lock Cargo.toml /app/
-RUN cargo build --release --manifest-path /app/Cargo.toml && rm -r /app/src
-
-COPY src /app/src
-COPY test /app/test
+COPY src/ /app/src/
+COPY test/ /app/test/
 
 RUN cargo build --release --manifest-path /app/Cargo.toml
 
