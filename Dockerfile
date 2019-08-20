@@ -1,29 +1,11 @@
-# stage 1
+FROM r-base:3.6.1 AS env
 
-FROM ubuntu:18.04 AS env
-
-# Add repository for R 3.6.
 RUN apt-get update \
-    && apt-get -y --no-install-recommends install ca-certificates gnupg \
-    && echo "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" > /etc/apt/sources.list.d/r.list \
-    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
-
-# Set the timezone before installing r-base to avoid having to interact with tzdata.
-RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
-    && apt-get update \
-    && apt-get -y --no-install-recommends install \
-        build-essential \
-        r-base \
-        libxml2-dev \
-        # curl (R lib)
+      && apt-get --yes install --no-install-recommends \
         libcurl4-openssl-dev \
         libssl-dev \
-        # htslib
-        libbz2-dev \
-        liblzma-dev \
-        # RMySQL
-        libmariadb-client-lgpl-dev \
-    && rm -r /var/lib/apt/lists/*
+        libxml2-dev \
+      && rm -r /var/lib/apt/lists/*
 
 RUN echo 'install.packages("BiocManager", repos = "https://cloud.r-project.org/"); \
         BiocManager::install(c( \
@@ -35,8 +17,6 @@ RUN echo 'install.packages("BiocManager", repos = "https://cloud.r-project.org/"
             "GenomicRanges" \
         ), version = "3.9")' | R --vanilla
 
-# stage 2
-
 FROM rust:1.37.0 AS app
 
 COPY Cargo.lock Cargo.toml /app/
@@ -44,8 +24,6 @@ COPY src/ /app/src/
 COPY test/ /app/test/
 
 RUN cargo build --release --manifest-path /app/Cargo.toml
-
-# stage 3
 
 FROM env
 
