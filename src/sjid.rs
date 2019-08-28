@@ -31,6 +31,7 @@ mod tests {
         assert!(parse("SJACT001_D").is_ok());
         assert!(parse("SJBALL020469_D1").is_ok());
         assert!(parse("").is_err());
+        assert!(parse("SJACT001").is_err());
         assert!(parse("HAP1_CHK2_56-3").is_err());
     }
 }
