@@ -91,7 +91,7 @@ up and installs all the required dependencies. To build and use this image,
 In the Mutational Signatures project directory, build the Docker image.
 
 ```
-$ docker build --tag mtsg .
+$ docker image build --tag mtsg .
 ```
 
 ### Run
@@ -99,14 +99,14 @@ $ docker build --tag mtsg .
 The image uses `mtsg` as its entrypoint, giving access to all commands.
 
 ```
-$ docker run mtsg <args...>
+$ docker container run mtsg <args...>
 ```
 
 The following example mounts the necessary files/directories and runs the
 `run` command.
 
 ```
-$ docker run \
+$ docker container run \
     --mount type=bind,source=$DATA_DIR,target=/data,readonly \
     --mount type=bind,source=$RESULTS_DIR,target=/results \
     mtsg \
