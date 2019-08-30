@@ -75,8 +75,8 @@ mutational patterns, and 4) visualize the results.
 
 ```
 $ mtsg split-vcf --output-directory vcfs in.vcf
-$ mtsg generate-sample-sheet --output sample-sheet.txt vcfs
-$ mtsg run --output-directory results vcfs sample-sheet.txt
+$ mtsg generate-sample-sheet --output sample-sheet.tsv vcfs
+$ mtsg run --output-directory results vcfs sample-sheet.tsv
 $ mtsg visualize --output results/signatures.html results/signatures.txt
 ```
 
@@ -114,7 +114,7 @@ $ docker container run \
     run \
     --output-directory /results \
     /data/vcfs \
-    /data/sample-sheet.txt
+    /data/sample-sheet.tsv
 ```
 
 ## References
