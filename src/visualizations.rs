@@ -6,7 +6,7 @@ use std::{
 };
 
 use handlebars::Handlebars;
-use lazy_static::lazy_static;
+use once_cell::sync::Lazy;
 use serde_derive::Serialize;
 use serde_json::{self, json};
 
@@ -17,15 +17,13 @@ static TAG_COLUMN_NAME: &str = "tissue";
 
 static SIGNATURES_TEMPLATE: &str = include_str!("signatures.html.hbs");
 
-lazy_static! {
-    static ref HBS: Handlebars = {
-        let mut hbs = Handlebars::new();
-        hbs.set_strict_mode(true);
-        hbs.register_template_string("signatures", SIGNATURES_TEMPLATE)
-            .unwrap();
-        hbs
-    };
-}
+static HBS: Lazy<Handlebars> = Lazy::new(|| {
+    let mut hbs = Handlebars::new();
+    hbs.set_strict_mode(true);
+    hbs.register_template_string("signatures", SIGNATURES_TEMPLATE)
+        .unwrap();
+    hbs
+});
 
 #[derive(Serialize)]
 pub struct Sample {

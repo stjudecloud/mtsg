@@ -1,11 +1,11 @@
-use lazy_static::lazy_static;
+use once_cell::sync::Lazy;
 use regex::Regex;
 
 use super::{Sjid, Type};
 use crate::sjid;
 
-lazy_static! {
-    static ref PATTERN: Regex = Regex::new(
+static PATTERN: Lazy<Regex> = Lazy::new(|| {
+    Regex::new(
         r"(?x)
         SJ
         (?P<disease>[[:alnum:]]*[[:alpha:]]\d?)
@@ -13,10 +13,10 @@ lazy_static! {
         _
         (?P<type>[[:upper:]])
         (?P<index>\d+)
-        (-(?P<secondary_id>.+))?"
+        (-(?P<secondary_id>.+))?",
     )
-    .unwrap();
-}
+    .unwrap()
+});
 
 #[derive(Debug)]
 pub struct SampleName {
