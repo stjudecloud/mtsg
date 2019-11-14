@@ -1,6 +1,6 @@
 # Mutational Signatures
 
-[![Build Status](https://travis-ci.org/stjude/mtsg.svg?branch=master)](https://travis-ci.org/stjude/mtsg)
+[![CI status](https://github.com/stjude/mtsg/workflows/CI/badge.svg)](https://github.com/stjude/mtsg/actions)
 
 **Mutational Signatures** (abbreviated as **mtsg**) finds and quantifies COSMIC
 mutational signatures across samples.

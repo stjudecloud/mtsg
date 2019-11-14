@@ -1,0 +1,13 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build
+        run: docker image build --target app --tag mtsg-app .
+      - name: Run tests
+        run: docker container run mtsg-app cargo test --manifest-path /app/Cargo.toml
