@@ -15,7 +15,7 @@ RUN echo 'install.packages("BiocManager", repos = "https://cloud.r-project.org/"
             "BSgenome.Hsapiens.UCSC.hg38", \
             "rtracklayer", \
             "GenomicRanges" \
-        ), version = "3.9")' | R --vanilla
+        ), version = "3.10")' | R --vanilla
 
 FROM rust:1.39.0 AS app
 
