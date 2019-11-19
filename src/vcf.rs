@@ -6,7 +6,7 @@ use std::{
 };
 
 use flate2::read::MultiGzDecoder;
-use log::info;
+use log::{info, warn};
 
 use self::reader::Reader;
 
@@ -47,6 +47,11 @@ where
             .map(|name| {
                 let filename = format!("{}.vcf", name);
                 let dst = dst_prefix.as_ref().join(filename);
+
+                if dst.exists() {
+                    warn!("{}: overwriting", dst.display());
+                }
+
                 let file = File::create(dst)?;
                 Ok(BufWriter::new(file))
             })

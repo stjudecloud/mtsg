@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+  * vcf: When splitting a VCF, warn when the output VCF already exists.
+
 ## [2.1.0] - 2019-05-16
 
 ### Changed
