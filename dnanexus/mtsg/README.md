@@ -75,8 +75,8 @@ reading VCFs and creating the initial mutation matrix. Both of these
 operations are multithreaded, meaning that adding more CPUs can improve
 performance.
 
-The following table is an example of price vs performance for 652 - 11
-filtered samples with `mem1_ssd1_x{2,4,8,16}` instances (as of 2018-08-08).
+The following table is an example of price vs performance for 652 - 11 filtered
+samples using `azure:mem1_ssd1_x{2,4,8,16}` instances (as of 2018-08-08).
 
 | cpus |  read | mutmat | total |    cost |
 |-----:|------:|-------:|------:|--------:|
