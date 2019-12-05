@@ -6,6 +6,8 @@
 
   * vcf: When splitting a VCF, warn when the output VCF already exists.
 
+  * sample-sheet: When creating a sample sheet, warn when no VCFs are loaded.
+
 ## [2.1.0] - 2019-05-16
 
 ### Changed

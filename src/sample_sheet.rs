@@ -6,7 +6,7 @@ use std::{
 };
 
 use glob::glob;
-use log::warn;
+use log::{info, warn};
 
 use crate::sjid;
 
@@ -22,7 +22,9 @@ where
     P: AsRef<Path>,
     Q: AsRef<Path>,
 {
-    let mut pattern = src.as_ref().to_path_buf();
+    let src = src.as_ref();
+
+    let mut pattern = src.to_path_buf();
     pattern.push("*.vcf");
 
     let pattern = format!("{}", pattern.display());
@@ -30,9 +32,16 @@ where
     let pathnames =
         list_directory(&pattern).map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
 
+    let file = File::create(dst)?;
+
+    if pathnames.is_empty() {
+        warn!("{}: found 0 samples", src.display());
+    } else {
+        info!("{}: found {} sample(s)", src.display(), pathnames.len());
+    }
+
     let pairs = build_pairs(&pathnames);
 
-    let file = File::create(dst)?;
     let mut writer = BufWriter::new(file);
 
     write_table(&mut writer, &pairs)
