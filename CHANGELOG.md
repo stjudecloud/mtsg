@@ -8,6 +8,10 @@
 
   * sample-sheet: When creating a sample sheet, warn when no VCFs are loaded.
 
+### Changed
+
+  * visualize: Link to COSMIC Mutational Signatures v2.
+
 ## [2.1.0] - 2019-05-16
 
 ### Changed
