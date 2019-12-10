@@ -19,6 +19,7 @@ RUN echo 'install.packages("BiocManager", repos = "https://cloud.r-project.org/"
 
 FROM rust:1.39.0 AS app
 
+COPY .git/ /app/.git/
 COPY Cargo.lock Cargo.toml /app/
 COPY src/ /app/src/
 COPY test/ /app/test/
