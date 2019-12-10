@@ -17,7 +17,7 @@ RUN echo 'install.packages("BiocManager", repos = "https://cloud.r-project.org/"
             "GenomicRanges" \
         ), version = "3.10")' | R --vanilla
 
-FROM rust:1.39.0 AS app
+FROM rust:1.39.0-buster AS app
 
 COPY .git/ /app/.git/
 COPY Cargo.lock Cargo.toml /app/
