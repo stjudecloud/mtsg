@@ -7,7 +7,7 @@ use std::{
 
 use handlebars::Handlebars;
 use once_cell::sync::Lazy;
-use serde_derive::Serialize;
+use serde::Serialize;
 use serde_json::{self, json};
 
 static CRATE_NAME: &str = env!("CARGO_PKG_NAME");
