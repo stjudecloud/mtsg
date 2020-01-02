@@ -50,8 +50,7 @@ where
 }
 
 fn download() -> reqwest::Result<String> {
-    let mut response = reqwest::get(SP_URL)?;
-    response.text()
+    reqwest::blocking::get(SP_URL).and_then(|r| r.text())
 }
 
 /// Extracts 30 known mutational signature probabilities and their 96 somatic
