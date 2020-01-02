@@ -10,6 +10,8 @@
 
 ### Changed
 
+  * Raise mininum supported Rust version to 1.39.0.
+
   * visualize: Link to COSMIC Mutational Signatures v2.
 
 ## [2.1.0] - 2019-05-16
