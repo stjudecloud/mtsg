@@ -7,7 +7,8 @@ RUN apt-get update \
         libxml2-dev \
       && rm -r /var/lib/apt/lists/*
 
-RUN echo 'install.packages("BiocManager", repos = "https://cloud.r-project.org/"); \
+RUN echo 'options(repos = "https://cloud.r-project.org/", Ncpus = parallel::detectCores()); \
+        install.packages("BiocManager"); \
         BiocManager::install(c( \
             "MutationalPatterns", \
             "BSgenome", \
