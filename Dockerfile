@@ -18,7 +18,7 @@ RUN echo 'options(repos = "https://cloud.r-project.org/", Ncpus = parallel::dete
             "GenomicRanges" \
         ), version = "3.10")' | R --vanilla
 
-FROM rust:1.40.0-buster AS app
+FROM rust:1.41.0-buster AS app
 
 COPY .git/ /app/.git/
 COPY Cargo.lock Cargo.toml /app/
