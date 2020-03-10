@@ -1,8 +1,8 @@
-FROM r-base:3.6.2 AS env
+FROM r-base:3.6.3 AS env
 
 RUN apt-get update \
-      && apt-get --yes install --target-release unstable libcurl4-openssl-dev \
       && apt-get --yes install --no-install-recommends \
+        libcurl4-openssl-dev \
         libssl-dev \
         libxml2-dev \
       && rm -r /var/lib/apt/lists/*
