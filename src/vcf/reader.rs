@@ -102,11 +102,11 @@ impl<R: BufRead> Reader<R> {
     }
 
     pub fn meta(&self) -> Option<&str> {
-        self.meta.as_ref().map(String::as_str)
+        self.meta.as_deref()
     }
 
     pub fn headers(&self) -> Option<&str> {
-        self.headers.as_ref().map(String::as_str)
+        self.headers.as_deref()
     }
 
     pub fn mandatory_headers(&self) -> Option<Vec<&str>> {

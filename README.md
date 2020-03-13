@@ -23,7 +23,7 @@ mtsg supports both hg19 (GRCh37) and hg38 (GRCh38).
     * [GenomicRanges] ~1.32.6
     * [MutationalPatterns] ~1.6.1
     * [rtracklayer] ~1.40.3
-  * [Rust] ^1.39.0
+  * [Rust] ^1.40.0
 
 [R]: https://www.r-project.org/
 [MutationalPatterns]: https://bioconductor.org/packages/release/bioc/html/MutationalPatterns.html
