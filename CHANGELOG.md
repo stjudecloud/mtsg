@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [2.2.0] - 2020-05-11
 
 ### Added
 
@@ -10,7 +10,7 @@
 
 ### Changed
 
-  * Raise mininum supported Rust version to 1.39.0.
+  * Raise mininum supported Rust version to 1.40.0.
 
   * visualize: Link to COSMIC Mutational Signatures v2.
 
@@ -41,5 +41,6 @@
 
   * Initial release
 
+[2.2.0]: https://github.com/stjude/mtsg/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/stjude/mtsg/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/stjude/mtsg/compare/v1.0.0...v2.0.0
