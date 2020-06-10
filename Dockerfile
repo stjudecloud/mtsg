@@ -1,4 +1,4 @@
-FROM r-base:3.6.3 AS env
+FROM r-base:4.0.1 AS env
 
 RUN apt-get update \
       && apt-get --yes install --no-install-recommends \
@@ -16,7 +16,7 @@ RUN echo 'options(repos = "https://cloud.r-project.org/", Ncpus = parallel::dete
             "BSgenome.Hsapiens.UCSC.hg38", \
             "rtracklayer", \
             "GenomicRanges" \
-        ), version = "3.10")' | R --vanilla
+        ), version = "3.11")' | R --vanilla
 
 FROM rust:1.44.0-buster AS app
 
