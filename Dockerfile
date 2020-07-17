@@ -1,4 +1,4 @@
-FROM r-base:4.0.1 AS env
+FROM r-base:4.0.2 AS env
 
 RUN apt-get update \
       && apt-get --yes install --no-install-recommends \
