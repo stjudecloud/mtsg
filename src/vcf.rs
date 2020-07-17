@@ -11,7 +11,8 @@ use self::reader::Reader;
 
 pub mod reader;
 
-static EMPTY_CELL: &str = ".:.";
+const GENOTYPE_FIELD_DELIMITER: char = ':';
+static MISSING_FIELD: &str = ".";
 
 pub fn split_file<P, Q>(src: P, dst_prefix: Q, disable_column: Option<usize>) -> io::Result<()>
 where
@@ -84,7 +85,10 @@ where
             .enumerate();
 
         for (i, value) in iter {
-            if value == EMPTY_CELL {
+            if value
+                .split(GENOTYPE_FIELD_DELIMITER)
+                .all(|v| v == MISSING_FIELD)
+            {
                 continue;
             }
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+  * vcf: Skip the genotype when it is fully missing (i.e., `.`) or every field
+    is missing (e.g., `.:.`).
+
 ## [2.2.0] - 2020-05-11
 
 ### Added
