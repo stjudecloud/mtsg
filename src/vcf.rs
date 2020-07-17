@@ -1,5 +1,4 @@
 use std::{
-    ffi::OsStr,
     fs::File,
     io::{self, BufRead, BufReader, BufWriter, Write},
     path::Path,
@@ -19,9 +18,7 @@ where
     P: AsRef<Path>,
     Q: AsRef<Path>,
 {
-    let file_reader = reader_factory(&src)?;
-
-    let mut reader = Reader::new(file_reader);
+    let mut reader = open(&src)?;
     reader.read_meta()?;
 
     let mut writers = {
@@ -104,20 +101,23 @@ where
     Ok(())
 }
 
-fn reader_factory<P>(src: P) -> io::Result<Box<dyn BufRead>>
+fn open<P>(src: P) -> io::Result<Reader<Box<dyn BufRead>>>
 where
     P: AsRef<Path>,
 {
     let path = src.as_ref();
     let file = File::open(path)?;
 
-    match path.extension().and_then(OsStr::to_str) {
+    match path.extension().and_then(|ext| ext.to_str()) {
         Some("gz") => {
             let decoder = MultiGzDecoder::new(file);
             let reader = BufReader::new(decoder);
-            Ok(Box::new(reader))
+            Ok(Reader::new(Box::new(reader)))
         }
-        _ => Ok(Box::new(BufReader::new(file))),
+        _ => {
+            let reader = BufReader::new(file);
+            Ok(Reader::new(Box::new(reader)))
+        }
     }
 }
 
