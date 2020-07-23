@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+  * visualizations: Show signature etiologies.
+
 ### Changed
 
   * vcf: Skip the genotype when it is fully missing (i.e., `.`) or every field
