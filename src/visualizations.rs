@@ -15,7 +15,7 @@ static CRATE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 static TAG_COLUMN_NAME: &str = "tissue";
 
-static SIGNATURES_TEMPLATE: &str = include_str!("signatures.html.hbs");
+static SIGNATURES_TEMPLATE: &str = include_str!("templates/signatures.html.hbs");
 
 static HBS: Lazy<Handlebars> = Lazy::new(|| {
     let mut hbs = Handlebars::new();
