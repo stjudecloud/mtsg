@@ -1,8 +1,6 @@
 use std::{
     collections::HashMap,
-    fs::File,
-    io::{self, BufWriter, Read, Write},
-    path::Path,
+    io::{self, Read, Write},
 };
 
 use log::warn;
@@ -35,18 +33,13 @@ const N_SIGNATURES: usize = 30;
 static SP_URL: &str =
     "https://cancer.sanger.ac.uk/cancergenome/assets/signatures_probabilities.txt";
 
-pub fn download_signature_probabilities<P>(dst: P) -> io::Result<()>
+pub fn download_signature_probabilities<W>(writer: &mut W) -> io::Result<()>
 where
-    P: AsRef<Path>,
+    W: Write,
 {
     let body = download().map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
-
     let (headers, rows) = extract_table(body.as_bytes())?;
-
-    let file = File::create(dst)?;
-    let mut writer = BufWriter::new(file);
-
-    write_table(&mut writer, &headers, &rows).map_err(|e| io::Error::new(io::ErrorKind::Other, e))
+    write_table(writer, &headers, &rows).map_err(|e| io::Error::new(io::ErrorKind::Other, e))
 }
 
 fn download() -> reqwest::Result<String> {

@@ -1,6 +1,7 @@
 use std::{
     env,
-    io::{self, BufRead, BufReader, Write},
+    fs::File,
+    io::{self, BufRead, BufReader, BufWriter, Write},
     path::Path,
     process::{Command, ExitStatus, Stdio},
 };
@@ -33,7 +34,8 @@ where
     } else {
         info!("using default COSMIC signature probabilities");
         let dst = env::temp_dir().join("signatures.txt");
-        download_signature_probabilities(&dst)?;
+        let mut writer = File::create(&dst).map(BufWriter::new)?;
+        download_signature_probabilities(&mut writer)?;
         dst
     };
 

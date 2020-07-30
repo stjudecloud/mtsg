@@ -1,4 +1,8 @@
-use std::{io, process};
+use std::{
+    fs::File,
+    io::{self, BufWriter},
+    process,
+};
 
 use clap::{crate_name, value_t, App, AppSettings, Arg, SubCommand};
 use git_testament::{git_testament, render_testament};
@@ -149,7 +153,8 @@ fn main() -> anyhow::Result<()> {
 
     if let Some(matches) = matches.subcommand_matches("download-signatures") {
         let dst = matches.value_of("output").unwrap();
-        download_signature_probabilities(dst)?;
+        let mut writer = File::create(dst).map(BufWriter::new)?;
+        download_signature_probabilities(&mut writer)?;
     } else if let Some(matches) = matches.subcommand_matches("generate-sample-sheet") {
         let src = matches.value_of("input-directory").unwrap();
         let dst = matches.value_of("output").unwrap();
