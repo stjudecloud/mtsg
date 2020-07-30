@@ -4,6 +4,8 @@
 
 ### Added
 
+  * main: Add context to error messages.
+
   * visualizations: Show signature etiologies.
 
 ### Changed

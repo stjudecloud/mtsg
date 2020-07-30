@@ -1,17 +1,8 @@
-use std::{
-    fs::File,
-    io::{self, BufWriter},
-    process,
-};
+mod commands;
 
 use clap::{crate_name, value_t, App, AppSettings, Arg, SubCommand};
 use git_testament::{git_testament, render_testament};
-use log::{warn, LevelFilter};
-
-use mtsg::{
-    cosmic::download_signature_probabilities, r::mutational_patterns, sample_sheet,
-    vcf::split_file, visualizations::create_visualization,
-};
+use log::LevelFilter;
 
 git_testament!(TESTAMENT);
 
@@ -153,13 +144,11 @@ fn main() -> anyhow::Result<()> {
 
     if let Some(matches) = matches.subcommand_matches("download-signatures") {
         let dst = matches.value_of("output").unwrap();
-        let mut writer = File::create(dst).map(BufWriter::new)?;
-        download_signature_probabilities(&mut writer)?;
+        commands::download_signatures(dst)?;
     } else if let Some(matches) = matches.subcommand_matches("generate-sample-sheet") {
         let src = matches.value_of("input-directory").unwrap();
         let dst = matches.value_of("output").unwrap();
-        let mut writer = File::create(dst).map(BufWriter::new)?;
-        sample_sheet::generate(src, &mut writer)?;
+        commands::generate_sample_sheet(src, dst)?;
     } else if let Some(matches) = matches.subcommand_matches("run") {
         let vcfs_dir = matches.value_of("vcfs-dir").unwrap();
         let sample_sheet = matches.value_of("sample-sheet").unwrap();
@@ -171,7 +160,7 @@ fn main() -> anyhow::Result<()> {
         let out_dir = matches.value_of("output-directory").unwrap();
         let prefix = matches.value_of("prefix").unwrap();
 
-        let result = mutational_patterns(
+        commands::run(
             vcfs_dir,
             sample_sheet,
             cancer_signatures,
@@ -180,17 +169,7 @@ fn main() -> anyhow::Result<()> {
             min_contribution,
             out_dir,
             prefix,
-        );
-
-        match result {
-            Ok(status) => {
-                if !status.success() {
-                    let code = status.code().unwrap_or(1);
-                    process::exit(code);
-                }
-            }
-            Err(e) => return Err(e.into()),
-        }
+        )?;
     } else if let Some(matches) = matches.subcommand_matches("split-vcf") {
         let srcs: Vec<&str> = matches.values_of("input").unwrap().collect();
         let dst = matches.value_of("output-directory").unwrap();
@@ -202,19 +181,11 @@ fn main() -> anyhow::Result<()> {
             },
         };
 
-        for src in srcs {
-            match split_file(src, dst, disable_column) {
-                Ok(_) => {}
-                Err(ref e) if e.kind() == io::ErrorKind::UnexpectedEof => {
-                    warn!("{}: invalid VCF (unexpected EOF), skipping", src);
-                }
-                Err(e) => return Err(e.into()),
-            }
-        }
+        commands::split_vcf(&srcs, dst, disable_column)?;
     } else if let Some(matches) = matches.subcommand_matches("visualize") {
         let src = matches.value_of("input").unwrap();
         let dst = matches.value_of("output").unwrap();
-        create_visualization(src, dst)?;
+        commands::visualize(src, dst)?;
     }
 
     Ok(())

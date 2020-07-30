@@ -1,8 +1,6 @@
 use std::{
     collections::BTreeSet,
-    fs::File,
     io::{self, Read, Write},
-    path::Path,
 };
 
 use handlebars::Handlebars;
@@ -30,19 +28,6 @@ pub struct Sample {
     id: String,
     disease: String,
     contributions: Vec<f64>,
-}
-
-pub fn create_visualization<P, Q>(src: P, dst: Q) -> io::Result<()>
-where
-    P: AsRef<Path>,
-    Q: AsRef<Path>,
-{
-    let file = File::open(&src)?;
-    let pathname = format!("{}", src.as_ref().display());
-    let (headers, samples) = read_table(file, &pathname)?;
-
-    let mut file = File::create(dst)?;
-    write_html(&mut file, &headers, &samples)
 }
 
 pub fn read_table<R>(reader: R, pathname: &str) -> io::Result<(Vec<String>, Vec<Sample>)>
@@ -121,7 +106,7 @@ where
     Ok((headers, samples))
 }
 
-fn write_html<W>(writer: &mut W, headers: &[String], samples: &[Sample]) -> io::Result<()>
+pub fn write_html<W>(writer: &mut W, headers: &[String], samples: &[Sample]) -> io::Result<()>
 where
     W: Write,
 {
