@@ -158,7 +158,8 @@ fn main() -> anyhow::Result<()> {
     } else if let Some(matches) = matches.subcommand_matches("generate-sample-sheet") {
         let src = matches.value_of("input-directory").unwrap();
         let dst = matches.value_of("output").unwrap();
-        sample_sheet::generate(src, dst)?;
+        let mut writer = File::create(dst).map(BufWriter::new)?;
+        sample_sheet::generate(src, &mut writer)?;
     } else if let Some(matches) = matches.subcommand_matches("run") {
         let vcfs_dir = matches.value_of("vcfs-dir").unwrap();
         let sample_sheet = matches.value_of("sample-sheet").unwrap();

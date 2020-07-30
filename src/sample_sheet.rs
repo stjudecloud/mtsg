@@ -1,7 +1,6 @@
 use std::{
     ffi::OsStr,
-    fs::File,
-    io::{self, BufWriter, Write},
+    io::{self, Write},
     path::Path,
 };
 
@@ -17,10 +16,10 @@ struct NameTagPair {
     tag: String,
 }
 
-pub fn generate<P, Q>(src: P, dst: Q) -> io::Result<()>
+pub fn generate<P, W>(src: P, writer: &mut W) -> io::Result<()>
 where
     P: AsRef<Path>,
-    Q: AsRef<Path>,
+    W: Write,
 {
     let src = src.as_ref();
 
@@ -32,8 +31,6 @@ where
     let pathnames =
         list_directory(&pattern).map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
 
-    let file = File::create(dst)?;
-
     if pathnames.is_empty() {
         warn!("{}: found 0 samples", src.display());
     } else {
@@ -42,9 +39,7 @@ where
 
     let pairs = build_pairs(&pathnames);
 
-    let mut writer = BufWriter::new(file);
-
-    write_table(&mut writer, &pairs)
+    write_table(writer, &pairs)
 }
 
 fn write_table<W>(writer: &mut W, pairs: &[NameTagPair]) -> io::Result<()>
