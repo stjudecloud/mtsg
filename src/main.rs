@@ -1,8 +1,8 @@
-use std::{error::Error, io, process};
+use std::{io, process};
 
 use clap::{crate_name, value_t, App, AppSettings, Arg, SubCommand};
 use git_testament::{git_testament, render_testament};
-use log::{error, warn, LevelFilter};
+use log::{warn, LevelFilter};
 
 use mtsg::{
     cosmic::download_signature_probabilities, r::mutational_patterns, sample_sheet,
@@ -11,15 +11,7 @@ use mtsg::{
 
 git_testament!(TESTAMENT);
 
-fn exit_with_error<E>(error: E) -> !
-where
-    E: Error,
-{
-    error!("{}", error);
-    process::exit(1);
-}
-
-fn main() {
+fn main() -> anyhow::Result<()> {
     let download_signatures_cmd = SubCommand::with_name("download-signatures")
         .about("Downloads and preprocesses known mutational signatures (COSMIC)")
         .arg(
@@ -157,11 +149,11 @@ fn main() {
 
     if let Some(matches) = matches.subcommand_matches("download-signatures") {
         let dst = matches.value_of("output").unwrap();
-        download_signature_probabilities(dst).unwrap_or_else(|e| exit_with_error(e));
+        download_signature_probabilities(dst)?;
     } else if let Some(matches) = matches.subcommand_matches("generate-sample-sheet") {
         let src = matches.value_of("input-directory").unwrap();
         let dst = matches.value_of("output").unwrap();
-        sample_sheet::generate(src, dst).unwrap_or_else(|e| exit_with_error(e));
+        sample_sheet::generate(src, dst)?;
     } else if let Some(matches) = matches.subcommand_matches("run") {
         let vcfs_dir = matches.value_of("vcfs-dir").unwrap();
         let sample_sheet = matches.value_of("sample-sheet").unwrap();
@@ -191,7 +183,7 @@ fn main() {
                     process::exit(code);
                 }
             }
-            Err(e) => exit_with_error(e),
+            Err(e) => return Err(e.into()),
         }
     } else if let Some(matches) = matches.subcommand_matches("split-vcf") {
         let srcs: Vec<&str> = matches.values_of("input").unwrap().collect();
@@ -199,22 +191,25 @@ fn main() {
         let disable_column = match value_t!(matches, "disable-column", usize) {
             Ok(i) => Some(i),
             Err(e) => match e.kind {
-                clap::ErrorKind::ValueValidation => exit_with_error(e),
+                clap::ErrorKind::ValueValidation => return Err(e.into()),
                 _ => None,
             },
         };
 
         for src in srcs {
-            split_file(src, dst, disable_column).unwrap_or_else(|e| match e.kind() {
-                io::ErrorKind::UnexpectedEof => {
+            match split_file(src, dst, disable_column) {
+                Ok(_) => {}
+                Err(ref e) if e.kind() == io::ErrorKind::UnexpectedEof => {
                     warn!("{}: invalid VCF (unexpected EOF), skipping", src);
                 }
-                _ => exit_with_error(e),
-            });
+                Err(e) => return Err(e.into()),
+            }
         }
     } else if let Some(matches) = matches.subcommand_matches("visualize") {
         let src = matches.value_of("input").unwrap();
         let dst = matches.value_of("output").unwrap();
-        create_visualization(src, dst).unwrap_or_else(|e| exit_with_error(e));
+        create_visualization(src, dst)?;
     }
+
+    Ok(())
 }
