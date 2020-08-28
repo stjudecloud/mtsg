@@ -15,7 +15,7 @@ static TAG_COLUMN_NAME: &str = "tissue";
 
 static SIGNATURES_TEMPLATE: &str = include_str!("templates/signatures.html.hbs");
 
-static HBS: Lazy<Handlebars> = Lazy::new(|| {
+static HBS: Lazy<Handlebars<'_>> = Lazy::new(|| {
     let mut hbs = Handlebars::new();
     hbs.set_strict_mode(true);
     hbs.register_template_string("signatures", SIGNATURES_TEMPLATE)
