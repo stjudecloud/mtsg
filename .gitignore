@@ -2,4 +2,11 @@
 dnanexus/mutspec/resources/tmp
 dnanexus/mutspec/tmp
 target
-tmp
+
+*.egg-info/
+.mypy_cache/
+.pytest_cache/
+.venv
+__pycache__/
+
+tmp/
