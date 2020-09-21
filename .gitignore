@@ -1,8 +1,3 @@
-**/*.rs.bk
-dnanexus/mutspec/resources/tmp
-dnanexus/mutspec/tmp
-target
-
 *.egg-info/
 .mypy_cache/
 .pytest_cache/

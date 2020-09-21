@@ -1,3 +1,0 @@
-Substitution Type	Trinucleotide	Somatic Mutation Type	Signature 1	Signature 2
-C>A	ACA	A[C>A]A	0.000000000000	0.000000000000
-C>A	ACC	A[C>A]C	0.000000000000	0.000000000000

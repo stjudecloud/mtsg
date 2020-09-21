@@ -1,4 +1,0 @@
-##fileformat=VCFv4.1
-##FILTER=<ID=PASS,Description="All filters passed">
-#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	SJACT001_D
-chr10	287638	.	G	C	.	.	SampleCounts=1	AD:DP	20,7:27

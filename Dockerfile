@@ -1,34 +1,20 @@
-FROM r-base:4.0.2 AS env
+FROM python:3.8.5
 
-RUN apt-get update \
-      && apt-get --yes install --no-install-recommends \
-        libcurl4-openssl-dev \
-        libssl-dev \
-        libxml2-dev \
-      && rm -r /var/lib/apt/lists/*
+ENV POETRY_VERSION=1.0.10 \
+      POETRY_HOME=/opt/poetry \
+      POETRY_VIRTUALENVS_IN_PROJECT=true \
+      MTSG_HOME=/opt/mtsg \
+      PATH=/opt/poetry/bin:$PATH
 
-RUN echo 'options(repos = "https://cloud.r-project.org/", Ncpus = parallel::detectCores()); \
-        install.packages("BiocManager"); \
-        BiocManager::install(c( \
-            "MutationalPatterns", \
-            "BSgenome", \
-            "BSgenome.Hsapiens.UCSC.hg19", \
-            "BSgenome.Hsapiens.UCSC.hg38", \
-            "rtracklayer", \
-            "GenomicRanges" \
-        ), version = "3.11")' | R --vanilla
+RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 
-FROM rust:1.46.0-buster AS app
+WORKDIR ${MTSG_HOME}
 
-COPY .git/ /app/.git/
-COPY Cargo.lock Cargo.toml /app/
-COPY src/ /app/src/
-COPY test/ /app/test/
+COPY poetry.lock pyproject.toml ./
+RUN poetry install --no-dev
 
-RUN cargo build --release --manifest-path /app/Cargo.toml
+RUN poetry run python -c 'from SigProfilerMatrixGenerator.install import install; install("GRCh38")'
 
-FROM env
+COPY mtsg/ ./mtsg/
 
-COPY --from=app /app/target/release/mtsg /opt/mtsg/bin/
-
-ENTRYPOINT ["/opt/mtsg/bin/mtsg"]
+ENTRYPOINT ["poetry", "run", "python", "mtsg/main.py"]
