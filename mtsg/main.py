@@ -78,6 +78,9 @@ def visualize(src: Path, dst: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(allow_abbrev=False)
+    parser.add_argument(
+        "--version", action="version", version="%(prog)s {}".format(mtsg.__version__)
+    )
 
     subparsers = parser.add_subparsers(
         title="subcommands", dest="subcommand", required=True
