@@ -21,6 +21,16 @@ Use [Poetry] to install mtsg and its dependencies.
 $ poetry install --no-dev
 ```
 
+SigProfilerMatrixGenerator can then be used to install generic mutational
+matrices given a supported genome build.
+
+```
+$ poetry run python -c 'from SigProfilerMatrixGenerator.install import install; install("<genome-build>")'
+```
+
+Replace `<genome-build>` with one of `GRCh37`, `GRCh38` (Homo sapiens),
+`mm9`, `mm10` (Mus musculus), or `rn6` (Rattus norvegicus).
+
 [Poetry]: http://python-poetry.org/
 
 ## Usage
