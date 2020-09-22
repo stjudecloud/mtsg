@@ -1,9 +1,26 @@
 from pathlib import Path
+from typing import List
 import csv
 import json
 import re
 
 import jinja2
+
+import mtsg
+
+
+class Sample:
+    id: str
+    contributions: List[int]
+
+    def __init__(self, id: str) -> None:
+        self.id = id
+
+    def disease(self) -> str:
+        if matches := re.match("SJ([A-Z]+).+", self.id):
+            return matches.group(1)
+        else:
+            return ""
 
 
 def visualize(src: Path, dst: Path) -> None:
@@ -21,15 +38,7 @@ def visualize(src: Path, dst: Path) -> None:
         sample_names = csv_headers[1:]
 
         for sample_name in sample_names:
-            matches = re.match("SJ([A-Z]+).+", sample_name)
-            disease = matches.group(1)
-
-            sample = {
-                "id": sample_name,
-                "disease": disease,
-                "contributions": [],
-            }
-
+            sample = Sample(sample_name)
             samples.append(sample)
 
         for row in reader:
@@ -41,7 +50,7 @@ def visualize(src: Path, dst: Path) -> None:
             for i, raw_contribution in enumerate(contributions):
                 sample = samples[i]
                 contribution = int(raw_contribution)
-                sample["contributions"].append(contribution)
+                sample.contributions.append(contribution)
 
     data = {
         "data": {
@@ -52,7 +61,7 @@ def visualize(src: Path, dst: Path) -> None:
 
     generator = "mtsg {}".format(mtsg.__version__)
     payload = json.dumps(data)
-    diseases = list(set(sample["disease"] for sample in samples))
+    diseases = list(set(sample.disease() for sample in samples))
 
     env = jinja2.Environment(loader=jinja2.PackageLoader("mtsg", "templates"))
     template = env.get_template("signatures.html.j2")
