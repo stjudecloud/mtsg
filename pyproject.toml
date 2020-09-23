@@ -8,8 +8,9 @@ authors = ["Michael Macias <michael.macias@stjude.org>"]
 mtsg = "mtsg.main:main"
 
 [tool.poetry.dependencies]
-sigproSS = "^0.0.0"
+Jinja2 = "^2.11.2"
 python = "^3.8"
+sigproSS = "^0.0.0"
 
 [tool.poetry.dev-dependencies]
 black = "20.8b1"
