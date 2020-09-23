@@ -78,7 +78,7 @@ image, [install Docker](https://docs.docker.com/install) for your platform.
 
 ### Build
 
-In the Mutational Signatures project directory, build the Docker image.
+In the Mutational Signatures project directory, build the container image.
 
 ```
 $ docker image build --tag mtsg .
@@ -86,8 +86,22 @@ $ docker image build --tag mtsg .
 
 ### Run
 
-The image uses `mtsg/main.py` as its entrypoint, giving access to all commands.
+The image uses `mtsg` as its entrypoint, giving access to all commands.
 
 ```
 $ docker container run mtsg <args...>
+```
+
+For example, to run the `run` command with samples in `$PWD/data` and an empty
+results directory at `$PWD/results`:
+
+```
+$ docker container run \
+  --rm \
+  --mount type=bind,source=$PWD/data,target=/data \
+  --mount type=bind,source=$PWD/results,target=/results \
+  mtsg \
+  run \
+  --dst-prefix /results \
+  /data
 ```
