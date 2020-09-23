@@ -15,6 +15,7 @@ class Sample:
 
     def __init__(self, id: str) -> None:
         self.id = id
+        self.contributions = []
 
     def disease(self) -> str:
         if matches := re.match("SJ([A-Z]+).+", self.id):
