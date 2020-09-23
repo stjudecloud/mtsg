@@ -53,12 +53,18 @@ def visualize(src: Path, dst: Path) -> None:
                 contribution = int(raw_contribution)
                 sample.contributions.append(contribution)
 
-    data = {
-        "data": {
-            "headers": headers,
-            "samples": samples,
-        }
-    }
+    prepared_samples = []
+
+    for sample in samples:
+        prepared_samples.append(
+            {
+                "id": sample.id,
+                "disease": sample.disease(),
+                "contributions": sample.contributions,
+            }
+        )
+
+    data = {"data": {"headers": headers, "samples": prepared_samples}}
 
     generator = "mtsg {}".format(mtsg.__version__)
     payload = json.dumps(data)
