@@ -17,4 +17,4 @@ RUN poetry run python -c 'from SigProfilerMatrixGenerator.install import install
 
 COPY mtsg/ ./mtsg/
 
-ENTRYPOINT ["poetry", "run", "python", "mtsg/main.py"]
+ENTRYPOINT ["poetry", "run", "mtsg"]
