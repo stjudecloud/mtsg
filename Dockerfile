@@ -6,6 +6,11 @@ ENV POETRY_VERSION=1.0.10 \
       MTSG_HOME=/opt/mtsg \
       PATH=/opt/poetry/bin:$PATH
 
+RUN sed -i "s/ main/ main contrib/g" /etc/apt/sources.list \
+      && apt-get update \
+      && apt-get --yes install ttf-mscorefonts-installer \
+      && rm -rf /var/lib/apt/lists/*
+
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 
 WORKDIR ${MTSG_HOME}
