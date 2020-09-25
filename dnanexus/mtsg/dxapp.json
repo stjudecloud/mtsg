@@ -3,110 +3,50 @@
   "title": "St. Jude Mutational Signatures",
   "summary": "Find and quantify COSMIC mutational signatures across samples",
   "dxapi": "1.0.0",
-  "version": "2.3.0-1",
+  "version": "3.0.0-1",
   "openSource": true,
   "details": {
     "upstreamUrl": "https://github.com/stjude/mtsg",
-    "upstreamVersion": "2.2.0",
-    "upstreamLicenses": ["Apache-2.0"]
+    "upstreamVersion": "3.0.0",
+    "upstreamLicenses": ["MIT"]
   },
   "inputSpec": [
     {
-      "name": "vcfs",
-      "label": "VCF(s)",
+      "name": "vcf_srcs",
+      "label": "VCF source(s)",
       "class": "array:file",
-      "patterns": ["*.vcf", "*.vcf.gz"],
-      "help": "Input VCFs. Can be single-sample or multi-sample and uncompressed or gzipped."
-    },
-    {
-      "name": "sample_sheet",
-      "label": "Sample sheet",
-      "class": "file",
-      "help": "Tab-delimited file containing sample ID and tag pairs",
-      "optional": true
-    },
-    {
-      "name": "genome_build",
-      "label": "Genome build",
-      "class": "string",
-      "help": "Genome build the input uses as reference",
-      "optional": true,
-      "default": "GRCh38",
-      "choices": ["GRCh37", "GRCh38"]
-    },
-    {
-      "name": "min_burden",
-      "label": "Minimum mutation burden",
-      "class": "int",
-      "help": "Minimum number of somatic SNVs a sample must have to be considered",
-      "optional": true,
-      "default": 9
-    },
-    {
-      "name": "min_contribution",
-      "label": "Minimum signature contribution",
-      "help": "Minimum number of mutations attributable to a single signature",
-      "class": "int",
-      "optional": true,
-      "default": 9
-    },
-    {
-      "name": "prefix",
-      "label": "Output prefix",
-      "help": "Prefix to prepend to output filenames",
-      "class": "string",
-      "optional": true
-    },
-    {
-      "name": "disable_column",
-      "label": "Disabled VCF column",
-      "help": "VCF column index to ignore (starting from sample names, zero-based)",
-      "class": "int",
-      "optional": true
+      "patterns": ["*.vcf"]
     }
   ],
   "outputSpec": [
     {
-      "name": "signatures_txt",
-      "label": "Raw signatures",
-      "class": "file",
-      "help": "Tab-delimited file of the raw results with sample contributions for each signature"
+      "name": "signature_activities_txt",
+      "label": "Raw signature activities",
+      "class": "file"
     },
     {
-      "name": "signatures_html",
-      "label": "Signatures visualization",
-      "class": "file",
-      "help": "HTML file for interactive plotting"
-    },
-    {
-      "name": "sample_sheet_out",
-      "label": "Sample sheet",
-      "class": "file",
-      "help": "Tab-delimited file containing sample ID and tag pairs"
+      "name": "signature_activities_html",
+      "label": "Signature activities visualization",
+      "class": "file"
     }
   ],
   "runSpec": {
     "timeoutPolicy": {
       "*": {
-        "hours": 48
+        "hours": 24
       }
     },
     "interpreter": "bash",
-    "release": "16.04",
-    "version": "1",
+    "file": "src/mtsg.sh",
     "distribution": "Ubuntu",
-    "file": "src/mtsg.sh"
-  },
-  "access": {
-    "network": [
-      "*"
-    ]
+    "release": "20.04",
+    "version": "0"
   },
   "regionalOptions": {
     "azure:westus": {
       "systemRequirements": {
         "*": {
-          "instanceType": "azure:mem1_ssd1_x16"
+          "instanceType": "azure:mem2_ssd1_x1"
         }
       }
     }
