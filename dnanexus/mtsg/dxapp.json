@@ -15,7 +15,7 @@
       "name": "vcf_srcs",
       "label": "VCF source(s)",
       "class": "array:file",
-      "patterns": ["*.vcf"],
+      "patterns": ["*.vcf", "*.vcf.gz"],
       "help": "Input VCF(s)"
     }
   ],

@@ -13,6 +13,10 @@ main() {
     dx-download-all-inputs --parallel
     mv $HOME/in/vcf_srcs/**/* $DATA_PREFIX
 
+    if [[ $(find $DATA_PREFIX -name "*.vcf.gz" -print -quit) ]]; then
+        gzip --decompress $DATA_PREFIX/*.vcf.gz
+    fi
+
     docker run \
         --mount type=bind,source=$DATA_PREFIX,target=/data \
         --mount type=bind,source=$RESULTS_PREFIX,target=/results \
