@@ -25,8 +25,8 @@ main() {
         --mount type=bind,source=$RESULTS_PREFIX,target=/results \
         mtsg \
         visualize \
-        --output /results/Sig_activities.txt \
-        /results/Sig_activities.html
+        --output /results/Sig_activities.html \
+        /results/Sig_activities.txt
 
     signature_activities_txt=$(dx upload --brief $RESULTS_PREFIX/Sig_activities.txt)
     signature_activities_html=$(dx upload --brief $RESULTS_PREFIX/Sig_activities.html)
