@@ -40,7 +40,12 @@
     "file": "src/mtsg.sh",
     "distribution": "Ubuntu",
     "release": "20.04",
-    "version": "0"
+    "version": "0",
+    "execDepends": [
+      {
+        "name": "zstd"
+      }
+    ]
   },
   "regionalOptions": {
     "azure:westus": {

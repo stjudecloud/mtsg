@@ -8,7 +8,7 @@ image.
 ```
 $ docker build --tag mtsg ../..
 $ mkdir resources/tmp
-$ docker save mtsg | gzip > resources/tmp/mtsg-latest.tar.gz
+$ docker save mtsg | zstd -T0 -f -o resources/tmp/mtsg-latest.tar.zst
 $ dx build
 ```
 

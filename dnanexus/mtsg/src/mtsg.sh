@@ -6,7 +6,7 @@ main() {
     DATA_PREFIX=$HOME/data
     RESULTS_PREFIX=$HOME/results
 
-    gzip --decompress --stdout $RESOURCES/tmp/mtsg-latest.tar.gz | docker load
+    zstd -T0 -d -c --no-progress $RESOURCES/tmp/mtsg-latest.tar.zst | docker load
 
     mkdir -p $DATA_PREFIX $RESULTS_PREFIX
 
