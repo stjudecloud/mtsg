@@ -15,19 +15,22 @@
       "name": "vcf_srcs",
       "label": "VCF source(s)",
       "class": "array:file",
-      "patterns": ["*.vcf"]
+      "patterns": ["*.vcf"],
+      "help": "Input VCF(s)"
     }
   ],
   "outputSpec": [
     {
       "name": "signature_activities_txt",
       "label": "Raw signature activities",
-      "class": "file"
+      "class": "file",
+      "help": "Raw signature activities"
     },
     {
       "name": "signature_activities_html",
       "label": "Signature activities visualization",
-      "class": "file"
+      "class": "file",
+      "help": "Signature activities plot"
     }
   ],
   "runSpec": {
