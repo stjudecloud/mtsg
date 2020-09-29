@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+  * [BREAKING] The underlying profile extractor changed from
+    [MutationalPatterns] to [SigProfilerSingleSample]. SigProfiler maps against
+    96 mutational contexts (COSMIC Mutational Signatures v3.1 (June 2020))
+    rather than the 30 used in v2 (March 2015).
+
+  * [BREAKING] Only the `run` and `visualize` commands remain to run profile
+    extraction and create a signature activities plot, respectively.
+
+[MutationalPatterns]: https://www.bioconductor.org/packages/release/bioc/html/MutationalPatterns.html
+[SigProfilerSingleSample]: https://cancer.sanger.ac.uk/cosmic/signatures/sigprofiler.tt
+
 ## [2.3.0] - 2020-09-21
 
 ### Added
