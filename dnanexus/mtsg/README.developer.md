@@ -12,6 +12,12 @@ $ docker save mtsg | zstd -T0 -f -o resources/tmp/mtsg-latest.tar.zst
 $ dx build
 ```
 
+The container image is compressed using [Zstandard] (`zstd`). It can be
+installed on CentOS/Fedora/RHEL (`dnf`), Debian/Ubuntu (`apt`), and macOS
+(`brew`) with the package name `zstd`.
+
+[Zstandard]: https://facebook.github.io/zstd/
+
 ## Versioning
 
 The version set in `dxapp.json` is defined as "{upstream version}-{release
