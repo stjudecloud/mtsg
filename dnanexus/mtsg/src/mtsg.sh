@@ -22,6 +22,7 @@ main() {
         --mount type=bind,source=$RESULTS_PREFIX,target=/results \
         mtsg \
         run \
+        --genome-build $genome_build \
         --dst-prefix /results \
         /data
 

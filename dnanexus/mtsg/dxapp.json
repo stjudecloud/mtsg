@@ -17,6 +17,15 @@
       "class": "array:file",
       "patterns": ["*.vcf", "*.vcf.gz"],
       "help": "Input VCF(s)"
+    },
+    {
+      "name": "genome_build",
+      "label": "Genome build",
+      "class": "string",
+      "optional": true,
+      "choices": ["GRCh38"],
+      "default": "GRCh38",
+      "help": "Genome build the input VCFs use as reference"
     }
   ],
   "outputSpec": [

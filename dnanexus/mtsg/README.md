@@ -8,6 +8,8 @@ Find and quantify COSMIC mutational signatures across samples
 
   * `vcf_srcs`: One or more VCF sources.
 
+  * `genome_build`: The genome build used as reference. [default: "GRCh38"]
+
 ## Outputs
 
   * `signature_activities_txt`: A tab-delimited file of the raw results with
