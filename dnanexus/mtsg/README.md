@@ -6,7 +6,8 @@ Find and quantify COSMIC mutational signatures across samples
 
 ## Inputs
 
-  * `vcf_srcs`: One or more VCF sources.
+  * `vcf_srcs`: One or more VCF sources. The files can be either uncompressed
+    (`*.vcf`) or gzipped (`*.vcf.gz`).
 
   * `genome_build`: The genome build used as reference. [default: "GRCh38"]
 
