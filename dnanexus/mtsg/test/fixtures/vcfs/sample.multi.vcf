@@ -1,5 +1,0 @@
-##fileformat=VCFv4.1
-#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	SJACT001_D	SJACT002_D	SJACT003_D
-chr10	287638	.	G	C	.	.	SampleCounts=1	AD:DP	20,7:27	.:.	.:.
-chr10	2072332	.	G	C	.	.	SampleCounts=1	AD:DP	.:.	16,17:33	.:.
-chr10	9722056	.	G	T	.	.	SampleCounts=1	AD:DP	.:.	.:.	27,6:33
