@@ -3,7 +3,15 @@
 **Mutational Signatures** (abbreviated as **mtsg**) finds and quantifies [COSMIC
 mutational signatures] across samples.
 
+mtsg uses a base set of mutational signatures extracted by [SigProfiler] for
+[single-base substitutions] (SBS), i.e., single-nucleotide variants (SNV),
+using 2780 whole-genome variant calls from the ICGC/TCGA [Pan-Cancer Analysis
+of Whole Genomes] (PCAWG) project.
+
 [COSMIC mutational signatures]: https://cancer.sanger.ac.uk/cosmic/signatures
+[SigProfiler]: https://cancer.sanger.ac.uk/cosmic/signatures/sigprofiler.tt
+[single-base substitutions]: https://cancer.sanger.ac.uk/cosmic/signatures/SBS/index.tt
+[Pan-Cancer Analysis of Whole Genomes]: https://dcc.icgc.org/pcawg
 
 ## Prerequisites
 
@@ -21,7 +29,7 @@ Use [Poetry] to install mtsg and its dependencies.
 $ poetry install --no-dev
 ```
 
-SigProfilerMatrixGenerator can then be used to install generic mutational
+SigProfilerMatrixGenerator can then be used to install base mutational
 matrices given a supported genome build.
 
 ```
@@ -105,3 +113,14 @@ $ docker container run \
   --dst-prefix /results \
   /data
 ```
+
+## References
+
+  * Alexandrov, L.B., Kim, J., Haradhvala, N.J. _et al_. The repertoire of
+    mutational signatures in human cancer. _Nature_ **578**, 94–101 (2020).
+    https://doi.org/10.1038/s41586-020-1943-3
+
+  * Bergstrom, E.N., Huang, M.N., Mahto, U. _et al_.
+    SigProfilerMatrixGenerator: a tool for visualizing and exploring patterns
+    of small mutational events. _BMC Genomics_ **20**, 685 (2019).
+    https://doi.org/10.1186/s12864-019-6041-2
