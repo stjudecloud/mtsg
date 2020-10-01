@@ -50,10 +50,25 @@ def parse_sjid_v1(s: str) -> Optional[SampleName]:
     disease = matches.group("disease")
     number = int(matches.group("number"))
     ty = matches.group("type")
-    index = 0
+    index = parse_index_from_type(ty)
+
+    if not index:
+        return None
+
     secondary_id = matches.group("secondary_id")
 
     return SampleName(disease, number, ty, index, secondary_id)
+
+
+def parse_index_from_type(ty: str) -> Optional[int]:
+    if ty in ["G", "D", "X", "A", "M", "O", "R", "C"]:
+        return 1
+    elif ty in ["Y", "S", "E", "B", "H"]:
+        return 2
+    elif ty in ["Z", "F", "T", "I"]:
+        return 3
+    else:
+        return None
 
 
 def parse_sjid_v2(s: str) -> Optional[SampleName]:
