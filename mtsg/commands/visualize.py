@@ -6,6 +6,7 @@ import re
 
 import jinja2
 
+from mtsg import SampleName
 import mtsg
 
 
@@ -18,9 +19,10 @@ class Sample:
         self.contributions = []
 
     def disease(self) -> str:
-        if matches := re.match("SJ([A-Z]+).+", self.id):
-            return matches.group(1)
-        else:
+        try:
+            sample_name = SampleName.parse(self.id)
+            return sample_name.disease
+        except ValueError:
             return ""
 
 
