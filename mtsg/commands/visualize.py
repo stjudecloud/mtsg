@@ -70,7 +70,9 @@ def visualize(src: Path, dst: Path) -> None:
 
     generator = "mtsg {}".format(mtsg.__version__)
     payload = json.dumps(data)
+
     diseases = list(set(sample.disease() for sample in samples))
+    diseases.sort()
 
     env = jinja2.Environment(loader=jinja2.PackageLoader("mtsg", "templates"))
     template = env.get_template("signatures.html.j2")
