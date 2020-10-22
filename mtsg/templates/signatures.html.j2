@@ -17,9 +17,14 @@
       ];
 
       const state = {
-        name: "Totals by signatures",
+        name: "",
         stacking: "normal",
         data: {},
+      };
+
+      const selectFirstDiseaseCode = () => {
+        const $option = document.querySelector("#plot option:first-child");
+        state.name = $option.value;
       };
 
       const addEventListeners = () => {
@@ -43,62 +48,7 @@
 
       const render = () => {
         const { name } = state;
-
-        if (name === "Totals by signatures") {
-          renderTotalsBySignaturesChart(name);
-        } else if (name === "Totals by disease") {
-          renderTotalsByDiseaseChart(name);
-        } else {
-          renderDiseaseChart(name);
-        }
-      };
-
-      const buildTotalsByDisease = (samples) => (
-        samples.reduce((groups, sample) => {
-          if (!groups[sample.disease]) {
-            groups[sample.disease] = [...sample.contributions];
-          } else {
-            for (let i = 0; i < sample.contributions.length; i++) {
-              groups[sample.disease][i] += sample.contributions[i];
-            }
-          }
-
-          return groups;
-        }, {})
-      );
-
-      const renderTotalsBySignaturesChart = (title) => {
-        const totalsByDisease = buildTotalsByDisease(state.data.samples);
-
-        const categories = state.data.headers;
-        const series = Object.keys(totalsByDisease).map((disease) => ({
-          name: disease,
-          data: totalsByDisease[disease],
-        }));
-
-        renderChart(title, categories, series);
-      };
-
-      const renderTotalsByDiseaseChart = (title) => {
-        const totalsByDisease = buildTotalsByDisease(state.data.samples);
-
-        const totalsBySignature = state.data.headers.reduce((groups, signature, i) => {
-          groups[signature] = [];
-
-          for (const contributions of Object.values(totalsByDisease)) {
-            groups[signature].push(contributions[i]);
-          }
-
-          return groups;
-        }, {});
-
-        const categories = Object.keys(totalsByDisease);
-        const series = Object.keys(totalsBySignature).map((signature) => ({
-          name: signature,
-          data: totalsBySignature[signature],
-        }));
-
-        renderChart(title, categories, series);
+        renderDiseaseChart(name);
       };
 
       const renderDiseaseChart = (disease) => {
@@ -141,6 +91,7 @@
 
       document.addEventListener("DOMContentLoaded", () => {
         loadData();
+        selectFirstDiseaseCode();
         addEventListeners();
         render();
       });
@@ -251,9 +202,6 @@
         <div class="plots">
           <strong>Plot</strong>
           <select id="plot">
-            <option value="Totals by signatures">Totals by signatures</option>
-            <option value="Totals by disease">Totals by disease</option>
-            <option disabled>───</option>
             {% for disease in diseases %}
               <option value="{{disease}}">{{disease}}</option>
             {% endfor %}
