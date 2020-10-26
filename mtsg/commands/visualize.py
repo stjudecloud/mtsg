@@ -9,6 +9,10 @@ import jinja2
 from mtsg import SampleName
 import mtsg
 
+MAX_SIGNATURE_NAME_COMPONENTS = 2
+SIGNATURE_NAME_DELIMITER = "-"
+SIGNATURE_NAME_PREFIX = "SBS"
+
 
 class Sample:
     id: str
@@ -26,8 +30,19 @@ class Sample:
             return ""
 
 
+def normalize_signature_name(s: str) -> str:
+    components = s.split(SIGNATURE_NAME_DELIMITER, MAX_SIGNATURE_NAME_COMPONENTS)
+
+    if len(components) < MAX_SIGNATURE_NAME_COMPONENTS:
+        raise ValueError("invalid signature name: {}".format(s))
+
+    position = components[1].lstrip("0")
+
+    return "{}{}".format(SIGNATURE_NAME_PREFIX, position)
+
+
 def visualize(src: Path, dst: Path) -> None:
-    headers = []
+    signatures = []
     samples = []
 
     with open(src, newline="") as f:
@@ -45,8 +60,8 @@ def visualize(src: Path, dst: Path) -> None:
             samples.append(sample)
 
         for row in reader:
-            header = row[0]
-            headers.append(header)
+            signature = normalize_signature_name(row[0])
+            signatures.append(signature)
 
             contributions = row[1:]
 
@@ -66,7 +81,7 @@ def visualize(src: Path, dst: Path) -> None:
             }
         )
 
-    data = {"data": {"signatures": headers, "samples": prepared_samples}}
+    data = {"data": {"signatures": signatures, "samples": prepared_samples}}
 
     generator = "mtsg {}".format(mtsg.__version__)
     payload = json.dumps(data)
