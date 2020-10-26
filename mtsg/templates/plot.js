@@ -1,3 +1,28 @@
+const ETIOLOGIES = {
+  SBS1: "Clock-like",
+  SBS2: "APOBEC",
+  SBS3: "HR-deficiency",
+  SBS4: "Tobacco",
+  SBS5: "Clock-like",
+  SBS6: "MMR-deficiency",
+  SBS7a: "UV",
+  SBS7b: "UV",
+  SBS7c: "UV",
+  SBS7d: "UV",
+  SBS9: "POLH",
+  SBS10a: "POLE",
+  SBS10b: "POLE",
+  SBS11: "Temozolomide",
+  SBS13: "APOBEC",
+  SBS15: "MMR-deficiency",
+  SBS18: "ROS",
+  SBS20: "MMR-deficiency",
+  SBS22: "Aristolochic acid",
+  SBS24: "Aflatoxin",
+  SBS26: "MMR-deficiency",
+  SBS29: "Tobacco",
+};
+
 const state = {
   diseaseCode: "",
   data: {
@@ -72,7 +97,9 @@ const buildSampleTraces = (signatures, samples, diseaseCode) => {
       y: sampleNames,
       xaxis: "x2",
       yaxis: "y2",
-      name,
+      name: `<b>${name}</b>${
+        ETIOLOGIES[name] ? `<br>${ETIOLOGIES[name]}` : ""
+      }`,
       text: samples.map(
         ({ sample }) => `${sample.contributions[i]}<br>${name}`
       ),
@@ -129,6 +156,7 @@ const renderChart = (title, data) => {
     hovermode: "closest",
     legend: {
       orientation: "h",
+      valign: "top",
     },
     xaxis: {
       anchor: "y1",
