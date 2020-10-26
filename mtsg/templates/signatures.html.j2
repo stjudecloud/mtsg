@@ -61,21 +61,27 @@
       };
 
       const buildSampleTraces = (signatures, samples, diseaseCode) => {
-        samples = samples.filter((s) => s.diseaseCode === diseaseCode);
-        const sampleNames = samples.map(s => s.name);
+        samples = samples
+          .filter((s) => s.diseaseCode === diseaseCode)
+          .map((sample) => ({
+            sample,
+            total: sample.contributions.reduce((sum, value) => sum + value, 0),
+          }));
 
-        const totals = samples.map((sample) => (
-          sample.contributions.reduce((sum, value) => sum + value, 0)
-        ));
+        console.log(samples);
+
+        samples.sort((a, b) => a.total - b.total);
+
+        const sampleNames = samples.map(({ sample }) => sample.name);
 
         const traces = signatures.map((name, i) => {
           return {
-            x: samples.map(s => s.contributions[i]),
+            x: samples.map(({ sample }, j) => sample.contributions[i] / samples[j].total),
             y: sampleNames,
             xaxis: "x2",
             yaxis: "y2",
             name,
-            text: samples.map((s) => `${s.contributions[i]}<br>${name}`),
+            text: samples.map(({ sample }) => `${sample.contributions[i]}<br>${name}`),
             hoverinfo: "text",
             orientation: "h",
             type: "bar",
@@ -85,18 +91,12 @@
           }
         });
 
-        for (let trace of traces) {
-          for (let i = 0; i < trace.x.length; i++) {
-            trace.x[i] /= totals[i];
-          }
-        }
-
         let contributionsTrace = {
-          x: totals,
+          x: samples.map(({ total }) => total),
           y: sampleNames,
           xaxis: "x3",
           yaxis: "y3",
-          text: sampleNames.map((name, i) => `${totals[i]}<br>${name}`),
+          text: samples.map((e) => `${e.total}<br>${e.sample.name}`),
           hoverinfo: "text",
           orientation: "h",
           type: "bar",
