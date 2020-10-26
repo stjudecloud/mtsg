@@ -156,6 +156,7 @@ const renderChart = (title, data) => {
     hovermode: "closest",
     legend: {
       orientation: "h",
+      traceorder: "normal",
       valign: "top",
     },
     xaxis: {
