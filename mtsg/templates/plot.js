@@ -64,8 +64,8 @@ const buildSampleTraces = (signatures, samples, diseaseCode) => {
 
   const sampleNames = samples.map(({ sample }) => sample.name);
 
-  const traces = signatures.map((name, i) => {
-    return {
+  const traces = signatures
+    .map((name, i) => ({
       x: samples.map(
         ({ sample }, j) => sample.contributions[i] / samples[j].total
       ),
@@ -82,8 +82,8 @@ const buildSampleTraces = (signatures, samples, diseaseCode) => {
       marker: {
         color: colors(i),
       },
-    };
-  });
+    }))
+    .filter((trace) => !trace.x.every((value) => value == 0.0));
 
   let contributionsTrace = {
     x: samples.map(({ total }) => total),
