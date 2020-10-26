@@ -57,6 +57,18 @@
           }
         }
 
+        let contributionsTrace = {
+          x: totals,
+          y: sampleNames,
+          xaxis: "x2",
+          yaxis: "y2",
+          orientation: "h",
+          type: "bar",
+          showlegend: false,
+        };
+
+        traces.push(contributionsTrace);
+
         renderChart(disease, traces);
       };
 
@@ -70,7 +82,14 @@
             y: -0.125,
           },
           xaxis: {
+            anchor: "y1",
+            domain: [0.0, 0.9],
             title: "Percent contribution (no. mutations)",
+          },
+          xaxis2: {
+            anchor: "y2",
+            domain: [0.9, 1.0],
+            title: "Total contribution",
           },
         };
 
