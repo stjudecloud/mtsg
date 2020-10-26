@@ -64,6 +64,10 @@
         samples = samples.filter((s) => s.diseaseCode === diseaseCode);
         const sampleNames = samples.map(s => s.name);
 
+        const totals = samples.map((sample) => (
+          sample.contributions.reduce((sum, value) => sum + value, 0)
+        ));
+
         const traces = signatures.map((name, i) => {
           return {
             x: samples.map(s => s.contributions[i]),
@@ -80,8 +84,6 @@
             }
           }
         });
-
-        const totals = samples.map((_, i) => traces.reduce((sum, trace) => sum + trace.x[i], 0));
 
         for (let trace of traces) {
           for (let i = 0; i < trace.x.length; i++) {
