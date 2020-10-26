@@ -91,6 +91,8 @@
           y: sampleNames,
           xaxis: "x3",
           yaxis: "y3",
+          text: sampleNames.map((name, i) => `${totals[i]}<br>${name}`),
+          hoverinfo: "text",
           orientation: "h",
           type: "bar",
           showlegend: false,
