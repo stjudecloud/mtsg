@@ -34,6 +34,33 @@
       };
 
       const renderDiseaseChart = (disease) => {
+        const diseaseCode = state.name;
+
+        const diseaseTotals = new Array(state.data.headers.length).fill(0);
+
+        for (let sample of state.data.samples) {
+          if (sample.disease === diseaseCode) {
+            for (let i = 0; i < sample.contributions.length; i++) {
+              diseaseTotals[i] += sample.contributions[i];
+            }
+          }
+        }
+
+        const t = diseaseTotals.reduce((sum, value) => (sum + value), 0);
+        console.log(diseaseTotals);
+
+        const signatureMeanTraces = state.data.headers.map((name, i) => ({
+          x: [diseaseTotals[i] / t],
+          y: [diseaseCode],
+          text: `${diseaseTotals[i]}<br>${name}`,
+          hoverinfo: "text",
+          orientation: "h",
+          type: "bar",
+          showlegend: false,
+        }));
+
+        console.log(signatureMeanTraces);
+
         const samples = state.data.samples.filter((s) => s.disease === disease);
         const sampleNames = samples.map(s => s.id);
 
@@ -41,6 +68,8 @@
           return {
             x: samples.map(s => s.contributions[i]),
             y: sampleNames,
+            xaxis: "x2",
+            yaxis: "y2",
             name,
             orientation: "h",
             type: "bar",
@@ -60,8 +89,8 @@
         let contributionsTrace = {
           x: totals,
           y: sampleNames,
-          xaxis: "x2",
-          yaxis: "y2",
+          xaxis: "x3",
+          yaxis: "y3",
           orientation: "h",
           type: "bar",
           showlegend: false,
@@ -69,7 +98,7 @@
 
         traces.push(contributionsTrace);
 
-        renderChart(disease, traces);
+        renderChart(disease, [...signatureMeanTraces, ...traces]);
       };
 
       const renderChart = (title, data) => {
@@ -84,13 +113,29 @@
           xaxis: {
             anchor: "y1",
             domain: [0.0, 0.9],
-            title: "Percent contribution (no. mutations)",
+          },
+          yaxis: {
+            anchor: "x1",
+            domain: [0.9, 1.0]
           },
           xaxis2: {
             anchor: "y2",
+            domain: [0.0, 0.9],
+            title: "Percent contribution (no. mutations)",
+          },
+          yaxis2: {
+            anchor: "x2",
+            domain: [0.0, 0.8],
+          },
+          xaxis3: {
+            anchor: "y3",
             domain: [0.9, 1.0],
             title: "Total contribution",
           },
+          yaxis3: {
+            anchor: "x3",
+            domain: [0.0, 0.8],
+          }
         };
 
         const config = {
