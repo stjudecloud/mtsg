@@ -60,13 +60,13 @@ def visualize(src: Path, dst: Path) -> None:
     for sample in samples:
         prepared_samples.append(
             {
-                "id": sample.id,
-                "disease": sample.disease(),
+                "name": sample.id,
+                "diseaseCode": sample.disease(),
                 "contributions": sample.contributions,
             }
         )
 
-    data = {"data": {"headers": headers, "samples": prepared_samples}}
+    data = {"data": {"signatures": headers, "samples": prepared_samples}}
 
     generator = "mtsg {}".format(mtsg.__version__)
     payload = json.dumps(data)

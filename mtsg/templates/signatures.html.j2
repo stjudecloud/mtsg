@@ -7,9 +7,9 @@
     <script src="https://cdn.plot.ly/plotly-1.57.1.min.js"></script>
     <script>
       const state = {
-        name: "",
+        diseaseCode: "",
         data: {
-          headers: [],
+          signatures: [],
           samples: [],
         },
       };
@@ -18,12 +18,12 @@
 
       const selectFirstDiseaseCode = () => {
         const $option = document.querySelector("#plot option:first-child");
-        state.name = $option.value;
+        state.diseaseCode = $option.value;
       };
 
       const addEventListeners = () => {
         document.getElementById("plot").addEventListener("change", (event) => {
-          state.name = event.target.value;
+          state.diseaseCode = event.target.value;
           render();
         });
       };
@@ -37,7 +37,7 @@
         const diseaseTotals = new Array(signatures.length).fill(0);
 
         for (let sample of samples) {
-          if (sample.disease === diseaseCode) {
+          if (sample.diseaseCode === diseaseCode) {
             for (let i = 0; i < sample.contributions.length; i++) {
               diseaseTotals[i] += sample.contributions[i];
             }
@@ -61,8 +61,8 @@
       };
 
       const buildSampleTraces = (signatures, samples, diseaseCode) => {
-        samples = samples.filter((s) => s.disease === diseaseCode);
-        const sampleNames = samples.map(s => s.id);
+        samples = samples.filter((s) => s.diseaseCode === diseaseCode);
+        const sampleNames = samples.map(s => s.name);
 
         const traces = signatures.map((name, i) => {
           return {
@@ -110,7 +110,7 @@
       };
 
       const render = () => {
-        const { data: { headers: signatures, samples: samples }, name: diseaseCode } = state;
+        const { data: { samples, signatures }, diseaseCode } = state;
 
         const signatureTraces = buildSignatureTraces(signatures, samples, diseaseCode);
         const sampleTraces = buildSampleTraces(signatures, samples, diseaseCode);
