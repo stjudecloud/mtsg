@@ -11,6 +11,8 @@
         data: {},
       };
 
+      const colors = Plotly.d3.scale.category20();
+
       const selectFirstDiseaseCode = () => {
         const $option = document.querySelector("#plot option:first-child");
         state.name = $option.value;
@@ -57,6 +59,9 @@
           orientation: "h",
           type: "bar",
           showlegend: false,
+          marker: {
+            color: colors(i),
+          }
         }));
 
         console.log(signatureMeanTraces);
@@ -75,6 +80,9 @@
             hoverinfo: "text",
             orientation: "h",
             type: "bar",
+            marker: {
+              color: colors(i),
+            }
           }
         });
 
