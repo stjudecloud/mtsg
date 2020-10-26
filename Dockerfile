@@ -21,5 +21,6 @@ RUN poetry install --no-dev
 RUN poetry run python -c 'from SigProfilerMatrixGenerator.install import install; install("GRCh38")'
 
 COPY mtsg/ ./mtsg/
+RUN poetry install --no-dev
 
-ENTRYPOINT ["poetry", "run", "mtsg"]
+ENTRYPOINT ["/opt/mtsg/.venv/bin/mtsg"]
