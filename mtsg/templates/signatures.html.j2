@@ -71,6 +71,8 @@
             xaxis: "x2",
             yaxis: "y2",
             name,
+            text: samples.map((s) => `${s.contributions[i]}<br>${name}`),
+            hoverinfo: "text",
             orientation: "h",
             type: "bar",
           }
