@@ -30,17 +30,10 @@
         state.data = JSON.parse(payload).data;
       };
 
-      const render = () => {
-        const { name } = state;
-        renderDiseaseChart(name);
-      };
+      const buildSignatureTraces = (signatures, samples, diseaseCode) => {
+        const diseaseTotals = new Array(signatures.length).fill(0);
 
-      const renderDiseaseChart = (disease) => {
-        const diseaseCode = state.name;
-
-        const diseaseTotals = new Array(state.data.headers.length).fill(0);
-
-        for (let sample of state.data.samples) {
+        for (let sample of samples) {
           if (sample.disease === diseaseCode) {
             for (let i = 0; i < sample.contributions.length; i++) {
               diseaseTotals[i] += sample.contributions[i];
@@ -48,11 +41,10 @@
           }
         }
 
-        const t = diseaseTotals.reduce((sum, value) => (sum + value), 0);
-        console.log(diseaseTotals);
+        const total = diseaseTotals.reduce((sum, value) => (sum + value), 0);
 
-        const signatureMeanTraces = state.data.headers.map((name, i) => ({
-          x: [diseaseTotals[i] / t],
+        return signatures.map((name, i) => ({
+          x: [diseaseTotals[i] / total],
           y: [diseaseCode],
           text: `${diseaseTotals[i]}<br>${name}`,
           hoverinfo: "text",
@@ -63,13 +55,13 @@
             color: colors(i),
           }
         }));
+      };
 
-        console.log(signatureMeanTraces);
-
-        const samples = state.data.samples.filter((s) => s.disease === disease);
+      const buildSampleTraces = (signatures, samples, diseaseCode) => {
+        samples = samples.filter((s) => s.disease === diseaseCode);
         const sampleNames = samples.map(s => s.id);
 
-        const traces = state.data.headers.map((name, i) => {
+        const traces = signatures.map((name, i) => {
           return {
             x: samples.map(s => s.contributions[i]),
             y: sampleNames,
@@ -86,9 +78,7 @@
           }
         });
 
-        const totals = samples.map((_, i) => {
-          return traces.reduce((sum, trace) => sum + trace.x[i], 0);
-        });
+        const totals = samples.map((_, i) => traces.reduce((sum, trace) => sum + trace.x[i], 0));
 
         for (let trace of traces) {
           for (let i = 0; i < trace.x.length; i++) {
@@ -108,7 +98,17 @@
 
         traces.push(contributionsTrace);
 
-        renderChart(disease, [...signatureMeanTraces, ...traces]);
+        return traces;
+      };
+
+      const render = () => {
+        const { data: { headers: signatures, samples: samples }, name: diseaseCode } = state;
+
+        const signatureTraces = buildSignatureTraces(signatures, samples, diseaseCode);
+        const sampleTraces = buildSampleTraces(signatures, samples, diseaseCode);
+        const data = [...signatureTraces, ...sampleTraces];
+
+        renderChart(diseaseCode, data);
       };
 
       const renderChart = (title, data) => {
