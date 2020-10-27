@@ -146,14 +146,57 @@ const render = () => {
   const sampleTraces = buildSampleTraces(signatures, samples, diseaseCode);
   const data = [...signatureTraces, ...sampleTraces];
 
-  renderChart(diseaseCode, data);
+  const filteredSamples = samples.filter((s) => s.diseaseCode === diseaseCode);
+
+  renderChart(diseaseCode, data, filteredSamples.length);
 };
 
-const renderChart = (title, data) => {
+const renderChart = (title, data, sampleCount) => {
   const layout = {
     title,
     barmode: "stack",
     hovermode: "closest",
+    annotations: [
+      {
+        text: `Signature contribution means (n = ${sampleCount})`,
+        xref: "paper",
+        yref: "paper",
+        xanchor: "center",
+        yanchor: "bottom",
+        x: 0.45,
+        y: 1.01,
+        showarrow: false,
+        font: {
+          size: 14,
+        },
+      },
+      {
+        text: "Sample signature contributions",
+        xref: "paper",
+        yref: "paper",
+        xanchor: "center",
+        yanchor: "bottom",
+        x: 0.45,
+        y: 0.81,
+        showarrow: false,
+        font: {
+          size: 14,
+        },
+      },
+      {
+        text: "Sample signature activities",
+        xref: "paper",
+        yref: "paper",
+        xanchor: "center",
+        yanchor: "bottom",
+        x: 0.95,
+        y: 0.81,
+        showarrow: false,
+        font: {
+          size: 14,
+        },
+      },
+    ],
     legend: {
       orientation: "h",
       traceorder: "normal",
@@ -171,7 +214,7 @@ const renderChart = (title, data) => {
     xaxis2: {
       anchor: "y2",
       domain: [0.025, 0.9],
-      title: "Percent contribution (no. mutations)",
+      title: "Percent contribution",
     },
     yaxis2: {
       anchor: "x2",
@@ -181,7 +224,7 @@ const renderChart = (title, data) => {
     xaxis3: {
       anchor: "y3",
       domain: [0.9, 1.0],
-      title: "Total contribution",
+      title: "Total absolute contribution",
     },
     yaxis3: {
       anchor: "x3",
