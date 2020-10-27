@@ -220,6 +220,7 @@ const renderChart = (title, data, sampleCount) => {
       anchor: "x2",
       domain: [0.0, 0.8],
       ticklen: 8,
+      automargin: true,
     },
     xaxis3: {
       anchor: "y3",
