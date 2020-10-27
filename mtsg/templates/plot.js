@@ -27,7 +27,8 @@ const state = {
   diseaseCode: "",
   data: {
     signatures: [],
-    samples: [],
+    reference: [],
+    query: [],
   },
 };
 
@@ -50,14 +51,12 @@ const loadData = () => {
   state.data = JSON.parse(payload).data;
 };
 
-const buildSignatureTraces = (signatures, samples, diseaseCode) => {
+const buildSignatureTraces = (signatures, samples) => {
   const diseaseTotals = new Array(signatures.length).fill(0);
 
   for (let sample of samples) {
-    if (sample.diseaseCode === diseaseCode) {
-      for (let i = 0; i < sample.contributions.length; i++) {
-        diseaseTotals[i] += sample.contributions[i];
-      }
+    for (let i = 0; i < sample.contributions.length; i++) {
+      diseaseTotals[i] += sample.contributions[i];
     }
   }
 
@@ -65,7 +64,7 @@ const buildSignatureTraces = (signatures, samples, diseaseCode) => {
 
   return signatures.map((name, i) => ({
     x: [diseaseTotals[i] / total],
-    y: [diseaseCode],
+    y: ["Query"],
     text: `${diseaseTotals[i]}<br>${name}`,
     hoverinfo: "text",
     orientation: "h",
@@ -77,13 +76,11 @@ const buildSignatureTraces = (signatures, samples, diseaseCode) => {
   }));
 };
 
-const buildSampleTraces = (signatures, samples, diseaseCode) => {
-  samples = samples
-    .filter((s) => s.diseaseCode === diseaseCode)
-    .map((sample) => ({
-      sample,
-      total: sample.contributions.reduce((sum, value) => sum + value, 0),
-    }));
+const buildSampleTraces = (signatures, samples) => {
+  samples = samples.map((sample) => ({
+    sample,
+    total: sample.contributions.reduce((sum, value) => sum + value, 0),
+  }));
 
   samples.sort((a, b) => a.total - b.total);
 
@@ -134,21 +131,15 @@ const buildSampleTraces = (signatures, samples, diseaseCode) => {
 
 const render = () => {
   const {
-    data: { samples, signatures },
+    data: { query: querySamples, signatures },
     diseaseCode,
   } = state;
 
-  const signatureTraces = buildSignatureTraces(
-    signatures,
-    samples,
-    diseaseCode
-  );
-  const sampleTraces = buildSampleTraces(signatures, samples, diseaseCode);
+  const signatureTraces = buildSignatureTraces(signatures, querySamples);
+  const sampleTraces = buildSampleTraces(signatures, querySamples);
   const data = [...signatureTraces, ...sampleTraces];
 
-  const filteredSamples = samples.filter((s) => s.diseaseCode === diseaseCode);
-
-  renderChart(diseaseCode, data, filteredSamples.length);
+  renderChart(diseaseCode, data, querySamples.length);
 };
 
 const renderChart = (title, data, sampleCount) => {

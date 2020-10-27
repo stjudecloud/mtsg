@@ -84,14 +84,22 @@ def read_signature_activities(src: Path) -> Tuple[List[str], List[Dict[str, Any]
     return (signatures, prepared_samples)
 
 
-def visualize(src: Path, dst: Path) -> None:
-    signatures, samples = read_signature_activities(src)
-    data = {"data": {"signatures": signatures, "samples": samples}}
+def visualize(src: Path, reference_src: Path, dst: Path) -> None:
+    signatures, query_samples = read_signature_activities(src)
+    _, reference_samples = read_signature_activities(reference_src)
+
+    data = {
+        "data": {
+            "signatures": signatures,
+            "reference": reference_samples,
+            "query": query_samples,
+        }
+    }
 
     generator = "mtsg {}".format(mtsg.__version__)
     payload = json.dumps(data)
 
-    diseases = list(set(sample["diseaseCode"] for sample in samples))
+    diseases = list(set(sample["diseaseCode"] for sample in reference_samples))
     diseases.sort()
 
     env = jinja2.Environment(loader=jinja2.PackageLoader("mtsg", "templates"))

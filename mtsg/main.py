@@ -29,6 +29,7 @@ def main() -> None:
     run_cmd.add_argument("src_prefix", metavar="src-prefix", type=Path)
 
     visualize_cmd = subparsers.add_parser("visualize")
+    visualize_cmd.add_argument("--reference", type=Path)
     visualize_cmd.add_argument("--output", type=Path)
     visualize_cmd.add_argument("src", type=Path)
 
@@ -42,8 +43,9 @@ def main() -> None:
         run(src_prefix, dst_prefix, genome_build=genome_build)
     elif cmd == "visualize":
         src: Path = args.src
+        reference_src: Path = args.reference
         dst: Path = args.output
-        visualize(src, dst)
+        visualize(src, reference_src, dst)
     else:
         raise ValueError("unreachable")
 
