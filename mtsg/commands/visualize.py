@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List
+from typing import Any, Dict, List, Tuple
 import csv
 import json
 import re
@@ -41,7 +41,7 @@ def normalize_signature_name(s: str) -> str:
     return "{}{}".format(SIGNATURE_NAME_PREFIX, position)
 
 
-def visualize(src: Path, dst: Path) -> None:
+def read_signature_activities(src: Path) -> Tuple[List[str], List[Dict[str, Any]]]:
     signatures = []
     samples = []
 
@@ -81,12 +81,17 @@ def visualize(src: Path, dst: Path) -> None:
             }
         )
 
-    data = {"data": {"signatures": signatures, "samples": prepared_samples}}
+    return (signatures, prepared_samples)
+
+
+def visualize(src: Path, dst: Path) -> None:
+    signatures, samples = read_signature_activities(src)
+    data = {"data": {"signatures": signatures, "samples": samples}}
 
     generator = "mtsg {}".format(mtsg.__version__)
     payload = json.dumps(data)
 
-    diseases = list(set(sample.disease() for sample in samples))
+    diseases = list(set(sample["diseaseCode"] for sample in samples))
     diseases.sort()
 
     env = jinja2.Environment(loader=jinja2.PackageLoader("mtsg", "templates"))
