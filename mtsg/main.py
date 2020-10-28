@@ -17,7 +17,7 @@ def main() -> None:
     )
 
     run_cmd = subparsers.add_parser("run")
-    run_cmd.add_argument("--dst-prefix", type=Path)
+    run_cmd.add_argument("--dst-prefix", type=Path, required=True)
 
     run_cmd.add_argument(
         "--genome-build",
@@ -29,8 +29,8 @@ def main() -> None:
     run_cmd.add_argument("src_prefix", metavar="src-prefix", type=Path)
 
     visualize_cmd = subparsers.add_parser("visualize")
-    visualize_cmd.add_argument("--reference", type=Path)
-    visualize_cmd.add_argument("--output", type=Path)
+    visualize_cmd.add_argument("--reference", type=Path, required=True)
+    visualize_cmd.add_argument("--output", type=Path, required=True)
     visualize_cmd.add_argument("src", type=Path)
 
     args = parser.parse_args()
