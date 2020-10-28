@@ -175,17 +175,14 @@ const render = () => {
     ...sampleTraces,
   ];
 
-  renderChart(
-    diseaseCode,
-    data,
-    filteredReferenceSamples.length,
-    querySamples.length
-  );
+  renderChart(data);
 };
 
-const renderChart = (title, data) => {
+const renderChart = (data) => {
   const layout = {
-    title,
+    margin: {
+      t: 40,
+    },
     barmode: "stack",
     hovermode: "closest",
     annotations: [
