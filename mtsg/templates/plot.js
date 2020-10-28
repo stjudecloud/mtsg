@@ -51,21 +51,37 @@ const loadData = () => {
   state.data = JSON.parse(payload).data;
 };
 
-const buildSignatureTraces = (signatures, samples) => {
-  const diseaseTotals = new Array(signatures.length).fill(0);
+const buildSignatureTraces = (
+  signatures,
+  referenceSamples,
+  diseaseCode,
+  querySamples
+) => {
+  const referenceTotals = new Array(signatures.length).fill(0);
 
-  for (let sample of samples) {
-    for (let i = 0; i < sample.contributions.length; i++) {
-      diseaseTotals[i] += sample.contributions[i];
+  for (let sample of referenceSamples) {
+    if (sample.diseaseCode === diseaseCode) {
+      for (let i = 0; i < sample.contributions.length; i++) {
+        referenceTotals[i] += sample.contributions[i];
+      }
     }
   }
 
-  const total = diseaseTotals.reduce((sum, value) => sum + value, 0);
+  const queryTotals = new Array(signatures.length).fill(0);
+
+  for (let sample of querySamples) {
+    for (let i = 0; i < sample.contributions.length; i++) {
+      queryTotals[i] += sample.contributions[i];
+    }
+  }
+
+  const referenceTotal = referenceTotals.reduce((sum, value) => sum + value, 0);
+  const queryTotal = queryTotals.reduce((sum, value) => sum + value, 0);
 
   return signatures.map((name, i) => ({
-    x: [diseaseTotals[i] / total],
-    y: ["Query"],
-    text: `${diseaseTotals[i]}<br>${name}`,
+    x: [queryTotals[i] / queryTotal, referenceTotals[i] / referenceTotal],
+    y: ["Query", "Reference"],
+    text: [`${queryTotals[i]}<br>${name}`, `${referenceTotals[i]}<br>${name}`],
     hoverinfo: "text",
     orientation: "h",
     type: "bar",
@@ -131,11 +147,16 @@ const buildSampleTraces = (signatures, samples) => {
 
 const render = () => {
   const {
-    data: { query: querySamples, signatures },
+    data: { query: querySamples, reference: referenceSamples, signatures },
     diseaseCode,
   } = state;
 
-  const signatureTraces = buildSignatureTraces(signatures, querySamples);
+  const signatureTraces = buildSignatureTraces(
+    signatures,
+    referenceSamples,
+    diseaseCode,
+    querySamples
+  );
   const sampleTraces = buildSampleTraces(signatures, querySamples);
   const data = [...signatureTraces, ...sampleTraces];
 

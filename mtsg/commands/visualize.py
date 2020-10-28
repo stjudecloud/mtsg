@@ -16,11 +16,11 @@ SIGNATURE_NAME_PREFIX = "SBS"
 
 class Sample:
     id: str
-    contributions: List[int]
+    contributions: Dict[str, int]
 
     def __init__(self, id: str) -> None:
         self.id = id
-        self.contributions = []
+        self.contributions = {}
 
     def disease(self) -> str:
         try:
@@ -41,7 +41,7 @@ def normalize_signature_name(s: str) -> str:
     return "{}{}".format(SIGNATURE_NAME_PREFIX, position)
 
 
-def read_signature_activities(src: Path) -> Tuple[List[str], List[Dict[str, Any]]]:
+def read_signature_activities(src: Path) -> Tuple[List[str], List[Sample]]:
     signatures = []
     samples = []
 
@@ -60,7 +60,7 @@ def read_signature_activities(src: Path) -> Tuple[List[str], List[Dict[str, Any]
             samples.append(sample)
 
         for row in reader:
-            signature = normalize_signature_name(row[0])
+            signature = row[0]
             signatures.append(signature)
 
             contributions = row[1:]
@@ -68,25 +68,62 @@ def read_signature_activities(src: Path) -> Tuple[List[str], List[Dict[str, Any]
             for i, raw_contribution in enumerate(contributions):
                 sample = samples[i]
                 contribution = int(raw_contribution)
-                sample.contributions.append(contribution)
+                sample.contributions[signature] = contribution
 
-    prepared_samples = []
+    return (signatures, samples)
 
-    for sample in samples:
-        prepared_samples.append(
+
+def normalize_samples(
+    signatures: List[str], raw_samples: List[Sample]
+) -> List[Dict[str, Any]]:
+    samples = []
+
+    for sample in raw_samples:
+        contributions = []
+
+        for signature in signatures:
+            if signature in sample.contributions:
+                contributions.append(sample.contributions[signature])
+            else:
+                contributions.append(0)
+
+        samples.append(
             {
                 "name": sample.id,
                 "diseaseCode": sample.disease(),
-                "contributions": sample.contributions,
+                "contributions": contributions,
             }
         )
 
-    return (signatures, prepared_samples)
+    return samples
+
+
+def normalize_data(
+    reference_signatures: List[str],
+    raw_reference_samples: List[Sample],
+    query_signatures: List[str],
+    raw_query_samples: List[Sample],
+) -> Tuple[List[str], List[Dict[str, Any]], List[Dict[str, Any]]]:
+    signatures = list(set(reference_signatures + query_signatures))
+    signatures.sort()
+
+    reference_samples = normalize_samples(signatures, raw_reference_samples)
+    query_samples = normalize_samples(signatures, raw_query_samples)
+
+    signatures = [normalize_signature_name(signature) for signature in signatures]
+
+    return (signatures, reference_samples, query_samples)
 
 
 def visualize(src: Path, reference_src: Path, dst: Path) -> None:
-    signatures, query_samples = read_signature_activities(src)
-    _, reference_samples = read_signature_activities(reference_src)
+    reference_signatures, raw_reference_samples = read_signature_activities(
+        reference_src
+    )
+    query_signatures, raw_query_samples = read_signature_activities(src)
+
+    signatures, reference_samples, query_samples = normalize_data(
+        reference_signatures, raw_reference_samples, query_signatures, raw_query_samples
+    )
 
     data = {
         "data": {
