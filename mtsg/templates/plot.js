@@ -53,41 +53,35 @@ const loadData = () => {
 
 const buildSignatureTraces = (
   signatures,
-  referenceSamples,
-  diseaseCode,
-  querySamples
+  querySamples,
+  title,
+  xaxis,
+  yaxis,
+  marker = {}
 ) => {
-  const referenceTotals = new Array(signatures.length).fill(0);
-
-  for (let sample of referenceSamples) {
-    if (sample.diseaseCode === diseaseCode) {
-      for (let i = 0; i < sample.contributions.length; i++) {
-        referenceTotals[i] += sample.contributions[i];
-      }
-    }
-  }
-
-  const queryTotals = new Array(signatures.length).fill(0);
+  const totals = new Array(signatures.length).fill(0);
 
   for (let sample of querySamples) {
     for (let i = 0; i < sample.contributions.length; i++) {
-      queryTotals[i] += sample.contributions[i];
+      totals[i] += sample.contributions[i];
     }
   }
 
-  const referenceTotal = referenceTotals.reduce((sum, value) => sum + value, 0);
-  const queryTotal = queryTotals.reduce((sum, value) => sum + value, 0);
+  const total = totals.reduce((sum, value) => sum + value, 0);
 
   return signatures.map((name, i) => ({
-    x: [queryTotals[i] / queryTotal, referenceTotals[i] / referenceTotal],
-    y: ["Query", "Reference"],
-    text: [`${queryTotals[i]}<br>${name}`, `${referenceTotals[i]}<br>${name}`],
+    x: [totals[i] / total],
+    y: [title],
+    xaxis,
+    yaxis,
+    text: [`${totals[i]}<br>${name}`],
     hoverinfo: "text",
     orientation: "h",
     type: "bar",
     showlegend: false,
     marker: {
       color: colors(i),
+      ...marker,
     },
   }));
 };
@@ -108,8 +102,8 @@ const buildSampleTraces = (signatures, samples) => {
         ({ sample }, j) => sample.contributions[i] / samples[j].total
       ),
       y: sampleNames,
-      xaxis: "x2",
-      yaxis: "y2",
+      xaxis: "x3",
+      yaxis: "y3",
       name: `<b>${name}</b>${
         ETIOLOGIES[name] ? `<br>${ETIOLOGIES[name]}` : ""
       }`,
@@ -128,8 +122,8 @@ const buildSampleTraces = (signatures, samples) => {
   let contributionsTrace = {
     x: samples.map(({ total }) => total),
     y: sampleNames,
-    xaxis: "x3",
-    yaxis: "y3",
+    xaxis: "x4",
+    yaxis: "y4",
     text: samples.map((e) => `${e.total}<br>${e.sample.name}`),
     hoverinfo: "text",
     orientation: "h",
@@ -151,18 +145,35 @@ const render = () => {
     diseaseCode,
   } = state;
 
-  const signatureTraces = buildSignatureTraces(
+  const filteredReferenceSamples = referenceSamples.filter(
+    (sample) => sample.diseaseCode === diseaseCode
+  );
+
+  const referenceSignatureTraces = buildSignatureTraces(
     signatures,
-    referenceSamples,
-    diseaseCode,
-    querySamples
+    filteredReferenceSamples,
+    "<b>Reference</b>",
+    "x",
+    "y",
+    {
+      line: {
+        width: 2,
+      },
+    }
+  );
+  const querySignatureTraces = buildSignatureTraces(
+    signatures,
+    querySamples,
+    "Query",
+    "x2",
+    "y2"
   );
   const sampleTraces = buildSampleTraces(signatures, querySamples);
-  const data = [...signatureTraces, ...sampleTraces];
-
-  const filteredReferenceSamples = referenceSamples.filter(
-    (s) => s.diseaseCode === diseaseCode
-  );
+  const data = [
+    ...referenceSignatureTraces,
+    ...querySignatureTraces,
+    ...sampleTraces,
+  ];
 
   renderChart(
     diseaseCode,
@@ -198,7 +209,7 @@ const renderChart = (title, data, referenceSampleCount, querySampleCount) => {
         xanchor: "center",
         yanchor: "bottom",
         x: 0.45,
-        y: 0.81,
+        y: 0.71,
         showarrow: false,
         font: {
           size: 14,
@@ -211,7 +222,7 @@ const renderChart = (title, data, referenceSampleCount, querySampleCount) => {
         xanchor: "center",
         yanchor: "bottom",
         x: 0.95,
-        y: 0.81,
+        y: 0.71,
         showarrow: false,
         font: {
           size: 14,
@@ -224,33 +235,43 @@ const renderChart = (title, data, referenceSampleCount, querySampleCount) => {
       valign: "top",
     },
     xaxis: {
-      anchor: "y1",
+      anchor: "y",
       domain: [0.025, 0.9],
+      showticklabels: false,
     },
     yaxis: {
-      anchor: "x1",
+      anchor: "x",
       domain: [0.9, 1.0],
       ticklen: 8,
     },
     xaxis2: {
       anchor: "y2",
       domain: [0.025, 0.9],
-      title: "Percent contribution",
     },
     yaxis2: {
       anchor: "x2",
-      domain: [0.0, 0.8],
+      domain: [0.8, 0.9],
       ticklen: 8,
-      automargin: true,
     },
     xaxis3: {
       anchor: "y3",
-      domain: [0.9, 1.0],
-      title: "Total absolute contribution",
+      domain: [0.025, 0.9],
+      title: "Percent contribution",
     },
     yaxis3: {
       anchor: "x3",
-      domain: [0.0, 0.8],
+      domain: [0.0, 0.7],
+      ticklen: 8,
+      automargin: true,
+    },
+    xaxis4: {
+      anchor: "y4",
+      domain: [0.9, 1.0],
+      title: "Total absolute contribution",
+    },
+    yaxis4: {
+      anchor: "x4",
+      domain: [0.0, 0.7],
       showticklabels: false,
     },
   };
