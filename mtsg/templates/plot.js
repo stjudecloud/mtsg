@@ -160,17 +160,26 @@ const render = () => {
   const sampleTraces = buildSampleTraces(signatures, querySamples);
   const data = [...signatureTraces, ...sampleTraces];
 
-  renderChart(diseaseCode, data, querySamples.length);
+  const filteredReferenceSamples = referenceSamples.filter(
+    (s) => s.diseaseCode === diseaseCode
+  );
+
+  renderChart(
+    diseaseCode,
+    data,
+    filteredReferenceSamples.length,
+    querySamples.length
+  );
 };
 
-const renderChart = (title, data, sampleCount) => {
+const renderChart = (title, data, referenceSampleCount, querySampleCount) => {
   const layout = {
     title,
     barmode: "stack",
     hovermode: "closest",
     annotations: [
       {
-        text: `Signature contribution means (n = ${sampleCount})`,
+        text: `Signature contribution means (n = ${referenceSampleCount} (reference), ${querySampleCount} (query))`,
         xref: "paper",
         yref: "paper",
         xanchor: "center",
