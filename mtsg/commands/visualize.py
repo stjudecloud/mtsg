@@ -27,7 +27,7 @@ class Sample:
         components = self.id.split(HEADER_DELIMITER, 2)
 
         if len(components) < 2:
-            return ""
+            return "Unknown"
         else:
             return components[1]
 
