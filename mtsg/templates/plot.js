@@ -152,7 +152,7 @@ const render = () => {
   const referenceSignatureTraces = buildSignatureTraces(
     signatures,
     filteredReferenceSamples,
-    `<b>Reference<br>(n = ${filteredReferenceSamples.length})</b>`,
+    `<b>Reference<br>${diseaseCode} (n=${filteredReferenceSamples.length})</b>`,
     "x",
     "y",
     {
@@ -164,7 +164,7 @@ const render = () => {
   const querySignatureTraces = buildSignatureTraces(
     signatures,
     querySamples,
-    `Query<br>(n = ${querySamples.length})`,
+    `Query<br>(n=${querySamples.length})`,
     "x2",
     "y2"
   );
@@ -243,6 +243,7 @@ const renderChart = (title, data) => {
       anchor: "x",
       domain: [0.9, 1.0],
       ticklen: 8,
+      automargin: true,
     },
     xaxis2: {
       anchor: "y2",
