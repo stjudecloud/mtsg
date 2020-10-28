@@ -9,6 +9,15 @@ sample_info_src = Path(sys.argv[1])
 activities_src = Path(sys.argv[2])
 
 
+def normalize_sample_name(s: str) -> str:
+    components = s.rsplit("_", 1)
+
+    if len(components) < 2:
+        raise ValueError("invalid sample name '{}'".format(s))
+
+    return components[0]
+
+
 def read_sample_info(src: Path) -> Dict[str, str]:
     sample_disease_codes = {}
 
@@ -29,10 +38,12 @@ with activities_src.open(newline="") as f:
     reader = csv.reader(f, delimiter="\t")
     headers = next(reader)
 
-    sample_names = headers[1:]
+    raw_sample_names = headers[1:]
     prepared_headers = [headers[0]]
 
-    for sample_name in sample_names:
+    for raw_sample_name in raw_sample_names:
+        sample_name = normalize_sample_name(raw_sample_name)
+
         if sample_name in sample_disease_codes:
             disease_code = sample_disease_codes[sample_name]
             header = "{}{}{}".format(sample_name, HEADER_DELIMITER, disease_code)
