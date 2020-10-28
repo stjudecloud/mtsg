@@ -152,7 +152,7 @@ const render = () => {
   const referenceSignatureTraces = buildSignatureTraces(
     signatures,
     filteredReferenceSamples,
-    "<b>Reference</b>",
+    `<b>Reference<br>(n = ${filteredReferenceSamples.length})</b>`,
     "x",
     "y",
     {
@@ -164,7 +164,7 @@ const render = () => {
   const querySignatureTraces = buildSignatureTraces(
     signatures,
     querySamples,
-    "Query",
+    `Query<br>(n = ${querySamples.length})`,
     "x2",
     "y2"
   );
@@ -183,14 +183,14 @@ const render = () => {
   );
 };
 
-const renderChart = (title, data, referenceSampleCount, querySampleCount) => {
+const renderChart = (title, data) => {
   const layout = {
     title,
     barmode: "stack",
     hovermode: "closest",
     annotations: [
       {
-        text: `Signature contribution means (n = ${referenceSampleCount} (reference), ${querySampleCount} (query))`,
+        text: "Signature contribution means",
         xref: "paper",
         yref: "paper",
         xanchor: "center",
