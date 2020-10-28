@@ -6,7 +6,7 @@ from typing import Dict
 HEADER_DELIMITER = "|"
 
 sample_info_src = Path(sys.argv[1])
-activities_src = Path(sys.argv[2])
+activities_srcs = [Path(src) for src in sys.argv[2:]]
 
 
 def normalize_sample_name(s: str) -> str:
@@ -34,12 +34,15 @@ def read_sample_info(src: Path) -> Dict[str, str]:
 
 sample_disease_codes = read_sample_info(sample_info_src)
 
-with activities_src.open(newline="") as f:
+prepared_headers = ["Samples"]
+readers = []
+
+for activities_src in activities_srcs:
+    f = activities_src.open(newline="")
     reader = csv.reader(f, delimiter="\t")
     headers = next(reader)
 
     raw_sample_names = headers[1:]
-    prepared_headers = [headers[0]]
 
     for raw_sample_name in raw_sample_names:
         sample_name = normalize_sample_name(raw_sample_name)
@@ -49,11 +52,24 @@ with activities_src.open(newline="") as f:
             header = "{}{}{}".format(sample_name, HEADER_DELIMITER, disease_code)
             prepared_headers.append(header)
         else:
-            print("WARN: unknown sample name '{}'".format(sample_name), file=sys.stderr)
+            print(
+                "WARN: unknown sample name '{}'".format(sample_name),
+                file=sys.stderr,
+            )
             prepared_headers.append(sample_name)
 
-    writer = csv.writer(sys.stdout, delimiter="\t", lineterminator="\n")
-    writer.writerow(prepared_headers)
+    readers.append(reader)
 
-    for row in reader:
-        writer.writerow(row)
+writer = csv.writer(sys.stdout, delimiter="\t", lineterminator="\n")
+writer.writerow(prepared_headers)
+
+for rdrs in zip(*readers):
+    row_out = []
+
+    for i, row_in in enumerate(rdrs):
+        if i == 0:
+            row_out.extend(row_in)
+        else:
+            row_out.extend(row_in[1:])
+
+    writer.writerow(row_out)
