@@ -6,8 +6,9 @@ import re
 
 import jinja2
 
-from mtsg import SampleName
 import mtsg
+
+HEADER_DELIMITER = "|"
 
 MAX_SIGNATURE_NAME_COMPONENTS = 2
 SIGNATURE_NAME_DELIMITER = "-"
@@ -23,11 +24,12 @@ class Sample:
         self.contributions = {}
 
     def disease(self) -> str:
-        try:
-            sample_name = SampleName.parse(self.id)
-            return sample_name.disease
-        except ValueError:
+        components = self.id.split(HEADER_DELIMITER, 2)
+
+        if len(components) < 2:
             return ""
+        else:
+            return components[1]
 
 
 def normalize_signature_name(s: str) -> str:
