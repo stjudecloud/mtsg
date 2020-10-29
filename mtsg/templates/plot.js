@@ -69,21 +69,25 @@ const buildSignatureTraces = (
 
   const total = totals.reduce((sum, value) => sum + value, 0);
 
-  return signatures.map((name, i) => ({
-    x: [totals[i] / total],
-    y: [title],
-    xaxis,
-    yaxis,
-    text: [`${totals[i]}<br>${name}`],
-    hoverinfo: "text",
-    orientation: "h",
-    type: "bar",
-    showlegend: false,
-    marker: {
-      color: colors(i),
-      ...marker,
-    },
-  }));
+  return signatures.map((name, i) => {
+    let etiology = ETIOLOGIES[name] ? `<br>${ETIOLOGIES[name]}` : "";
+
+    return {
+      x: [totals[i] / total],
+      y: [title],
+      xaxis,
+      yaxis,
+      text: [`${totals[i]}<br>${name}${etiology}`],
+      hoverinfo: "text",
+      orientation: "h",
+      type: "bar",
+      showlegend: false,
+      marker: {
+        color: colors(i),
+        ...marker,
+      },
+    };
+  });
 };
 
 const buildSampleTraces = (signatures, samples) => {
@@ -97,26 +101,28 @@ const buildSampleTraces = (signatures, samples) => {
   const sampleNames = samples.map(({ sample }) => sample.name);
 
   const traces = signatures
-    .map((name, i) => ({
-      x: samples.map(
-        ({ sample }, j) => sample.contributions[i] / samples[j].total
-      ),
-      y: sampleNames,
-      xaxis: "x3",
-      yaxis: "y3",
-      name: `<b>${name}</b>${
-        ETIOLOGIES[name] ? `<br>${ETIOLOGIES[name]}` : ""
-      }`,
-      text: samples.map(
-        ({ sample }) => `${sample.contributions[i]}<br>${name}`
-      ),
-      hoverinfo: "text",
-      orientation: "h",
-      type: "bar",
-      marker: {
-        color: colors(i),
-      },
-    }))
+    .map((name, i) => {
+      let etiology = ETIOLOGIES[name] ? `<br>${ETIOLOGIES[name]}` : "";
+
+      return {
+        x: samples.map(
+          ({ sample }, j) => sample.contributions[i] / samples[j].total
+        ),
+        y: sampleNames,
+        xaxis: "x3",
+        yaxis: "y3",
+        name: `<b>${name}</b>${etiology}`,
+        text: samples.map(
+          ({ sample }) => `${sample.contributions[i]}<br>${name}${etiology}`
+        ),
+        hoverinfo: "text",
+        orientation: "h",
+        type: "bar",
+        marker: {
+          color: colors(i),
+        },
+      };
+    })
     .filter((trace) => !trace.x.every((value) => value == 0.0));
 
   let contributionsTrace = {
