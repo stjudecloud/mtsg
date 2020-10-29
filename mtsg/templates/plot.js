@@ -69,28 +69,31 @@ const buildSignatureTraces = (
 
   const total = totals.reduce((sum, value) => sum + value, 0);
 
-  return signatures.map((name, i) => {
-    let etiology = ETIOLOGIES[name] ? `<br>${ETIOLOGIES[name]}` : "";
+  return signatures
+    .map((name, i) => {
+      let etiology = ETIOLOGIES[name] ? `<br>${ETIOLOGIES[name]}` : "";
 
-    return {
-      x: [totals[i] / total],
-      y: [title],
-      xaxis,
-      yaxis,
-      text: [`${totals[i]}<br>${name}${etiology}`],
-      hoverinfo: "text",
-      orientation: "h",
-      type: "bar",
-      showlegend: false,
-      marker: {
-        color: colors(i),
-        ...marker,
-      },
-    };
-  });
+      return {
+        x: [totals[i] / total],
+        y: [title],
+        xaxis,
+        yaxis,
+        name: `<b>${name}</b>${etiology}`,
+        text: [`${totals[i]}<br>${name}${etiology}`],
+        hoverinfo: "text",
+        orientation: "h",
+        type: "bar",
+        showlegend: false,
+        marker: {
+          color: colors(i),
+          ...marker,
+        },
+      };
+    })
+    .filter((trace) => !trace.x.every((value) => value == 0.0));
 };
 
-const buildSampleTraces = (signatures, samples) => {
+const buildSampleTraces = (signatures, samples, activeSignatures) => {
   samples = samples.map((sample) => ({
     sample,
     total: sample.contributions.reduce((sum, value) => sum + value, 0),
@@ -123,7 +126,7 @@ const buildSampleTraces = (signatures, samples) => {
         },
       };
     })
-    .filter((trace) => !trace.x.every((value) => value == 0.0));
+    .filter((trace) => activeSignatures.has(trace.name));
 
   let contributionsTrace = {
     x: samples.map(({ total }) => total),
@@ -167,6 +170,7 @@ const render = () => {
       },
     }
   );
+
   const querySignatureTraces = buildSignatureTraces(
     signatures,
     querySamples,
@@ -174,7 +178,21 @@ const render = () => {
     "x2",
     "y2"
   );
-  const sampleTraces = buildSampleTraces(signatures, querySamples);
+
+  let activeSignatures = new Set();
+
+  for (let traces of [referenceSignatureTraces, querySignatureTraces]) {
+    for (let trace of traces) {
+      activeSignatures.add(trace.name);
+    }
+  }
+
+  const sampleTraces = buildSampleTraces(
+    signatures,
+    querySamples,
+    activeSignatures
+  );
+
   const data = [
     ...referenceSignatureTraces,
     ...querySignatureTraces,
