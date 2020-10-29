@@ -9,6 +9,15 @@ sample_info_src = Path(sys.argv[1])
 activities_srcs = [Path(src) for src in sys.argv[2:]]
 
 
+class Disease:
+    name: str
+    code: str
+
+    def __init__(self, name: str, code: str) -> None:
+        self.name = name
+        self.code = code
+
+
 def normalize_sample_name(s: str) -> str:
     components = s.rsplit("_", 1)
 
@@ -18,21 +27,22 @@ def normalize_sample_name(s: str) -> str:
     return components[0]
 
 
-def read_sample_info(src: Path) -> Dict[str, str]:
-    sample_disease_codes = {}
+def read_sample_info(src: Path) -> Dict[str, Disease]:
+    sample_name_diseases = {}
 
     with src.open(newline="") as f:
         reader = csv.DictReader(f)
 
         for row in reader:
             sample_name = row["sample_name"]
+            disease_name = row["sj_long_disease_name"]
             disease_code = row["sj_diseases"]
-            sample_disease_codes[sample_name] = disease_code
+            sample_name_diseases[sample_name] = Disease(disease_name, disease_code)
 
-    return sample_disease_codes
+    return sample_name_diseases
 
 
-sample_disease_codes = read_sample_info(sample_info_src)
+sample_name_diseases = read_sample_info(sample_info_src)
 
 prepared_headers = ["Samples"]
 readers = []
@@ -47,9 +57,9 @@ for activities_src in activities_srcs:
     for raw_sample_name in raw_sample_names:
         sample_name = normalize_sample_name(raw_sample_name)
 
-        if sample_name in sample_disease_codes:
-            disease_code = sample_disease_codes[sample_name]
-            header = "{}{}{}".format(sample_name, HEADER_DELIMITER, disease_code)
+        if sample_name in sample_name_diseases:
+            disease = sample_name_diseases[sample_name]
+            header = "{}{}{}".format(sample_name, HEADER_DELIMITER, disease.name)
             prepared_headers.append(header)
         else:
             print(
