@@ -34,6 +34,14 @@ const state = {
 
 const colors = Plotly.d3.scale.category20();
 
+const formatSnv = (count) => {
+  if (count === 1) {
+    return `${count} SNV`;
+  } else {
+    return `${count} SNVs`;
+  }
+};
+
 const populateDiseases = () => {
   let uniqueDiseases = {};
 
@@ -93,7 +101,7 @@ const buildSignatureTraces = (
         xaxis,
         yaxis,
         name: `<b>${name}</b>${etiology}`,
-        text: [`${totals[i]}<br>${name}${etiology}`],
+        text: [`${formatSnv(totals[i])}<br>${name}${etiology}`],
         hoverinfo: "text",
         orientation: "h",
         type: "bar",
@@ -130,7 +138,8 @@ const buildSampleTraces = (signatures, samples, activeSignatures) => {
         yaxis: "y3",
         name: `<b>${name}</b>${etiology}`,
         text: samples.map(
-          ({ sample }) => `${sample.contributions[i]}<br>${name}${etiology}`
+          ({ sample }) =>
+            `${formatSnv(sample.contributions[i])}<br>${name}${etiology}`
         ),
         hoverinfo: "text",
         orientation: "h",
@@ -147,7 +156,7 @@ const buildSampleTraces = (signatures, samples, activeSignatures) => {
     y: sampleNames,
     xaxis: "x4",
     yaxis: "y4",
-    text: samples.map((e) => `${e.total}<br>${e.sample.name}`),
+    text: samples.map((e) => `${formatSnv(e.total)}<br>${e.sample.name}`),
     hoverinfo: "text",
     orientation: "h",
     type: "bar",
