@@ -34,9 +34,23 @@ const state = {
 
 const colors = Plotly.d3.scale.category20();
 
-const selectFirstDiseaseCode = () => {
-  const $option = document.querySelector("#plot option:first-child");
-  state.diseaseCode = $option.value;
+const populateDiseases = () => {
+  let uniqueDiseases = {};
+
+  for (let sample of state.data.reference) {
+    uniqueDiseases[sample.disease.name] = sample.disease.code;
+  }
+
+  let names = Object.keys(uniqueDiseases);
+  names.sort();
+
+  const $plot = document.getElementById("plot");
+
+  for (let name of names) {
+    $plot.add(new Option(name, uniqueDiseases[name]));
+  }
+
+  state.diseaseCode = uniqueDiseases[names[0]];
 };
 
 const addEventListeners = () => {
@@ -155,7 +169,7 @@ const render = () => {
   } = state;
 
   const filteredReferenceSamples = referenceSamples.filter(
-    (sample) => sample.diseaseCode === diseaseCode
+    (sample) => sample.disease.code === diseaseCode
   );
 
   const referenceSignatureTraces = buildSignatureTraces(
@@ -307,7 +321,7 @@ const renderChart = (data) => {
 
 document.addEventListener("DOMContentLoaded", () => {
   loadData();
-  selectFirstDiseaseCode();
+  populateDiseases();
   addEventListeners();
   render();
 });

@@ -107,7 +107,10 @@ def normalize_samples(
         samples.append(
             {
                 "name": sample.name,
-                "diseaseCode": sample.disease.name,
+                "disease": {
+                    "code": sample.disease.code,
+                    "name": sample.disease.name,
+                },
                 "contributions": contributions,
             }
         )
@@ -153,13 +156,8 @@ def visualize(src: Path, reference_src: Path, dst: Path) -> None:
     generator = "mtsg {}".format(mtsg.__version__)
     payload = json.dumps(data)
 
-    diseases = list(set(sample["diseaseCode"] for sample in reference_samples))
-    diseases.sort()
-
     env = jinja2.Environment(loader=jinja2.PackageLoader("mtsg", "templates"))
     template = env.get_template("signatures.html.j2")
 
     with open(dst, "w") as f:
-        f.write(
-            template.render(generator=generator, payload=payload, diseases=diseases)
-        )
+        f.write(template.render(generator=generator, payload=payload))
