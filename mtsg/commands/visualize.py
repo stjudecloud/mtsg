@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 import csv
 import json
 import re
@@ -15,21 +15,37 @@ SIGNATURE_NAME_DELIMITER = "-"
 SIGNATURE_NAME_PREFIX = "SBS"
 
 
+class Disease:
+    code: str
+    name: str
+
+    def __init__(self, code: str, name: str) -> None:
+        self.code = code
+        self.name = name
+
+
 class Sample:
-    id: str
+    name: str
+    disease: Disease
     contributions: Dict[str, int]
 
-    def __init__(self, id: str) -> None:
-        self.id = id
+    def __init__(self, name: str, disease: Disease) -> None:
+        self.name = name
+        self.disease = disease
         self.contributions = {}
 
-    def disease(self) -> str:
-        components = self.id.split(HEADER_DELIMITER, 2)
 
-        if len(components) < 2:
-            return "Unknown"
-        else:
-            return components[2]
+def parse_header(s: str) -> Tuple[str, Disease]:
+    components = s.split(HEADER_DELIMITER, 2)
+
+    sample_name = components[0]
+
+    if len(components) < 3:
+        disease = Disease("UNKNOWN", "Unknown")
+    else:
+        disease = Disease(components[1], components[2])
+
+    return (sample_name, disease)
 
 
 def normalize_signature_name(s: str) -> str:
@@ -50,15 +66,14 @@ def read_signature_activities(src: Path) -> Tuple[List[str], List[Sample]]:
     with open(src, newline="") as f:
         reader = csv.reader(f, delimiter="\t")
 
-        csv_headers = next(reader, None)
+        headers = next(reader, None)
 
-        if not csv_headers:
+        if not headers:
             raise ValueError("missing headers")
 
-        sample_names = csv_headers[1:]
-
-        for sample_name in sample_names:
-            sample = Sample(sample_name)
+        for header in headers[1:]:
+            sample_name, disease = parse_header(header)
+            sample = Sample(sample_name, disease)
             samples.append(sample)
 
         for row in reader:
@@ -91,8 +106,8 @@ def normalize_samples(
 
         samples.append(
             {
-                "name": sample.id,
-                "diseaseCode": sample.disease(),
+                "name": sample.name,
+                "diseaseCode": sample.disease.name,
                 "contributions": contributions,
             }
         )
