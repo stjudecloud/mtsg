@@ -29,7 +29,7 @@ class Sample:
         if len(components) < 2:
             return "Unknown"
         else:
-            return components[1]
+            return components[2]
 
 
 def normalize_signature_name(s: str) -> str:

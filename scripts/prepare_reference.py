@@ -59,7 +59,15 @@ for activities_src in activities_srcs:
 
         if sample_name in sample_name_diseases:
             disease = sample_name_diseases[sample_name]
-            header = "{}{}{}".format(sample_name, HEADER_DELIMITER, disease.name)
+
+            header = "{}{}{}{}{}".format(
+                sample_name,
+                HEADER_DELIMITER,
+                disease.code,
+                HEADER_DELIMITER,
+                disease.name,
+            )
+
             prepared_headers.append(header)
         else:
             print(
