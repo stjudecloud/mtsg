@@ -280,7 +280,7 @@ const renderChart = (data) => {
     },
     xaxis: {
       anchor: "y",
-      domain: [0.025, 0.9],
+      domain: [0.0, 0.9],
       showticklabels: false,
     },
     yaxis: {
@@ -291,7 +291,7 @@ const renderChart = (data) => {
     },
     xaxis2: {
       anchor: "y2",
-      domain: [0.025, 0.9],
+      domain: [0.0, 0.9],
     },
     yaxis2: {
       anchor: "x2",
@@ -300,7 +300,7 @@ const renderChart = (data) => {
     },
     xaxis3: {
       anchor: "y3",
-      domain: [0.025, 0.9],
+      domain: [0.0, 0.9],
       title: "Proportion of SNVs",
     },
     yaxis3: {
