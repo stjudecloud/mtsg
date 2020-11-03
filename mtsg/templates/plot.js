@@ -312,7 +312,7 @@ const renderChart = (data) => {
     xaxis4: {
       anchor: "y4",
       domain: [0.9, 1.0],
-      title: "Total absolute contribution",
+      title: "Total mutational burden",
     },
     yaxis4: {
       anchor: "x4",
