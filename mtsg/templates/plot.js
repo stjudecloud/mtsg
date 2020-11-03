@@ -234,7 +234,7 @@ const renderChart = (data) => {
     hovermode: "closest",
     annotations: [
       {
-        text: "Signature contribution means",
+        text: "Cohort Signature Contribution Means",
         xref: "paper",
         yref: "paper",
         xanchor: "center",
@@ -247,7 +247,7 @@ const renderChart = (data) => {
         },
       },
       {
-        text: "Sample signature contributions",
+        text: "Sample Signature Contributions",
         xref: "paper",
         yref: "paper",
         xanchor: "center",
@@ -260,7 +260,7 @@ const renderChart = (data) => {
         },
       },
       {
-        text: "Sample signature activities",
+        text: "Sample Signature Activities",
         xref: "paper",
         yref: "paper",
         xanchor: "center",
@@ -301,7 +301,7 @@ const renderChart = (data) => {
     xaxis3: {
       anchor: "y3",
       domain: [0.025, 0.9],
-      title: "Percent contribution",
+      title: "Proportion of SNVs",
     },
     yaxis3: {
       anchor: "x3",
@@ -312,7 +312,7 @@ const renderChart = (data) => {
     xaxis4: {
       anchor: "y4",
       domain: [0.9, 1.0],
-      title: "Total mutational burden",
+      title: "Total Mutational Burden",
     },
     yaxis4: {
       anchor: "x4",
