@@ -1,3 +1,4 @@
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 import csv
@@ -15,24 +16,17 @@ SIGNATURE_NAME_DELIMITER = "-"
 SIGNATURE_NAME_PREFIX = "SBS"
 
 
+@dataclass
 class Disease:
     code: str
     name: str
 
-    def __init__(self, code: str, name: str) -> None:
-        self.code = code
-        self.name = name
 
-
+@dataclass
 class Sample:
     name: str
     disease: Disease
-    contributions: Dict[str, int]
-
-    def __init__(self, name: str, disease: Disease) -> None:
-        self.name = name
-        self.disease = disease
-        self.contributions = {}
+    contributions: Dict[str, int] = field(default_factory=dict)
 
 
 def parse_header(s: str) -> Tuple[str, Disease]:
