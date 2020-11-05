@@ -8,4 +8,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build
-        run: docker image build --tag mtsg .
+        run: docker image build --tag mtsg --target development .
+      - name: Test
+        run: |
+          docker container run \
+            --rm \
+            --mount type=bind,src=$PWD/mtsg,dst=/opt/mtsg/mtsg,readonly \
+            --mount type=bind,src=$PWD/tests,dst=/opt/mtsg/tests,readonly \
+            --entrypoint "" \
+            mtsg \
+            poetry run \
+            pytest tests

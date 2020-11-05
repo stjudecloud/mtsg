@@ -32,10 +32,11 @@ RUN wget --output-document /tmp/signatures.xlsx https://cancer.sanger.ac.uk/sign
 
 FROM base as development
 
+COPY mtsg/main.py ./mtsg/
+
 COPY --from=base $POETRY_HOME $POETRY_HOME
 COPY --from=base $MTSG_HOME $MTSG_HOME
 
-COPY mtsg/main.py ./mtsg/
 VOLUME ["/opt/mtsg/mtsg", "/opt/mtsg/tests"]
 
 RUN poetry install
