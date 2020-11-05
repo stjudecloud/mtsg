@@ -2,7 +2,7 @@ import csv
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Set, Tuple
 
 HEADER_DELIMITER = "|"
 
@@ -46,32 +46,43 @@ def read_sample_info(src: Path) -> Dict[str, Disease]:
     return sample_name_diseases
 
 
+def read_activities(src: Path) -> Tuple[Set[str], Dict[str, Sample]]:
+    signatures = set()
+    samples: Dict[str, Sample] = {}
+
+    with src.open(newline="") as f:
+        reader = csv.reader(f, delimiter="\t")
+        headers = next(reader)
+
+        sample_names = headers[1:]
+
+        for row in reader:
+            signature = row[0]
+            contributions = row[1:]
+
+            signatures.add(signature)
+
+            for (sample_name, contribution) in zip(sample_names, contributions):
+                if sample_name in samples:
+                    sample = samples[sample_name]
+                else:
+                    sample = Sample(sample_name)
+                    samples[sample_name] = sample
+
+                sample.contributions[signature] = int(contribution)
+
+    return (signatures, samples)
+
+
 sample_name_diseases = read_sample_info(sample_info_src)
 
 signatures = set()
-samples: Dict[str, Sample] = {}
+samples = {}
 
-for activities_src in activities_srcs:
-    f = activities_src.open(newline="")
-    reader = csv.reader(f, delimiter="\t")
-    headers = next(reader)
-
-    sample_names = headers[1:]
-
-    for row in reader:
-        signature = row[0]
-        contributions = row[1:]
-
-        signatures.add(signature)
-
-        for (sample_name, contribution) in zip(sample_names, contributions):
-            if sample_name in samples:
-                sample = samples[sample_name]
-            else:
-                sample = Sample(sample_name)
-                samples[sample_name] = sample
-
-            sample.contributions[signature] = int(contribution)
+for src in activities_srcs:
+    read_signatures, read_samples = read_activities(src)
+    signatures.update(read_signatures)
+    samples.update(read_samples)
 
 sample_names = list(samples.keys())
 sample_names.sort()
