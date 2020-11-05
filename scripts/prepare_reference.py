@@ -19,7 +19,7 @@ class Disease:
 @dataclass
 class Sample:
     name: str
-    contributions: Dict[str, int] = field(default_factory=dict)
+    contributions: Dict[str, str] = field(default_factory=dict)
 
 
 def normalize_sample_name(s: str) -> str:
@@ -69,7 +69,7 @@ def read_activities(src: Path) -> Tuple[Set[str], Dict[str, Sample]]:
                     sample = Sample(sample_name)
                     samples[sample_name] = sample
 
-                sample.contributions[signature] = int(contribution)
+                sample.contributions[signature] = contribution
 
     return (signatures, samples)
 
@@ -128,6 +128,6 @@ for signature in activated_signatures:
             contribution = sample.contributions[signature]
             row.append(contribution)
         else:
-            row.append(0)
+            row.append("0")
 
     writer.writerow(row)
