@@ -1,4 +1,4 @@
-FROM python:3.8.6
+FROM python:3.8.6 AS base
 
 ENV POETRY_VERSION=1.1.4 \
       POETRY_HOME=/opt/poetry \
@@ -13,7 +13,7 @@ RUN sed -i "s/ main/ main contrib/g" /etc/apt/sources.list \
 
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 
-WORKDIR ${MTSG_HOME}
+WORKDIR $MTSG_HOME
 
 COPY poetry.lock pyproject.toml ./
 RUN poetry install --no-dev
@@ -29,7 +29,21 @@ RUN wget --output-document /tmp/signatures.xlsx https://cancer.sanger.ac.uk/sign
             ${MTSG_HOME}/.venv/lib/python3.8/site-packages/sigproSS/input \
       && rm /tmp/signatures.xlsx
 
-COPY mtsg/ ./mtsg/
-RUN poetry install --no-dev
+
+FROM base as development
+
+COPY --from=base $POETRY_HOME $POETRY_HOME
+COPY --from=base $MTSG_HOME $MTSG_HOME
+
+COPY mtsg/main.py ./mtsg/
+VOLUME ["/opt/mtsg/mtsg", "/opt/mtsg/tests"]
+
+RUN poetry install
 
 ENTRYPOINT ["/opt/mtsg/.venv/bin/mtsg"]
+
+
+FROM base as release
+
+COPY --from=base $MTSG_HOME $MTSG_HOME
+COPY mtsg/ ./mtsg/
