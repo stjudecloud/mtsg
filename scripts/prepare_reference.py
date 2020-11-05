@@ -1,5 +1,6 @@
 import csv
 import sys
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List
 
@@ -9,22 +10,16 @@ sample_info_src = Path(sys.argv[1])
 activities_srcs = [Path(src) for src in sys.argv[2:]]
 
 
+@dataclass
 class Disease:
     name: str
     code: str
 
-    def __init__(self, name: str, code: str) -> None:
-        self.name = name
-        self.code = code
 
-
+@dataclass
 class Sample:
     name: str
-    contributions: Dict[str, int]
-
-    def __init__(self, name: str) -> None:
-        self.name = name
-        self.contributions = {}
+    contributions: Dict[str, int] = field(default_factory=dict)
 
 
 def normalize_sample_name(s: str) -> str:
