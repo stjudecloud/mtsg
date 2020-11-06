@@ -18,7 +18,6 @@ SIGNATURE_NAME_PREFIX = "SBS"
 
 @dataclass
 class Disease:
-    code: str
     name: str
 
 
@@ -30,14 +29,14 @@ class Sample:
 
 
 def parse_header(s: str) -> Tuple[str, Disease]:
-    components = s.split(HEADER_DELIMITER, 2)
+    components = s.split(HEADER_DELIMITER, 1)
 
     sample_name = components[0]
 
-    if len(components) < 3:
-        disease = Disease("UNKNOWN", "Unknown")
+    if len(components) < 2:
+        disease = Disease("Unknown")
     else:
-        disease = Disease(components[1], components[2])
+        disease = Disease(components[1])
 
     return (sample_name, disease)
 
@@ -102,7 +101,6 @@ def normalize_samples(
             {
                 "name": sample.name,
                 "disease": {
-                    "code": sample.disease.code,
                     "name": sample.disease.name,
                 },
                 "contributions": contributions,

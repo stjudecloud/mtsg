@@ -13,7 +13,6 @@ activities_srcs = [Path(src) for src in sys.argv[2:]]
 @dataclass
 class Disease:
     name: str
-    code: str
 
 
 @dataclass
@@ -38,10 +37,9 @@ def read_sample_info(src: Path) -> Dict[str, Disease]:
         reader = csv.DictReader(f)
 
         for row in reader:
-            sample_name = row["sample_name"]
-            disease_name = row["sj_long_disease_name"]
-            disease_code = row["sj_diseases"]
-            sample_name_diseases[sample_name] = Disease(disease_name, disease_code)
+            sample_name = row["SampleID"]
+            disease_name = row["new label"]
+            sample_name_diseases[sample_name] = Disease(disease_name)
 
     return sample_name_diseases
 
@@ -100,10 +98,8 @@ for raw_sample_name in sample_names:
     if sample_name in sample_name_diseases:
         disease = sample_name_diseases[sample_name]
 
-        header = "{}{}{}{}{}".format(
+        header = "{}{}{}".format(
             sample_name,
-            HEADER_DELIMITER,
-            disease.code,
             HEADER_DELIMITER,
             disease.name,
         )

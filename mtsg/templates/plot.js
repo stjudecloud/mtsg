@@ -40,7 +40,7 @@ const ETIOLOGIES = {
 };
 
 const state = {
-  diseaseCode: "",
+  diseaseName: "",
   data: {
     signatures: [],
     reference: [],
@@ -62,7 +62,7 @@ const populateDiseases = () => {
   let uniqueDiseases = {};
 
   for (let sample of state.data.reference) {
-    uniqueDiseases[sample.disease.name] = sample.disease.code;
+    uniqueDiseases[sample.disease.name] = sample.disease.name;
   }
 
   let names = Object.keys(uniqueDiseases);
@@ -74,12 +74,12 @@ const populateDiseases = () => {
     $plot.add(new Option(name, uniqueDiseases[name]));
   }
 
-  state.diseaseCode = uniqueDiseases[names[0]];
+  state.diseaseName = uniqueDiseases[names[0]];
 };
 
 const addEventListeners = () => {
   document.getElementById("plot").addEventListener("change", (event) => {
-    state.diseaseCode = event.target.value;
+    state.diseaseName = event.target.value;
     render();
   });
 };
@@ -190,17 +190,17 @@ const buildSampleTraces = (signatures, samples, activeSignatures) => {
 const render = () => {
   const {
     data: { query: querySamples, reference: referenceSamples, signatures },
-    diseaseCode,
+    diseaseName,
   } = state;
 
   const filteredReferenceSamples = referenceSamples.filter(
-    (sample) => sample.disease.code === diseaseCode
+    (sample) => sample.disease.name === diseaseName
   );
 
   const referenceSignatureTraces = buildSignatureTraces(
     signatures,
     filteredReferenceSamples,
-    `<b>Reference<br>${diseaseCode} (n=${filteredReferenceSamples.length})</b>`,
+    `<b>Reference<br>${diseaseName} (n=${filteredReferenceSamples.length})</b>`,
     "x",
     "y",
     {
