@@ -138,26 +138,27 @@ const buildReferenceSignatureTraces = (signatures, samples, diseaseName) => {
     traces.push(trace);
   }
 
-  const otherTrace = {
-    x: [otherValue / total],
-    y: [title],
-    xaxis: "x",
-    yaxis: "y",
-    name: "<b>Other</b>",
-    text: [`${formatSnv(otherValue)}<br>Other`],
-    hoverinfo: "text",
-    orientation: "h",
-    type: "bar",
-    showlegend: false,
-    marker: {
-      color: "#222",
-      line: {
-        width: 2,
+  if (otherValue > 0) {
+    const otherTrace = {
+      x: [otherValue / total],
+      y: [title],
+      xaxis: "x",
+      yaxis: "y",
+      name: "<b>Other</b>",
+      text: [`${formatSnv(otherValue)}<br>Other`],
+      hoverinfo: "text",
+      orientation: "h",
+      type: "bar",
+      marker: {
+        color: "#222",
+        line: {
+          width: 2,
+        },
       },
-    },
-  };
+    };
 
-  traces.push(otherTrace);
+    traces.push(otherTrace);
+  }
 
   return traces;
 };
@@ -289,9 +290,9 @@ const render = () => {
   );
 
   const data = [
-    ...referenceSignatureTraces,
     ...querySignatureTraces,
     ...sampleTraces,
+    ...referenceSignatureTraces,
   ];
 
   renderChart(data);
