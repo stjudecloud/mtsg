@@ -91,6 +91,7 @@ activated_signatures.sort()
 writer = csv.writer(sys.stdout, delimiter="\t", lineterminator="\n")
 
 prepared_headers = []
+prepared_raw_sample_names = set()
 
 for raw_sample_name in sample_names:
     sample_name = normalize_sample_name(raw_sample_name)
@@ -105,25 +106,26 @@ for raw_sample_name in sample_names:
         )
 
         prepared_headers.append(header)
+        prepared_raw_sample_names.add(raw_sample_name)
     else:
         print(
             "WARN: unknown sample name '{}'".format(sample_name),
             file=sys.stderr,
         )
-        prepared_headers.append(sample_name)
 
 writer.writerow(["Samples"] + prepared_headers)
 
 for signature in activated_signatures:
     row = [signature]
 
-    for sample_name in sample_names:
-        sample = samples[sample_name]
+    for raw_sample_name in sample_names:
+        if raw_sample_name in prepared_raw_sample_names:
+            sample = samples[raw_sample_name]
 
-        if signature in sample.contributions:
-            contribution = sample.contributions[signature]
-            row.append(contribution)
-        else:
-            row.append("0")
+            if signature in sample.contributions:
+                contribution = sample.contributions[signature]
+                row.append(contribution)
+            else:
+                row.append("0")
 
     writer.writerow(row)
