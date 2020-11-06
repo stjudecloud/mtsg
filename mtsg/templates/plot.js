@@ -89,23 +89,90 @@ const loadData = () => {
   state.data = JSON.parse(payload).data;
 };
 
-const buildSignatureTraces = (
-  signatures,
-  querySamples,
-  title,
-  xaxis,
-  yaxis,
-  marker = {}
-) => {
+const buildReferenceSignatureTraces = (signatures, samples, diseaseName) => {
   const totals = new Array(signatures.length).fill(0);
 
-  for (let sample of querySamples) {
+  for (let sample of samples) {
     for (let i = 0; i < sample.contributions.length; i++) {
       totals[i] += sample.contributions[i];
     }
   }
 
   const total = totals.reduce((sum, value) => sum + value, 0);
+  const threshold = total * 0.02;
+
+  const title = `<b>Reference<br>${diseaseName} (n=${samples.length})</b>`;
+
+  let otherValue = 0.0;
+
+  const traces = [];
+
+  for (let i = 0; i < signatures.length; i++) {
+    if (totals[i] === 0 || totals[i] < threshold) {
+      otherValue += totals[i];
+      continue;
+    }
+
+    const name = signatures[i];
+    const etiology = ETIOLOGIES[name] ? `<br>${ETIOLOGIES[name]}` : "";
+
+    const trace = {
+      x: [totals[i] / total],
+      y: [title],
+      xaxis: "x",
+      yaxis: "y",
+      name: `<b>${name}</b>${etiology}`,
+      text: [`${formatSnv(totals[i])}<br>${name}${etiology}`],
+      hoverinfo: "text",
+      orientation: "h",
+      type: "bar",
+      showlegend: false,
+      marker: {
+        color: colors(i),
+        line: {
+          width: 2,
+        },
+      },
+    };
+
+    traces.push(trace);
+  }
+
+  const otherTrace = {
+    x: [otherValue / total],
+    y: [title],
+    xaxis: "x",
+    yaxis: "y",
+    name: "<b>Other</b>",
+    text: [`${formatSnv(otherValue)}<br>Other`],
+    hoverinfo: "text",
+    orientation: "h",
+    type: "bar",
+    showlegend: false,
+    marker: {
+      color: "#222",
+      line: {
+        width: 2,
+      },
+    },
+  };
+
+  traces.push(otherTrace);
+
+  return traces;
+};
+
+const buildQuerySignatureTraces = (signatures, samples) => {
+  const totals = new Array(signatures.length).fill(0);
+
+  for (let sample of samples) {
+    for (let i = 0; i < sample.contributions.length; i++) {
+      totals[i] += sample.contributions[i];
+    }
+  }
+
+  const total = totals.reduce((sum, value) => sum + value, 0);
+  const title = `Query<br>(n=${samples.length})`;
 
   return signatures
     .map((name, i) => {
@@ -114,8 +181,8 @@ const buildSignatureTraces = (
       return {
         x: [totals[i] / total],
         y: [title],
-        xaxis,
-        yaxis,
+        xaxis: "x2",
+        yaxis: "y2",
         name: `<b>${name}</b>${etiology}`,
         text: [`${formatSnv(totals[i])}<br>${name}${etiology}`],
         hoverinfo: "text",
@@ -124,7 +191,6 @@ const buildSignatureTraces = (
         showlegend: false,
         marker: {
           color: colors(i),
-          ...marker,
         },
       };
     })
@@ -197,25 +263,15 @@ const render = () => {
     (sample) => sample.disease.name === diseaseName
   );
 
-  const referenceSignatureTraces = buildSignatureTraces(
+  const referenceSignatureTraces = buildReferenceSignatureTraces(
     signatures,
     filteredReferenceSamples,
-    `<b>Reference<br>${diseaseName} (n=${filteredReferenceSamples.length})</b>`,
-    "x",
-    "y",
-    {
-      line: {
-        width: 2,
-      },
-    }
+    diseaseName
   );
 
-  const querySignatureTraces = buildSignatureTraces(
+  const querySignatureTraces = buildQuerySignatureTraces(
     signatures,
-    querySamples,
-    `Query<br>(n=${querySamples.length})`,
-    "x2",
-    "y2"
+    querySamples
   );
 
   let activeSignatures = new Set();
