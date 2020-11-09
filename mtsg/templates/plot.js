@@ -39,6 +39,10 @@ const ETIOLOGIES = {
   SBS90: "Duocarmycin",
 };
 
+const COSMIC_SBS_URL_PREFIX =
+  "https://cancer.sanger.ac.uk/cosmic/signatures/SBS";
+const COSMIC_SBS_URL_SUFFIX = ".tt";
+
 const state = {
   diseaseName: "",
   data: {
@@ -398,7 +402,26 @@ const renderChart = (data) => {
     responsive: true,
   };
 
-  Plotly.newPlot("chart", data, layout, config);
+  const $chart = document.getElementById("chart");
+  Plotly.newPlot($chart, data, layout, config);
+
+  $chart.on("plotly_legendclick", (ev) => {
+    const { curveNumber: i, data } = ev;
+    const { name } = data[i];
+
+    const matches = name.match(/<b>(SBS.+)<\/b>/);
+
+    if (!matches) {
+      return false;
+    }
+
+    const signature = matches[1];
+
+    const url = `${COSMIC_SBS_URL_PREFIX}/${signature}${COSMIC_SBS_URL_SUFFIX}`;
+    window.open(url, "_blank");
+
+    return false;
+  });
 };
 
 document.addEventListener("DOMContentLoaded", () => {
