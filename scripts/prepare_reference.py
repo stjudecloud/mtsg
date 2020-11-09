@@ -88,8 +88,6 @@ sample_names.sort()
 activated_signatures = list(signatures)
 activated_signatures.sort()
 
-writer = csv.writer(sys.stdout, delimiter="\t", lineterminator="\n")
-
 prepared_headers = []
 prepared_raw_sample_names = set()
 
@@ -113,6 +111,7 @@ for raw_sample_name in sample_names:
             file=sys.stderr,
         )
 
+writer = csv.writer(sys.stdout, delimiter="\t", lineterminator="\n")
 writer.writerow(["Samples"] + prepared_headers)
 
 for signature in activated_signatures:
