@@ -44,6 +44,7 @@ const COSMIC_SBS_URL_PREFIX =
 const COSMIC_SBS_URL_SUFFIX = ".tt";
 
 const state = {
+  activeCohort: "Query",
   diseaseName: "",
   data: {
     signatures: [],
@@ -93,7 +94,12 @@ const loadData = () => {
   state.data = JSON.parse(payload).data;
 };
 
-const buildReferenceSignatureTraces = (signatures, samples, diseaseName) => {
+const buildReferenceSignatureTraces = (
+  signatures,
+  samples,
+  diseaseName,
+  isActive
+) => {
   const totals = new Array(signatures.length).fill(0);
 
   for (let sample of samples) {
@@ -105,16 +111,28 @@ const buildReferenceSignatureTraces = (signatures, samples, diseaseName) => {
   const total = totals.reduce((sum, value) => sum + value, 0);
   const threshold = total * 0.02;
 
-  const title = `<b>Reference<br>${diseaseName} (n=${samples.length})</b>`;
+  let title = `Reference<br>${diseaseName} (n=${samples.length})`;
+  let line = { width: 0 };
+
+  if (isActive) {
+    title = `<b>${title}</b>`;
+    line.width = 2;
+  }
 
   let otherValue = 0.0;
 
   const traces = [];
 
   for (let i = 0; i < signatures.length; i++) {
-    if (totals[i] === 0 || totals[i] < threshold) {
-      otherValue += totals[i];
+    let isOther = false;
+
+    if (totals[i] === 0) {
       continue;
+    }
+
+    if (totals[i] < threshold) {
+      otherValue += totals[i];
+      isOther = true;
     }
 
     const name = signatures[i];
@@ -131,11 +149,10 @@ const buildReferenceSignatureTraces = (signatures, samples, diseaseName) => {
       orientation: "h",
       type: "bar",
       showlegend: false,
+      visible: !isOther,
       marker: {
         color: colors(i),
-        line: {
-          width: 2,
-        },
+        line,
       },
     };
 
@@ -155,9 +172,7 @@ const buildReferenceSignatureTraces = (signatures, samples, diseaseName) => {
       type: "bar",
       marker: {
         color: "#222",
-        line: {
-          width: 2,
-        },
+        line,
       },
     };
 
@@ -167,7 +182,7 @@ const buildReferenceSignatureTraces = (signatures, samples, diseaseName) => {
   return traces;
 };
 
-const buildQuerySignatureTraces = (signatures, samples) => {
+const buildQuerySignatureTraces = (signatures, samples, isActive) => {
   const totals = new Array(signatures.length).fill(0);
 
   for (let sample of samples) {
@@ -177,7 +192,14 @@ const buildQuerySignatureTraces = (signatures, samples) => {
   }
 
   const total = totals.reduce((sum, value) => sum + value, 0);
-  const title = `Query<br>(n=${samples.length})`;
+
+  let title = `Query<br>(n=${samples.length})`;
+  let line = { width: 0 };
+
+  if (isActive) {
+    title = `<b>${title}</b>`;
+    line.width = 2;
+  }
 
   return signatures
     .map((name, i) => {
@@ -196,6 +218,7 @@ const buildQuerySignatureTraces = (signatures, samples) => {
         showlegend: false,
         marker: {
           color: colors(i),
+          line,
         },
       };
     })
@@ -271,12 +294,14 @@ const render = () => {
   const referenceSignatureTraces = buildReferenceSignatureTraces(
     signatures,
     filteredReferenceSamples,
-    diseaseName
+    diseaseName,
+    state.activeCohort === "Reference"
   );
 
   const querySignatureTraces = buildQuerySignatureTraces(
     signatures,
-    querySamples
+    querySamples,
+    state.activeCohort === "Query"
   );
 
   let activeSignatures = new Set();
@@ -287,11 +312,12 @@ const render = () => {
     }
   }
 
-  const sampleTraces = buildSampleTraces(
-    signatures,
-    querySamples,
-    activeSignatures
-  );
+  let samples =
+    state.activeCohort === "Reference"
+      ? filteredReferenceSamples
+      : querySamples;
+
+  const sampleTraces = buildSampleTraces(signatures, samples, activeSignatures);
 
   const data = [
     ...querySignatureTraces,
@@ -421,6 +447,22 @@ const renderChart = (data) => {
     window.open(url, "_blank");
 
     return false;
+  });
+
+  $chart.on("plotly_afterplot", () => {
+    $labels = document.querySelectorAll(
+      ".subplot.xy g.ytick, .subplot.x2y2 g.y2tick"
+    );
+
+    for (let $label of $labels) {
+      $label.addEventListener("click", (ev) => {
+        $text = ev.target.closest("text");
+        $line = $text.firstChild;
+        state.activeCohort = $line.textContent;
+        render();
+        return false;
+      });
+    }
   });
 };
 
