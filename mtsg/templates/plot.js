@@ -109,7 +109,7 @@ const buildReferenceSignatureTraces = (
   }
 
   const total = totals.reduce((sum, value) => sum + value, 0);
-  const threshold = total * 0.02;
+  const threshold = total * 0.01;
 
   let title = `Reference<br>${diseaseName} (n=${samples.length})`;
   let line = { width: 0 };
