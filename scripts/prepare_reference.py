@@ -82,18 +82,21 @@ for src in activities_srcs:
     signatures.update(read_signatures)
     samples.update(read_samples)
 
-sample_names = list(samples.keys())
+normalized_samples = {}
+
+for _, sample in samples.items():
+    normalized_sample_name = normalize_sample_name(sample.name)
+    normalized_samples[normalized_sample_name] = sample
+
+sample_names = list(normalized_samples.keys())
 sample_names.sort()
 
 activated_signatures = list(signatures)
 activated_signatures.sort()
 
 prepared_headers = []
-prepared_raw_sample_names = set()
 
-for raw_sample_name in sample_names:
-    sample_name = normalize_sample_name(raw_sample_name)
-
+for sample_name in sample_names:
     if sample_name in sample_name_diseases:
         disease = sample_name_diseases[sample_name]
 
@@ -104,7 +107,6 @@ for raw_sample_name in sample_names:
         )
 
         prepared_headers.append(header)
-        prepared_raw_sample_names.add(raw_sample_name)
     else:
         print(
             "WARN: unknown sample name '{}'".format(sample_name),
@@ -117,9 +119,9 @@ writer.writerow(["Samples"] + prepared_headers)
 for signature in activated_signatures:
     row = [signature]
 
-    for raw_sample_name in sample_names:
-        if raw_sample_name in prepared_raw_sample_names:
-            sample = samples[raw_sample_name]
+    for sample_name in sample_names:
+        if sample_name in sample_name_diseases:
+            sample = normalized_samples[sample_name]
 
             if signature in sample.contributions:
                 contribution = sample.contributions[signature]
