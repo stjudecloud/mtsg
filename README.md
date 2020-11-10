@@ -80,9 +80,11 @@ optional arguments:
 
 ## Docker
 
-Mutational Signatures has a `Dockerfile` to create a Docker image, which sets
-up and installs the required runtime and dependencies. To build and use this
-image, [install Docker](https://docs.docker.com/install) for your platform.
+Mutational Signatures has a `Dockerfile` to create a container image, which
+sets up and installs the required runtime and dependencies. It installs
+reference files for only GRCh38 and uses COMSIC mutational signatures 3.1. To
+build and use this image, [install Docker](https://docs.docker.com/install)
+for your platform.
 
 ### Build
 
@@ -100,8 +102,7 @@ The image uses `mtsg` as its entrypoint, giving access to all commands.
 $ docker container run mtsg <args...>
 ```
 
-For example, to run the `run` command with samples in `$PWD/data` and an empty
-results directory at `$PWD/results`:
+For example, a typical workflow is to run the `run` command followed by `visualize`.
 
 ```
 $ docker container run \
@@ -112,6 +113,16 @@ $ docker container run \
   run \
   --dst-prefix /results \
   /data
+
+$ docker container run \
+  --rm \
+  --mount type=bind,source=$PWD/references,target=/references,readonly \
+  --mount type=bind,source=$PWD/results,target=/results \
+  mtsg \
+  visualize \
+  --reference /references/reference.tsv \
+  --output /results/signatures.html \
+  /results/Sig_activities.txt
 ```
 
 ## References
