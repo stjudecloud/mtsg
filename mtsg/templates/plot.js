@@ -43,6 +43,8 @@ const COSMIC_SBS_URL_PREFIX =
   "https://cancer.sanger.ac.uk/cosmic/signatures/SBS";
 const COSMIC_SBS_URL_SUFFIX = ".tt";
 
+const OTHER_CATEGORY_THRESHOLD = 0.01; // [0.0, 1.0]
+
 const state = {
   activeCohort: "Query",
   diseaseName: "",
@@ -109,7 +111,7 @@ const buildReferenceSignatureTraces = (
   }
 
   const total = totals.reduce((sum, value) => sum + value, 0);
-  const threshold = total * 0.01;
+  const threshold = total * OTHER_CATEGORY_THRESHOLD;
 
   let title = `Reference<br>${diseaseName} (n=${samples.length})`;
   let line = { width: 0 };
