@@ -435,6 +435,9 @@ const renderChart = (data) => {
 
   const config = {
     responsive: true,
+    toImageButtonOptions: {
+      format: "svg",
+    },
   };
 
   const $chart = document.getElementById("chart");
