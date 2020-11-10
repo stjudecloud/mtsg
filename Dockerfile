@@ -48,3 +48,7 @@ FROM base as release
 
 COPY --from=base $MTSG_HOME $MTSG_HOME
 COPY mtsg/ ./mtsg/
+
+RUN poetry install --no-dev
+
+ENTRYPOINT ["/opt/mtsg/.venv/bin/mtsg"]
