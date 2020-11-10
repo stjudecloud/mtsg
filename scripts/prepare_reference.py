@@ -37,8 +37,8 @@ def read_sample_info(src: Path) -> Dict[str, Disease]:
         reader = csv.DictReader(f)
 
         for row in reader:
-            sample_name = row["SampleID"]
-            disease_name = row["new label"]
+            sample_name = row["sample"]
+            disease_name = row["newlabel"]
             sample_name_diseases[sample_name] = Disease(disease_name)
 
     return sample_name_diseases
