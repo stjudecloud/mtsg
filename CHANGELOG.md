@@ -12,6 +12,10 @@
   * [BREAKING] Only the `run` and `visualize` commands remain to run profile
     extraction and create a signature activities plot, respectively.
 
+  * [BREAKING] commands/visualize: Query samples are plotted against a given
+    reference dataset, grouped by disease. Summary, sample, and contribution
+    plots are now drawn.
+
 [MutationalPatterns]: https://www.bioconductor.org/packages/release/bioc/html/MutationalPatterns.html
 [SigProfilerSingleSample]: https://cancer.sanger.ac.uk/cosmic/signatures/sigprofiler.tt
 
