@@ -19,7 +19,7 @@
 [MutationalPatterns]: https://www.bioconductor.org/packages/release/bioc/html/MutationalPatterns.html
 [SigProfilerSingleSample]: https://cancer.sanger.ac.uk/cosmic/signatures/sigprofiler.tt
 
-## [2.3.0] - 2020-09-21
+## 2.3.0 - 2020-09-21
 
 ### Added
 
@@ -32,7 +32,7 @@
   * vcf: Skip the genotype when it is fully missing (i.e., `.`) or every field
     is missing (e.g., `.:.`).
 
-## [2.2.0] - 2020-05-11
+## 2.2.0 - 2020-05-11
 
 ### Added
 
@@ -46,14 +46,14 @@
 
   * visualize: Link to COSMIC Mutational Signatures v2.
 
-## [2.1.0] - 2019-05-16
+## 2.1.0 - 2019-05-16
 
 ### Changed
 
   * Rather than the default set of ten repeated colors, the colors used in the
     signature contributions stacked bar chart are distinct.
 
-## [2.0.0] - 2019-03-20
+## 2.0.0 - 2019-03-20
 
 ### Changed
 
@@ -72,8 +72,3 @@
 ## 1.0.0 - 2018-09-04
 
   * Initial release
-
-[2.3.0]: https://github.com/stjude/mtsg/compare/v2.2.0...v2.3.0
-[2.2.0]: https://github.com/stjude/mtsg/compare/v2.1.0...v2.2.0
-[2.1.0]: https://github.com/stjude/mtsg/compare/v2.0.0...v2.1.0
-[2.0.0]: https://github.com/stjude/mtsg/compare/v1.0.0...v2.0.0
