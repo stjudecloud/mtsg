@@ -28,9 +28,13 @@ class Sample:
     contributions: Dict[str, int] = field(default_factory=dict)
 
 
+class ParseHeaderError(Exception):
+    pass
+
+
 def parse_header(s: str) -> Tuple[str, Disease]:
     if len(s) == 0:
-        raise ValueError("header cannot be empty")
+        raise ParseHeaderError("empty input")
 
     components = s.split(HEADER_DELIMITER, 1)
 

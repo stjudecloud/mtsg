@@ -1,6 +1,11 @@
 import pytest
 
-from mtsg.commands.visualize import normalize_signature_name, parse_header, Disease
+from mtsg.commands.visualize import (
+    normalize_signature_name,
+    parse_header,
+    Disease,
+    ParseHeaderError,
+)
 
 
 def test_parse_header() -> None:
@@ -12,7 +17,7 @@ def test_parse_header() -> None:
     expected = ("SJSMPL000001_D1", Disease("Unknown"))
     assert actual == expected
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ParseHeaderError):
         parse_header("")
 
 
