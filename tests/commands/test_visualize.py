@@ -12,6 +12,9 @@ def test_parse_header() -> None:
     expected = ("SJSMPL000001_D1", Disease("Unknown"))
     assert actual == expected
 
+    with pytest.raises(ValueError):
+        parse_header("")
+
 
 def test_normalize_signature_name() -> None:
     assert normalize_signature_name("Signature Subs-01") == "SBS1"

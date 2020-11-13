@@ -29,6 +29,9 @@ class Sample:
 
 
 def parse_header(s: str) -> Tuple[str, Disease]:
+    if len(s) == 0:
+        raise ValueError("header cannot be empty")
+
     components = s.split(HEADER_DELIMITER, 1)
 
     sample_name = components[0]
