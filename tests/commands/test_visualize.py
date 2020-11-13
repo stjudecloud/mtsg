@@ -1,6 +1,16 @@
 import pytest
 
-from mtsg.commands.visualize import normalize_signature_name
+from mtsg.commands.visualize import normalize_signature_name, parse_header, Disease
+
+
+def test_parse_header() -> None:
+    actual = parse_header("SJSMPL000001_D1|SMPL")
+    expected = ("SJSMPL000001_D1", Disease("SMPL"))
+    assert actual == expected
+
+    actual = parse_header("SJSMPL000001_D1")
+    expected = ("SJSMPL000001_D1", Disease("Unknown"))
+    assert actual == expected
 
 
 def test_normalize_signature_name() -> None:
