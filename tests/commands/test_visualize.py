@@ -4,6 +4,7 @@ from mtsg.commands.visualize import (
     normalize_signature_name,
     parse_header,
     Disease,
+    NormalizeSignatureNameError,
     ParseHeaderError,
 )
 
@@ -26,8 +27,8 @@ def test_normalize_signature_name() -> None:
     assert normalize_signature_name("Signature Subs-07a") == "SBS7a"
     assert normalize_signature_name("Signature Subs-13") == "SBS13"
 
-    with pytest.raises(ValueError):
+    with pytest.raises(NormalizeSignatureNameError):
         normalize_signature_name("")
 
-    with pytest.raises(ValueError):
+    with pytest.raises(NormalizeSignatureNameError):
         normalize_signature_name("Signature Subs")

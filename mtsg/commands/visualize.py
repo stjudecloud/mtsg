@@ -32,6 +32,16 @@ class ParseHeaderError(Exception):
     pass
 
 
+class NormalizeSignatureNameError(Exception):
+    s: str
+
+    def __init__(self, s: str) -> None:
+        self.s = s
+
+    def __str__(self) -> str:
+        return "invalid signature name: {}".format(self.s)
+
+
 def parse_header(s: str) -> Tuple[str, Disease]:
     if len(s) == 0:
         raise ParseHeaderError("empty input")
@@ -52,7 +62,7 @@ def normalize_signature_name(s: str) -> str:
     components = s.split(SIGNATURE_NAME_DELIMITER, MAX_SIGNATURE_NAME_COMPONENTS)
 
     if len(components) < MAX_SIGNATURE_NAME_COMPONENTS:
-        raise ValueError("invalid signature name: {}".format(s))
+        raise NormalizeSignatureNameError(s)
 
     position = components[1].lstrip("0")
 
