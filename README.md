@@ -49,6 +49,8 @@ commands: `run` and `visualize`.
 ### Run
 
 `run` is used to profile samples (as VCFs) using known mutational signatures.
+The selected genome build must match the input VCFs and previously installed
+during the installation.
 
 ```
 usage: mtsg run [-h] [--dst-prefix DST_PREFIX] [--genome-build {GRCh37,GRCh38,mm9,mm10,rn6}] src-prefix
