@@ -22,7 +22,7 @@ RUN poetry run python -c 'from SigProfilerMatrixGenerator.install import install
 
 COPY scripts/ ./scripts/
 
-RUN wget --output-document /tmp/signatures.xlsx https://cancer.sanger.ac.uk/signatures/COSMIC_Mutational_Signatures_v3.1.xlsx \
+RUN wget --output-document /tmp/signatures.xlsx https://cancer.sanger.ac.uk/sigs-assets-20/COSMIC_Mutational_Signatures_v3.1.xlsx \
       && echo "de2b0f99aed16d04491b3314bf11063aec72c4da531c63a04e641f08420047ab  /tmp/signatures.xlsx" | sha256sum --check \
       && poetry run python ${MTSG_HOME}/scripts/generate_inputs.py \
             /tmp/signatures.xlsx \
