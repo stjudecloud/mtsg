@@ -4,11 +4,16 @@ main() {
     set -ex
 
     DATA_PREFIX=$HOME/data
+    REFERENCES_PREFIX=$HOME/references
     RESULTS_PREFIX=$HOME/results
 
     zstd -T0 -d -c --no-progress $RESOURCES/tmp/mtsg-latest.tar.zst | docker load
 
-    mkdir -p $DATA_PREFIX $RESULTS_PREFIX
+    mkdir -p $DATA_PREFIX $REFERENCES_PREFIX $RESULTS_PREFIX
+
+    wget \
+        --output-document $REFERENCES_PREFIX/reference.tsv \
+        https://raw.githubusercontent.com/stjudecloud/mtsg/e0e888db17a128ffb6a033c950a4dbf8b9b72573/references/reference.sj.clinical-pilot-g4k-pcgp.20201016.tsv
 
     dx-download-all-inputs --parallel
     mv $HOME/in/vcf_srcs/**/* $DATA_PREFIX
@@ -27,9 +32,11 @@ main() {
         /data
 
     docker run \
+        --mount type=bind,source=$REFERENCES_PREFIX,target=/references \
         --mount type=bind,source=$RESULTS_PREFIX,target=/results \
         mtsg \
         visualize \
+        --reference /references/reference.tsv \
         --output /results/Sig_activities.html \
         /results/Sig_activities.txt
 
