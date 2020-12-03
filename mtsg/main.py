@@ -2,7 +2,7 @@ from pathlib import Path
 import argparse
 
 from mtsg import GenomeBuild
-from mtsg.commands import run, visualize
+from mtsg.commands import init, run, visualize
 import mtsg
 
 
@@ -14,6 +14,14 @@ def main() -> None:
 
     subparsers = parser.add_subparsers(
         title="subcommands", dest="subcommand", required=True
+    )
+
+    init_cmd = subparsers.add_parser("init")
+    init_cmd.add_argument(
+        "--genome-build",
+        choices=GenomeBuild.__members__.values(),
+        default=GenomeBuild.GRCH38,
+        type=GenomeBuild.parse,
     )
 
     run_cmd = subparsers.add_parser("run")
@@ -36,10 +44,13 @@ def main() -> None:
     args = parser.parse_args()
     cmd = args.subcommand
 
-    if cmd == "run":
+    genome_build: GenomeBuild = args.genome_build
+
+    if cmd == "init":
+        init(genome_build)
+    elif cmd == "run":
         src_prefix: Path = args.src_prefix
         dst_prefix: Path = args.dst_prefix
-        genome_build: GenomeBuild = args.genome_build
         run(src_prefix, dst_prefix, genome_build=genome_build)
     elif cmd == "visualize":
         src: Path = args.src

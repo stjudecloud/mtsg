@@ -29,11 +29,11 @@ Use [Poetry] to install mtsg and its dependencies.
 $ poetry install --no-dev
 ```
 
-SigProfilerMatrixGenerator can then be used to install base mutational
-matrices given a supported genome build.
+`mtsg init` can then be used to install base mutational matrices given a
+supported genome build.
 
 ```
-$ poetry run python -c 'from SigProfilerMatrixGenerator.install import install; install("<genome-build>")'
+$ mtsg init --genome-build <genome-build>
 ```
 
 Replace `<genome-build>` with one of `GRCh37`, `GRCh38` (Homo sapiens),
@@ -43,8 +43,8 @@ Replace `<genome-build>` with one of `GRCh37`, `GRCh38` (Homo sapiens),
 
 ## Usage
 
-Mutational Signatures is installed as the executable `mtsg`. It has two
-commands: `run` and `visualize`.
+Mutational Signatures is installed as the executable `mtsg`. It has three
+commands: `init`, `run`, and `visualize`.
 
 ### Run
 

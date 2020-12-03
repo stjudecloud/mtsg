@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Added
+
+  * commands: Add `init` command to install reference mutational signature
+    matrices.
+
 ### Changed
 
   * [BREAKING] The underlying profile extractor changed from
