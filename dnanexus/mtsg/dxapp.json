@@ -59,6 +59,11 @@
       }
     ]
   },
+  "access": {
+    "network": [
+      "*"
+    ]
+  },
   "regionalOptions": {
     "azure:westus": {
       "systemRequirements": {
