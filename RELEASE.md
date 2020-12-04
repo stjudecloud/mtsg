@@ -13,7 +13,7 @@
 ## DNAnexus
 
   * [ ] Build container image: `docker image build --tag mtsg .`
-  * [ ] Save container image: `docker image save mtsg | zstd -T0 -f -o resources/tmp/mtsg-latest.tar.zst`
+  * [ ] Save container image: `docker image save mtsg | zstd -T0 -f -o dnanexus/mtsg/resources/tmp/mtsg-latest.tar.zst`
   * [ ] Check security context: `dx whoami`
   * [ ] Build DNAnexus applet: `dx build --destination mtsg:/mtsg-$VERSION dnanexus/mtsg`
   * [ ] Publish DNAnexus app: `dx build --app --publish dnanexus/mtsg`
