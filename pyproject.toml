@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mtsg"
-version = "3.0.0"
+version = "3.0.1"
 description = "Find and quantify COSMIC mutational signatures across samples"
 authors = ["Michael Macias <michael.macias@stjude.org>"]
 
