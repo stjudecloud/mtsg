@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+  * main: Fix argument matching for `--genome-build` when missing.
+
 ## 3.0.0 - 2020-12-04
 
 ### Added

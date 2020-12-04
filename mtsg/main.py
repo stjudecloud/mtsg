@@ -44,13 +44,15 @@ def main() -> None:
     args = parser.parse_args()
     cmd = args.subcommand
 
-    genome_build: GenomeBuild = args.genome_build
+    genome_build: GenomeBuild
 
     if cmd == "init":
+        genome_build = args.genome_build
         init(genome_build)
     elif cmd == "run":
         src_prefix: Path = args.src_prefix
         dst_prefix: Path = args.dst_prefix
+        genome_build = args.genome_build
         run(src_prefix, dst_prefix, genome_build=genome_build)
     elif cmd == "visualize":
         src: Path = args.src
