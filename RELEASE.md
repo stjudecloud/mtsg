@@ -17,4 +17,6 @@
   * [ ] Check security context: `dx whoami`
   * [ ] Build DNAnexus applet: `dx build --destination mtsg:/mtsg-$VERSION dnanexus/mtsg`
   * [ ] Publish DNAnexus app: `dx build --app --publish dnanexus/mtsg`
-  * [ ] Build St. Jude Cloud production workflow.
+  * [ ] Build St. Jude Cloud production workflow on DNAnexus.
+  * [ ] Download DNAnexus-built workflow: `dx get $DXID`
+  * [ ] Build DNAnexus workflow: `dx build --workflow --destination "$DX_PROJECT_NAME:$DX_PATH"`
