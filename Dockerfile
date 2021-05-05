@@ -1,6 +1,6 @@
 FROM python:3.8.8 AS base
 
-ENV POETRY_VERSION=1.1.4 \
+ENV POETRY_VERSION=1.1.6 \
       POETRY_HOME=/opt/poetry \
       POETRY_VIRTUALENVS_IN_PROJECT=true \
       MTSG_HOME=/opt/mtsg \
