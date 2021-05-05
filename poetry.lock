@@ -605,7 +605,7 @@ test = ["pytest", "pytest-cov"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "71752996bdbf9d462efa820dbfca8fa8d816d5b921acf4cc95b3129c2a709263"
+content-hash = "10fab39cf581fc873a44ac1f27e13ca1f5ff87e6830ea287958c408c16089c2e"
 
 [metadata.files]
 appdirs = [

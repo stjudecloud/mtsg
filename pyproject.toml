@@ -10,7 +10,7 @@ mtsg = "mtsg.main:main"
 [tool.poetry.dependencies]
 Jinja2 = "^2.11.2"
 python = "^3.8"
-sigproSS = "^0.0.0"
+sigproSS = "0.0.0.27"
 
 [tool.poetry.dev-dependencies]
 black = "21.5b0"
