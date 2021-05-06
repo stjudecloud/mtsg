@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+  * templates/plot: Update COSMIC SBS signatures URL. This changed from
+    `https://cancer.sanger.ac.uk/cosmic/signatures/SBS/<signature>.tt` to
+    `https://cancer.sanger.ac.uk/signatures/sbs/<lower(signature)>/`.
+
 ## 3.0.1 - 2020-12-04
 
 ### Fixed

@@ -39,9 +39,7 @@ const ETIOLOGIES = {
   SBS90: "Duocarmycin",
 };
 
-const COSMIC_SBS_URL_PREFIX =
-  "https://cancer.sanger.ac.uk/cosmic/signatures/SBS";
-const COSMIC_SBS_URL_SUFFIX = ".tt";
+const COSMIC_SBS_BASE_URL = "https://cancer.sanger.ac.uk/signatures/sbs";
 
 const OTHER_CATEGORY_THRESHOLD = 0.01; // [0.0, 1.0]
 
@@ -455,7 +453,7 @@ const renderChart = (data) => {
 
     const signature = matches[1];
 
-    const url = `${COSMIC_SBS_URL_PREFIX}/${signature}${COSMIC_SBS_URL_SUFFIX}`;
+    const url = `${COSMIC_SBS_BASE_URL}/${signature.toLowerCase()}/`;
     window.open(url, "_blank");
 
     return false;
