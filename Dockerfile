@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 FROM python:3.8.8 AS base
 
 ENV POETRY_VERSION=1.1.6 \
