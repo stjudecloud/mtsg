@@ -8,6 +8,8 @@
     `https://cancer.sanger.ac.uk/cosmic/signatures/SBS/<signature>.tt` to
     `https://cancer.sanger.ac.uk/signatures/sbs/<lower(signature)>/`.
 
+  * templates/signatures: Update COSMIC mutational signatures URL in footer.
+
 ## 3.0.1 - 2020-12-04
 
 ### Fixed
