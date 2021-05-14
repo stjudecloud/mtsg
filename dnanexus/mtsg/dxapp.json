@@ -3,11 +3,11 @@
   "title": "St. Jude Mutational Signatures",
   "summary": "Find and quantify COSMIC mutational signatures across samples",
   "dxapi": "1.0.0",
-  "version": "3.0.1-1",
+  "version": "3.1.0-1",
   "openSource": true,
   "details": {
     "upstreamUrl": "https://github.com/stjude/mtsg",
-    "upstreamVersion": "3.0.1",
+    "upstreamVersion": "3.1.0",
     "upstreamLicenses": ["MIT"]
   },
   "inputSpec": [
