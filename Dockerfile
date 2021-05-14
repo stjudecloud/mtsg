@@ -24,12 +24,12 @@ RUN poetry run python -c 'from SigProfilerMatrixGenerator.install import install
 
 COPY scripts/ ./scripts/
 
-RUN wget --output-document /tmp/signatures.xlsx https://cancer.sanger.ac.uk/sigs-assets-20/COSMIC_Mutational_Signatures_v3.1.xlsx \
-      && echo "de2b0f99aed16d04491b3314bf11063aec72c4da531c63a04e641f08420047ab  /tmp/signatures.xlsx" | sha256sum --check \
+RUN wget --output-document /tmp/signatures.tsv https://cancer.sanger.ac.uk/signatures/documents/442/COSMIC_v3.1_SBS_GRCh38.txt \
+      && echo "2c3a4cf0ebde8ae2a163d4a4196c097fa762d2fb6ce8330ee4c462bc71b388a3  /tmp/signatures.tsv" | sha256sum --check \
       && poetry run python ${MTSG_HOME}/scripts/generate_inputs.py \
-            /tmp/signatures.xlsx \
+            /tmp/signatures.tsv \
             ${MTSG_HOME}/.venv/lib/python3.8/site-packages/sigproSS/input \
-      && rm /tmp/signatures.xlsx
+      && rm /tmp/signatures.tsv
 
 
 FROM base as development

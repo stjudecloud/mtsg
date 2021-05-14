@@ -34,13 +34,13 @@ dst_prefix = Path(sys.argv[2])
 signatures_dst = dst_prefix / SIGNATURES_FILENAME
 signature_names_dst = dst_prefix / SIGNATURE_NAMES_FILENAME
 
-df = pandas.read_excel(io=src, sheet_name=SHEET_NAME)
+df = pandas.read_csv(src, sep="\t")
 df.columns = [normalize_name(name) for name in df.columns]
 
-signatures = df.iloc[:, 2:]
+signatures = df.iloc[:, 1:]
 signatures.to_csv(signatures_dst, sep="\t", header=False, index=False)
 
-names = df.columns[2:]
+names = df.columns[1:]
 
 with open(signature_names_dst, "w") as f:
     for i, name in enumerate(names):

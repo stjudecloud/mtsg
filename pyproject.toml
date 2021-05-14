@@ -9,7 +9,6 @@ mtsg = "mtsg.main:main"
 
 [tool.poetry.dependencies]
 Jinja2 = "^2.11.2"
-openpyxl = "^3.0.7"
 python = "^3.8"
 sigproSS = "0.0.0.27"
 
